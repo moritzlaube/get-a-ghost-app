@@ -1,22 +1,18 @@
 const express = require('express')
-const User = require('../models/user')
 const Ghost = require('../models/ghost')
 
 const router = express.Router()
 
 // init test data start
-const users = []
+const ghosts = []
 
 const moritz = new Ghost('ml@moritzlaube.com', 'Moritz', 'Laube', 'Ghostwriter', '01703301300')
-const embassy = new User('alex@embassy.de', 'Alex', 'Fischer', 'Embassy of Dreams', '01721234567')
-embassy.requestGhost(moritz, "Hi, I'd like to request you!")
 // init test data end
+ghosts.push(moritz)
 
-users.push(embassy)
-
-/* GET users listing. */
+/* GET ghosts listing. */
 router.get('/', (req, res) => {
-  res.send(users)
+  res.send(ghosts)
 })
 
 module.exports = router
