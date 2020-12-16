@@ -19,6 +19,7 @@ class Ghost {
     this.portfolio = []
     this.ratings = []
     this.requests = []
+    this.accountCreated = Date.now()
 
     this.initTimezoneOffset()
   }
