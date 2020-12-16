@@ -1,5 +1,5 @@
 const express = require('express')
-const Ghost = require('../models/ghost')
+const Ghost = require('../models/ghost-model')
 
 const router = express.Router()
 

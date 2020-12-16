@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
-const Request = require('./request')
+const Request = require('./request-model')
 
 class User {
   id = uuidv4()
