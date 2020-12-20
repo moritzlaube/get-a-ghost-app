@@ -6,9 +6,16 @@ const router = express.Router()
 // init test data start
 const ghosts = []
 
-const moritz = new Ghost('ml@moritzlaube.com', 'Moritz', 'Laube', 'Ghostwriter', '01703301300')
+const moritz = new Ghost({
+  email: 'ml@moritzlaube.com',
+  firstName: 'Moritz',
+  lastName: 'Laube'
+})
+
+moritz.save().then('ghost saved')
+
 // init test data end
-ghosts.push(moritz)
+
 
 /* GET ghosts listing. */
 router.get('/', (req, res) => {
