@@ -8,6 +8,8 @@ const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
 const ghostsRouter = require('./routes/ghosts')
 
+const db = require('../database-connection')
+
 const app = express()
 
 // enable Hot Reloading in browser in dev mode
