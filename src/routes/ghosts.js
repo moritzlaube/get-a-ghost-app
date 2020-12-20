@@ -12,7 +12,7 @@ const moritz = new Ghost({
   lastName: 'Laube'
 })
 
-moritz.save().then('ghost saved')
+moritz.save().then()
 
 // init test data end
 

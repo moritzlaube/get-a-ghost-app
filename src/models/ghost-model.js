@@ -1,6 +1,10 @@
 const { v4: uuidv4 } = require('uuid')
 const mongoose = require('mongoose')
 
+function initTimezoneOffset() {
+      return new Date().getTimezoneOffset() / 60
+    }
+
 const GhostSchema = mongoose.Schema({
   email: String,
   firstName: String,
@@ -10,16 +14,19 @@ const GhostSchema = mongoose.Schema({
   mobilePhone: Number,
   profilePicture: String,
   aboutText: String,
-  timezoneOffset: Number,
-  categories: [],
-  languages: [],
+  timezoneOffset: {
+    type: Number,
+    default: initTimezoneOffset
+  },
+  categories: Array,
+  languages: Array,
   blockedDates: [{
     startBlockedDate: Date,
     endBlockedDate: Date
   }],
-  portfolio: [],
-  ratings: [],
-  requests: [],
+  portfolio: Array,
+  ratings: Array,
+  requests: Array,
   createdAt: { type: Date, default: Date.now }
 })
 // class Ghost {
