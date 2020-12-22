@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid')
+// const { v4: uuidv4 } = require('uuid')
 const mongoose = require('mongoose')
 
 function initTimezoneOffset() {
@@ -6,12 +6,16 @@ function initTimezoneOffset() {
     }
 
 const GhostSchema = mongoose.Schema({
+  schemaVersion: {
+    type: Number,
+    default: 1.0
+  },
   email: String,
   firstName: String,
   lastName: String,
   proMembership: Boolean,
-  profession: String,
-  mobilePhone: Number,
+  occupation: String,
+  mobilePhone: String,
   profilePicture: String,
   aboutText: String,
   timezoneOffset: {
