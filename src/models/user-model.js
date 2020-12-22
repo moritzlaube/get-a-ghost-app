@@ -1,31 +1,45 @@
-const { v4: uuidv4 } = require('uuid')
+const mongoose = require('mongoose')
 const Request = require('./request-model')
 
-class User {
-  id = uuidv4()
+const UserSchema = mongoose.Schema({
+  schemaVersion: {
+    type: Number,
+    default: 1.0
+  },
+  email: String,
+  firstName: String,
+  lastName: String,
+  company: String,
+  proMembership: Boolean,
+  mobilePhone: String,
+  profilePicture: String,
+})
 
-  #proMembership = false
+// class User {
+//   id = uuidv4()
 
-  constructor(email, firstName, lastName, company, mobilePhone) {
-    this.email = email
-    this.firstName = firstName
-    this.lastName = lastName
-    this.company = company
-    this.mobilePhone = mobilePhone
-    this.requests = []
-  }
+//   #proMembership = false
 
-  get proMembership() {
-    return this.#proMembership
-  }
+//   constructor(email, firstName, lastName, company, mobilePhone) {
+//     this.email = email
+//     this.firstName = firstName
+//     this.lastName = lastName
+//     this.company = company
+//     this.mobilePhone = mobilePhone
+//     this.requests = []
+//   }
 
-  requestGhost(ghost, notification = '') {
-    const request = new Request()
-    request.ghost = ghost.id
-    request.requestedBy = this.id
-    request.requestNotification = notification
-    this.requests.push(request)
-  }
-}
+//   get proMembership() {
+//     return this.#proMembership
+//   }
 
-module.exports = User
+//   requestGhost(ghost, notification = '') {
+//     const request = new Request()
+//     request.ghost = ghost.id
+//     request.requestedBy = this.id
+//     request.requestNotification = notification
+//     this.requests.push(request)
+//   }
+// }
+
+module.exports = mongoose.model('User', UserSchema)
