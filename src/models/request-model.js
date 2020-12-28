@@ -1,10 +1,26 @@
 /* eslint-disable lines-between-class-members */
-class Request {
-  ghost = null
-  requestedBy = null
-  requestedStartDate = null
-  requestedEndDate = null
-  requestNotification = ''
-}
+const mongoose = require('mongoose')
 
-module.exports = Request
+const RequestSchema = new mongoose.Schema({
+  ghost: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Ghost'
+  },
+  requestedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  requestedDates: {
+    requestedStartDate: {
+      type: Date,
+      default: true
+    },
+    requestedEndDate: {
+      type: Date,
+      default: true
+    }
+  },
+  requestBody: String
+})
+
+module.exports = mongoose.model('Request', RequestSchema)

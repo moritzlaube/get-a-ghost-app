@@ -5,7 +5,7 @@ function initTimezoneOffset() {
       return new Date().getTimezoneOffset() / 60
     }
 
-const GhostSchema = mongoose.Schema({
+const GhostSchema = new mongoose.Schema({
   schemaVersion: {
     type: Number,
     default: 1.0
@@ -31,39 +31,23 @@ const GhostSchema = mongoose.Schema({
   portfolio: Array,
   ratings: Array,
   requests: Array,
-  createdAt: { type: Date, default: Date.now }
+  createdAt: {
+    type: Date,
+    default: null
+  }
 })
-// class Ghost {
-//   id = uuidv4()
 
-//   #proMembership = false
-
-//   constructor(email, firstName, lastName, profession, mobilePhone) {
-//     this.email = email
-//     this.firstName = firstName
-//     this.lastName = lastName
-//     this.profession = profession
-//     this.mobilePhone = mobilePhone
-//     this.profilePicture = ''
-//     this.aboutText = ''
-//     this.categories = []
-//     this.languages = []
-//     this.blockedDates = []
-//     this.portfolio = []
-//     this.ratings = []
-//     this.requests = []
-//     this.accountCreated = Date.now()
-
-//     this.initTimezoneOffset()
-//   }
-
-//   get proMembership() {
-//     return this.#proMembership
-//   }
-
-//   initTimezoneOffset() {
-//     this.timezoneOffset = new Date().getTimezoneOffset() / 60
-//   }
-// }
+GhostSchema.pre('save', function (next) {
+  let now = Date.now()
+   
+  this.updatedAt = now
+  // Set a value for createdAt only if it is null
+  if (!this.createdAt) {
+    this.createdAt = now
+  }
+  
+  // Call the next function in the pre-save chain
+  next()    
+})
 
 module.exports = mongoose.model('Ghost', GhostSchema)

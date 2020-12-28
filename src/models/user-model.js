@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const Request = require('./request-model')
 
-const UserSchema = mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   schemaVersion: {
     type: Number,
     default: 1.0
@@ -13,8 +12,28 @@ const UserSchema = mongoose.Schema({
   proMembership: Boolean,
   mobilePhone: String,
   profilePicture: String,
+  requests: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Request'
+  }],
+  createdAt: {
+    type: Date,
+    default: null
+  }
 })
 
+UserSchema.pre('save', function (next) {
+  let now = Date.now()
+   
+  this.updatedAt = now
+  // Set a value for createdAt only if it is null
+  if (!this.createdAt) {
+    this.createdAt = now
+  }
+  
+  // Call the next function in the pre-save chain
+  next()    
+})
 // class User {
 //   id = uuidv4()
 
