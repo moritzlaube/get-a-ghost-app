@@ -8,7 +8,7 @@ const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
 const ghostsRouter = require('./routes/ghosts')
 
-const db = require('../database-connection')
+require('../database-connection')
 
 const app = express()
 
@@ -51,6 +51,5 @@ app.use((err, req, res) => {
   res.status(err.status || 500)
   res.render('error')
 })
-
 
 module.exports = app
