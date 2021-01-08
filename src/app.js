@@ -8,18 +8,18 @@ const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
 const ghostsRouter = require('./routes/ghosts')
 
-require('../database-connection')
+require('./database-connection')
 
 const app = express()
 
 // enable Hot Reloading in browser in dev mode
 if (app.get('env') === 'development') {
   /* eslint-disable-next-line */
-  app.use(require('connect-livereload')())
-  /* eslint-disable-next-line */
   require('livereload')
     .createServer({ extraExts: ['pug'] })
     .watch([`${__dirname}/public`, `${__dirname}/views`])
+  /* eslint-disable-next-line */
+  app.use(require('connect-livereload')())
 }
 
 // view engine setup
