@@ -5,13 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const mongoose = require('mongoose')
 
-const dbName = process.env.MONODB_DATABASE
-const host = process.env.MONODB_HOST
-const port = process.env.MONGODB_PORT
-
-const connectionString = process.env.MONGODB_REMOTE_URI
-  ? process.env.MONGODB_REMOTE_URI
-  : `mongodb://${host}:${port}/${dbName}`
+const connectionString = process.env.MONGODB_URI ? process.env.MONGODB_URI : 'mongodb://mongo/get-a-ghost'
 
 mongoose.set('debug', true)
 
