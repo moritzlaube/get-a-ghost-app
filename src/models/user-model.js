@@ -37,4 +37,27 @@ UserSchema.pre('save', function (next) {
   next()
 })
 
+// const userSchema = new Schema({ email: String })
+// class UserClass {
+//   // `gravatarImage` becomes a virtual
+//   get gravatarImage() {
+//     const hash = md5(this.email.toLowerCase())
+//     return `https://www.gravatar.com/avatar/${hash}`
+//   }
+
+//   // `getProfileUrl()` becomes a document method
+//   getProfileUrl() {
+//     return `https://mysite.com/${this.email}`
+//   }
+
+//   // `findByEmail()` becomes a static
+//   static findByEmail(email) {
+//     return this.findOne({ email })
+//   }
+// }
+
+// // `schema` will now have a `gravatarImage` virtual, a `getProfileUrl()` method,
+// // and a `findByEmail()` static
+// userSchema.loadClass(UserClass)
+
 module.exports = mongoose.model('User', UserSchema)
