@@ -1,9 +1,9 @@
-version: '3'
+version: "3"
 services:
-  app:
+  backend:
     image: get-a-ghost-app
     build:
-      context: .
+      context: backend
       dockerfile: Dockerfile
     # environment:
     #   - MONGODB_URI=mongodb+srv://moritz:cl5rdrcJtGzeKg0a@cluster0.dg6v9.mongodb.net/get-a-ghost?retryWrites=true&w=majority
@@ -11,7 +11,7 @@ services:
       - 3000:3000
       - 35729:35729
     volumes:
-      - ./src:/app/src
+      - ./backend/src:/app/src
   mongo:
     image: mongo
     ports:
