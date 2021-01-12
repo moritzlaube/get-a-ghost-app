@@ -1,18 +1,48 @@
 version: "3"
 services:
+  frontend:
+    image: frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - 8080
+    volumes:
+      - ./frontend/src:/app/src
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=(Host(`get-a-ghost.localhost`))"
+      - "traefik.http.routers.frontend.entrypoints=web"
   backend:
-    image: get-a-ghost-app
+    image: backend
     build:
       context: backend
       dockerfile: Dockerfile
     # environment:
     #   - MONGODB_URI=mongodb+srv://moritz:cl5rdrcJtGzeKg0a@cluster0.dg6v9.mongodb.net/get-a-ghost?retryWrites=true&w=majority
     ports:
-      - 3000:3000
+      - 3000
       - 35729:35729
     volumes:
       - ./backend/src:/app/src
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=(Host(`get-a-ghost.localhost`) && PathPrefix(`/api`))"
+      # - "traefik.http.routers.backend.rule=(Host(`api.get-a-ghost.localhost`))"
+      - "traefik.http.routers.backend.entrypoints=web"
   mongo:
     image: mongo
     ports:
       - 27017:27017
+  load-balancer:
+    image: traefik:v2.3
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
