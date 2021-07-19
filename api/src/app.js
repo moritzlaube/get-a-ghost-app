@@ -5,7 +5,7 @@ const cors = require('cors')
 const mongoSanitize = require('express-mongo-sanitize')
 
 const { db } = require('./config/database')
-const usersRouter = require('./routes/users')
+const ghostsRouter = require('./routes/ghosts')
 
 /* CONNECT TO MONGODB */
 db.on('error', console.error.bind(console, 'connection error:'))
@@ -30,6 +30,6 @@ app.use(express.json({ limit: '12kb' }))
 app.use(express.urlencoded({ extended: false }))
 
 /* ROUTES */
-app.use('/users', usersRouter)
+app.use('/ghosts', ghostsRouter)
 
 module.exports = app
