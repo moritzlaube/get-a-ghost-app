@@ -1,22 +1,20 @@
 const Ghost = require('../models/ghost.model')
 
 exports.getAllGhosts = async (req, res) => {
-  let query
-  console.log(req.query)
-  if (req.query) {
-    const {type} = req.query
-    query = {type: { $in: [type] }}
-  } else {
-    query = {}
-  }
+  let ghosts
 
   try {
+    if (Object.keys(req.query).length === 0 && req.query.constructor === Object) {
+      ghosts = await Ghost.find()
+    } else {
+      const { type, start, end } = req.query
+      console.log(start) // undefined
+      ghosts = await Ghost.find().where('type').in([type])
+    }
 
-    const ghosts = await Ghost.find(query)
-
-    return res.status(200).json({ status: 'ok', data: ghosts })
+    return res.status(200).json({ ok: true, data: ghosts })
   } catch (error) {
-    return res.status(500).json({ status: 'failed', error })
+    return res.status(500).json({ ok: false, error })
   }
 }
 
@@ -26,41 +24,45 @@ exports.getGhostById = async (req, res) => {
   try {
     const ghost = await Ghost.findById(id)
 
-    return res.status(200).json({ status: 'ok', data: ghost.getEssentialData })
+    return res.status(200).json({ ok: true, data: ghost.getEssentialData })
   } catch (error) {
-    return res.status(500).json({ status: 'failed', error })
+    return res.status(500).json({ ok: false, error })
   }
 }
 
-
 exports.createGhost = async (req, res) => {
-  const { type, firstName, lastName } = req.body
+  const { type, name } = req.body
 
   try {
     const savedGhost = await Ghost.create({
       type,
-      name: {
-        first: firstName,
-        last: lastName,
-      },
+      name,
     })
-    return res.status(200).json({ status: 'ok', data: savedGhost.getEssentialData })
+    return res.status(200).json({ ok: true, data: savedGhost.getEssentialData })
   } catch (error) {
-    return res.status(500).json({ status: 'failed', error })
+    return res.status(500).json({ ok: false, error })
   }
 }
 
 exports.updateGhost = async (req, res) => {
-  // TODO Check parameter and then update object one by one 
+  // TODO Check parameter and then update object one by one
   // ex: ghost.name.first = 'Max'
   const id = req.params.id
-  
+
   try {
     const ghost = await Ghost.findById(id)
-    const updatedGhost = Object.assign(ghost, req.body)
+    Object.keys(req.body).forEach(key => {
+      if (key === 'blocked') {
+        ghost[key].push(...req.body[key])
+      } else {
+        ghost[key] = req.body[key]
+      }
+    })
+    // ghost.blocked.push(...req.body.blocked)
+    await ghost.save()
 
-    return res.status(200).json({ status: 'ok', data: updatedGhost.getEssentialData })
+    return res.status(200).json({ ok: true, data: ghost })
   } catch (error) {
-    return res.status(500).json({ status: 'failed', error })
+    return res.status(500).json({ ok: false, error })
   }
 }
