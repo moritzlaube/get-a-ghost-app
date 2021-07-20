@@ -9,14 +9,14 @@ const ghostSchema = new Schema(
     type: [
       {
         type: String,
-        enum: ['Moodscout', 'Ghostwriter'],
+        enum: ['moodscout', 'ghostwriter'],
       },
     ],
     name: {
       first: String,
       last: String,
     },
-    blocked: [{ startDate: Date, endDate: Date }],
+    blocked: [{ start: Date, end: Date }],
   },
   {
     timestamps: { createdAt: 'createdAt', updatedAt: 'modifiedAt' },
