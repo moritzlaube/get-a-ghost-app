@@ -6,6 +6,9 @@ const router = express.Router()
 /* GET ghost listing. */
 router.get('/', ghostController.getAllGhosts)
 
+/* Init Ghosts in DB */
+router.get('/init', ghostController.init)
+
 /* GET ghost by id. */
 router.get('/:id', ghostController.getGhostById)
 
