@@ -36,6 +36,15 @@ exports.getAllGhosts = async (req, res) => {
       }
     }
 
+    if (!req.user) {
+      return res.status(200).json({
+        ok: true,
+        data: {
+          ghostCount: ghosts.length,
+        },
+      })
+    }
+
     return res.status(200).json({ ok: true, data: ghosts })
   } catch (error) {
     return res.status(500).json({ ok: false, error })
