@@ -14,16 +14,21 @@ const accountSchema = new Schema({
     type: String,
     enum: ['User', 'Ghost'],
   },
+  isGhost: {
+    type: Boolean,
+    default: false,
+  },
   emailVerified: {
     type: Boolean,
     default: false,
   },
+  verificationToken: Number,
+  verificationTokenExpire: Date,
 })
 
 accountSchema.plugin(passportLocalMongoose, {
   usernameField: 'email',
   usernameLowerCase: true,
-  // populateFields: 'invoices',
 })
 
 module.exports = mongoose.model('Account', accountSchema)
