@@ -82,6 +82,8 @@ exports.updateGhost = async (req, res) => {
   // ex: ghost.name.first = 'Max'
   const id = req.params.id
 
+  if (req.user.role !== req.params.id) return res.status(401).json({ ok: false, message: 'Unauthorized' })
+
   try {
     const ghost = await Ghost.findById(id)
     Object.keys(req.body).forEach(key => {
