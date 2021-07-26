@@ -1,8 +1,11 @@
-const express = require('express')
+const router = require('express').Router()
+const passport = require('passport')
 const authController = require('../controllers/auth.controller')
 
-const router = express.Router()
-
+router.post('/login', passport.authenticate('local'), authController.login)
 router.post('/register', authController.register)
+router.get('/logout', authController.logout)
+router.post('/invite', authController.sendInvite)
+router.get('/invite/:token', authController.verifyInvite)
 
 module.exports = router
