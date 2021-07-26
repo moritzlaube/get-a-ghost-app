@@ -1,7 +1,7 @@
-const express = require('express')
+const router = require('express').Router()
 const ghostController = require('../controllers/ghost.controller')
-
-const router = express.Router()
+const isAuthenticated = require('../middleware/is-authenticated')
+const checkRole = require('../middleware/check-role')
 
 /* GET ghost listing. */
 router.get('/', ghostController.getAllGhosts)
@@ -10,12 +10,12 @@ router.get('/', ghostController.getAllGhosts)
 router.get('/init', ghostController.init)
 
 /* GET ghost by id. */
-router.get('/:id', ghostController.getGhostById)
+router.get('/:id', isAuthenticated, ghostController.getGhostById)
 
 /* CREATE new ghost. */
-router.post('/', ghostController.createGhost)
+router.post('/', isAuthenticated, checkRole('Ghost'), ghostController.createGhost)
 
 /* UPDATE ghost. */
-router.put('/:id', ghostController.updateGhost)
+router.put('/:id', isAuthenticated, checkRole('Ghost'), ghostController.updateGhost)
 
 module.exports = router
