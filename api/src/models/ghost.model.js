@@ -22,9 +22,15 @@ const ghostSchema = new Schema(
     },
     ghostName: {
       type: String,
-      default: function () {
+      default() {
         return `${this.name.first} ${this.name.last}`
       },
+    },
+    phone: String, // E.164 format -> npm package 'phone'
+    address: {
+      street: String,
+      zip: String,
+      country: String,
     },
     language: [
       {
