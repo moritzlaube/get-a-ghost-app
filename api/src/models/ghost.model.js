@@ -6,6 +6,10 @@ const { Schema } = mongoose
 
 const ghostSchema = new Schema(
   {
+    account: {
+      type: Schema.Types.ObjectId,
+      ref: 'Account',
+    },
     type: [
       {
         type: String,
@@ -214,6 +218,10 @@ const ghostSchema = new Schema(
       },
     ],
     blocked: [{ start: Date, end: Date }],
+    profileVisits: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: { createdAt: 'createdAt', updatedAt: 'modifiedAt' },
