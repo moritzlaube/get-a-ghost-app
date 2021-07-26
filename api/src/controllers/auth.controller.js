@@ -1,10 +1,10 @@
-const Account = require('../models/account.model')
-const authService = require('../services/auth.service')
+/* eslint-disable no-underscore-dangle */
 const jwt = require('jsonwebtoken')
+const Account = require('../models/account.model')
+const Token = require('../models/token.model')
+const authService = require('../services/auth.service')
 
-exports.login = async (req, res) => {
-  return res.status(200).json({ ok: true, data: req.user })
-}
+exports.login = async (req, res) => res.status(200).json({ ok: true, data: req.user })
 
 exports.register = async (req, res) => {
   const { email, password } = req.body
@@ -19,7 +19,7 @@ exports.register = async (req, res) => {
       password
     )
 
-    req.login(createdAccount, err => {
+    return req.login(createdAccount, err => {
       if (err) throw new Error(err)
       return res.status(200).json({ ok: true, data: { id: createdAccount._id } })
     })
@@ -33,11 +33,11 @@ exports.logout = (req, res) => {
     req.logout()
     return res.status(200).json({ ok: true, data: req.user })
   } catch (err) {
-    return res.status(500).json({ ok: false, data: error })
+    return res.status(500).json({ ok: false, data: err })
   }
 }
 
-exports.sendInvite = (req, res) => {
+exports.sendInvite = async (req, res) => {
   const token = req.headers.authorization.split(' ')[1]
 
   if (token !== process.env.BEARER_TOKEN) return res.status(401).json({ ok: false, message: 'Unauthorized' })
@@ -52,17 +52,25 @@ exports.sendInvite = (req, res) => {
     { expiresIn: '1d' }
   )
 
+  const t = new Token({
+    token: signedToken,
+  })
+
+  await t.save()
+
   return res.status(200).json({ ok: true, data: { token: signedToken } })
 }
 
 exports.verifyInvite = async (req, res) => {
-  const token = req.params.token
+  const { token } = req.params
 
   try {
     const { email } = jwt.verify(token, process.env.JWT_SECRET)
-    if (await Account.findOne({ email }).exec())
-      return res.status(500).json({ ok: false, message: 'User already exists' })
-    return res.status(200).json({ ok: true, message: 'Token verified' })
+    const hasAccount = await Account.exists({ email })
+    const hasToken = await Token.exists({ token })
+    if (!hasToken || hasAccount)
+      return res.status(404).json({ ok: false, message: 'Wrong Token or Account already exists' })
+    return res.status(200).json({ ok: true, data: { email }, message: 'Token verified' })
   } catch (error) {
     return res.status(401).json({ ok: false, data: error })
   }
