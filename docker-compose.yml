@@ -1,34 +1,21 @@
-version: '3'
+version: "3"
 services:
-  #   web:
-  #     image: web
-  #     build:
-  #       context: ./web
-  #       dockerfile: Dockerfile.dev
-  #     depends_on:
-  #       - api
-  #     ports:
-  #       - 3000:3000
-  #     environment:
-  #       - HOST=0.0.0.0
-  #       - PORT=3000
-  #       - BASE_API_URL=http://api:5000/api
-  #       - BROWSER_BASE_API_URL=http://localhost:5000/api
-  #       # - API_HOST=api
-  #       # - API_PORT=5000
-  #       # - API_PREFIX=/api
-  #     volumes:
-  #       - ./web/assets:/app/assets
-  #       - ./web/components:/app/components
-  #       - ./web/layouts:/app/layouts
-  #       - ./web/middleware:/app/middleware
-  #       - ./web/server-middleware:/app/server-middleware
-  #       - ./web/pages:/app/pages
-  #       - ./web/plugins:/app/plugins
-  #       - ./web/static:/app/static
-  #       - ./web/store:/app/store
-  #       - ./web/test:/app/test
-  #       - ./web/nuxt.config.js:/app/nuxt.config.js
+  web:
+    image: web
+    build:
+      context: ./web
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - api
+    ports:
+      - 3000:3000
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+      - BASE_API_URL=http://api:5000
+      - BROWSER_BASE_API_URL=http://localhost:5000
+    volumes:
+      - ./web:/app
   api:
     image: api
     build:
