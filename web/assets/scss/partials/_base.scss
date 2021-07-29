@@ -1,0 +1,16 @@
+body {
+  font-family: var(--ff-text);
+  font-weight: var(--fw-regular);
+  font-style: normal;
+  font-size: var(--text-md);
+  line-height: var(--body-line-height);
+  color: var(--text-light);
+  background-color: var(--bg-dark-grey);
+}
+
+.container {
+  max-width: 60rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: var(--space-xl);
+}

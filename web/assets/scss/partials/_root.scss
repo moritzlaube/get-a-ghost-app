@@ -1,0 +1,27 @@
+:root {
+  --ff-text: 'Open Sans', sans-serif;
+  --fw-regular: 400;
+  --fw-bold: 700;
+  --bg-dark-grey: #363636;
+  --clr-pink: #ed408d;
+  --text-light: white;
+  --text-dark: black;
+  --heading-line-height: 1.25;
+  --body-line-height: 1.6;
+  --size-unit: 1rem;
+  --flow-spacer: var(--size-unit, 1rem);
+  --text-xs: calc(0.75 * var(--size-unit));
+  --text-sm: calc(0.875 * var(--size-unit));
+  --text-md: calc(1 * var(--size-unit));
+  --text-lg: calc(1.125 * var(--size-unit));
+  --text-xl: calc(1.25 * var(--size-unit));
+  --text-xxl: calc(2 * var(--size-unit));
+  --text-xxxl: calc(3 * var(--size-unit));
+  --space-xs: calc(0.75 * var(--size-unit));
+  --space-sm: calc(0.875 * var(--size-unit));
+  --space-md: calc(1 * var(--size-unit));
+  --space-lg: calc(1.125 * var(--size-unit));
+  --space-xl: calc(1.25 * var(--size-unit));
+  --space-xxl: calc(2 * var(--size-unit));
+  --space-xxxl: calc(3 * var(--size-unit));
+}
