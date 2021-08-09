@@ -1,0 +1,14 @@
+{
+    "name": "Get A Ghost",
+    "short_name": "Get A Ghost",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#363636",
+    "background_color": "#363636",
+    "display": "standalone"
+}
