@@ -1,0 +1,52 @@
+@use '../abstracts/sizes' as *;
+
+.container {
+  max-width: 24rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: var(--space-sm);
+}
+
+.centered {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.center-align {
+  text-align: center;
+}
+
+.flow > * + * {
+  margin-top: var(--flow-spacer) !important;
+}
+
+.split {
+  display: flex;
+  flex-direction: column;
+}
+
+.split > * {
+  flex-basis: 100%;
+}
+
+.split > * + * {
+  margin: var(--space-lg) 0 0 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap; /* added line */
+  border: 0;
+}
+
+@each $size, $value in $sizes {
+  .mt-#{$size} {
+    margin-top: $value;
+  }
+}
