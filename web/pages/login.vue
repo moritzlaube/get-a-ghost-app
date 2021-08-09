@@ -8,7 +8,7 @@ div.container.login-page
       BaseInput(type="email" id="email" name="email" v-model="email" placeholder="Email" label="Email")
       BaseInput(type="password" id="password" name="password" v-model="password" placeholder="Password" label="Password")
     BaseButton.mt-xxl LOG IN
-    p.mt-md.center-align No account yet? Register to get started right away and get 30 days for free.
+    p.mt-md.center-align No account yet? #[NuxtLink(to="/register") Register] to get started right away and get 30 days for free.
 </template>
 
 <script>
