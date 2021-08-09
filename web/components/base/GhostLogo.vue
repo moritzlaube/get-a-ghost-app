@@ -1,5 +1,10 @@
 <template>
-  <svg width="317" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    viewBox="0 0 317 60"
+    width="100%"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <g id="logo">
       <g id="ghost">
         <path
@@ -42,6 +47,7 @@
 <style lang="scss" scoped>
 svg {
   overflow: visible;
+  max-width: 24rem;
 }
 
 #ghost {
