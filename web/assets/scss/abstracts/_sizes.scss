@@ -1,0 +1,9 @@
+$sizes: (
+  xs: calc(0.75 * var(--size-unit)),
+  sm: calc(0.875 * var(--size-unit)),
+  md: calc(1 * var(--size-unit)),
+  lg: calc(1.125 * var(--size-unit)),
+  xl: calc(1.25 * var(--size-unit)),
+  xxl: calc(2 * var(--size-unit)),
+  xxxl: calc(3 * var(--size-unit)),
+);
