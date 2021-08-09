@@ -7,12 +7,43 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
+      { name: 'apple-mobile-web-app-title', content: 'Get A Ghost' },
+      { name: 'application-name', content: 'Get A Ghost' },
+      { name: 'msapplication-TileColor', content: '#363636' },
+      { name: 'theme-color', content: '#363636' },
     ],
     htmlAttrs: {
       lang: 'de',
     },
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '16x16',
+        href: '/favicon-16x16.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: '/favicon-32x32.png',
+      },
+      {
+        rel: 'apple-touch-icon',
+        type: 'image/png',
+        sizes: '180x180',
+        href: '/apple-touch-icon.png',
+      },
+      {
+        rel: 'mask-icon',
+        color: '#363636',
+        href: '/safari-pinned-tab.svg',
+      },
+      {
+        rel: 'manifest',
+        href: '/site.webmanifest',
+      },
       { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
       {
         rel: 'preconnect',
