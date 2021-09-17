@@ -22,7 +22,7 @@ const accountSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  verificationToken: Number,
+  verificationToken: Number, // possible candidate for index (index: true)
   verificationTokenExpire: Date,
 })
 
