@@ -80,8 +80,38 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    '@nuxtjs/auth-next',
   ],
-
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          required: false,
+          type: false,
+        },
+        user: {
+          property: 'data',
+          // autoFetch: true
+        },
+        endpoints: {
+          login: { url: '/auth/login', method: 'post' },
+          logout: { url: '/auth/logout', method: 'get' },
+          user: { url: '/auth/me', method: 'get' },
+        },
+      },
+    },
+    redirect: {
+      login: '/login',
+      logout: '/',
+      home: '/',
+    },
+    fullPathRedirect: true,
+    cookie: {
+      options: {
+        secure: process.env.NODE_ENV && process.env.NODE_ENV === 'production',
+      },
+    },
+  },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: process.env.BROWSER_BASE_API_URL,
@@ -97,7 +127,9 @@ export default {
       baseURL: process.env.BASE_API_URL,
     },
   },
-
+  router: {
+    middleware: ['auth'],
+  },
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {

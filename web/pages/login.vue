@@ -13,6 +13,7 @@ div.container.login-page
 
 <script>
 export default {
+  name: 'LoginPage',
   data() {
     return {
       email: '',
