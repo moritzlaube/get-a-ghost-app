@@ -10,6 +10,7 @@ exports.register = async (req, res) => {
   const { email, password } = req.body
 
   try {
+    // create Account with barebones info.
     const createdAccount = await Account.register(
       {
         email,
@@ -18,6 +19,7 @@ exports.register = async (req, res) => {
       },
       password
     )
+    // TODO: send verificationToken to email via Sendgrid
 
     return req.login(createdAccount, err => {
       if (err) throw new Error(err)
@@ -26,6 +28,19 @@ exports.register = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ ok: false, data: error })
   }
+}
+
+// TODO: Verify Token
+exports.verifyToken = async (req, res) => {
+  const { token } = req.body
+  const verifiedAccount = await Account.findOne({ verificationToken: token })
+
+  if (verifiedAccount !== null) {
+    verifiedAccount.emailVerified = true
+    await verifiedAccount.save()
+  }
+
+  return res.status(200).json({ ok: true, data: verifiedAccount })
 }
 
 exports.logout = (req, res) => {
