@@ -34,6 +34,15 @@ input {
   border: none;
   width: 100%;
   padding: var(--space-sm) var(--space-md);
+  color: var(--text-light);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 1000px var(--bg-dark-grey) inset;
+  -webkit-text-fill-color: var(--text-light);
 }
 
 input::placeholder {

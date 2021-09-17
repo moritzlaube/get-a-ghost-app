@@ -20,5 +20,6 @@ button {
   width: 100%;
   padding: var(--space-sm) var(--space-md);
   line-height: 1;
+  cursor: pointer;
 }
 </style>
