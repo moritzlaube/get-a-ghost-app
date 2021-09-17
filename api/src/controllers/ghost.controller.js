@@ -1,4 +1,5 @@
 const Ghost = require('../models/ghost.model')
+const Account = require('../models/account.model')
 const { isWithinInterval, parseISO } = require('date-fns')
 
 exports.getAllGhosts = async (req, res) => {
@@ -67,11 +68,21 @@ exports.createGhost = async (req, res) => {
   const { type, name } = req.body
 
   try {
-    const savedGhost = await Ghost.create({
+    const createdAccount = await Account.register(
+      {
+        email,
+        roleModel: 'User',
+        verificationToken: authService.getRandomInt(1000, 9999),
+        verificationTokenExpire: new Date(Date.now() + 1000 * 3600 * 24),
+      },
+      password
+    )
+
+    const createdGhost = await Ghost.create({
       type,
       name,
     })
-    return res.status(200).json({ ok: true, data: savedGhost.getEssentialData })
+    return res.status(200).json({ ok: true, data: createdGhost.getEssentialData })
   } catch (error) {
     return res.status(500).json({ ok: false, error })
   }
