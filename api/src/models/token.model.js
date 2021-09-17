@@ -7,6 +7,10 @@ const tokenSchema = new Schema({
     type: String,
     required: true,
   },
+  verfied: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 module.exports = mongoose.model('Token', tokenSchema)
