@@ -7,7 +7,7 @@ const passport = require('passport')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 
-const clientPromise = require('./config/database')
+const clientPromise = require('./config/database') // automatically connects to db through config/database.js
 
 const Account = require('./models/account.model')
 
@@ -22,13 +22,6 @@ const cookie = {
   secure: false,
   maxAge: 14 * 24 * 60 * 60 * 1000,
 }
-
-/* CONNECT TO MONGODB */
-// mongoose.connect(process.env.MONGODB_CONNECTION_STRING)
-// clientPromise = new Promise(function (resolve, reject) {
-//   resolve(mongoose.connection.getClient())
-//   reject(new Error('MongoClient Error'))
-// })
 
 const app = express()
 
@@ -79,7 +72,7 @@ app.use('/ghosts', ghostsRouter)
 app.use('/auth', authRouter)
 app.use('/users', usersRouter)
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   res.status(err.status || 500).json({
     ok: false,
     message: err.message,
