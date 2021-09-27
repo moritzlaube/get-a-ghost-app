@@ -7,6 +7,7 @@
     "dev": "DEBUG=api:* nodemon -r dotenv/config ./bin/www"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.4.6",
     "connect-mongo": "^4.4.1",
     "cors": "^2.8.5",
     "date-fns": "^2.22.1",
@@ -16,7 +17,8 @@
     "express-session": "^1.17.2",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.13.3",
+    "mongoose": "^6.0.7",
+    "mongoose-autopopulate": "^0.15.0",
     "morgan": "~1.9.1",
     "passport": "^0.4.1",
     "passport-local-mongoose": "^6.1.0"
