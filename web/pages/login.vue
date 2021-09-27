@@ -3,7 +3,8 @@ div.container.login-page
   div.flow
     BaseGhostLogo.mt-md.center-align
     p Login and find an available Moodscout and/or Ghostwriter within seconds. No more chain calling your handwritten, out-of-date list of Ghosts.
-  form
+    p(v-if="error") {{error}}
+  form(@submit.prevent="login" :class="{ loading: isLoading }")
     fieldset.flow
       BaseInput(type="email" id="email" name="email" v-model="email" placeholder="Email" label="Email")
       BaseInput(type="password" id="password" name="password" v-model="password" placeholder="Password" label="Password")
@@ -18,7 +19,28 @@ export default {
     return {
       email: '',
       password: '',
+      isLoading: false,
+      response: null,
+      error: null,
     }
+  },
+  methods: {
+    async login() {
+      this.isLoading = true
+
+      try {
+        await this.$auth.loginWith('local', {
+          data: {
+            email: this.email,
+            password: this.password,
+          },
+        })
+      } catch (error) {
+        this.error = error.response.data
+      }
+
+      this.isLoading = false
+    },
   },
 }
 </script>
