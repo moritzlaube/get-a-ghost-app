@@ -1,57 +1,74 @@
 /* eslint-disable no-underscore-dangle */
-const jwt = require('jsonwebtoken')
+const { verifyJWT, signJWT, getRandomInt } = require('../services/auth.service')
 const Account = require('../models/account.model')
 const User = require('../models/user.model')
 const Token = require('../models/token.model')
-const authService = require('../services/auth.service')
+const sendMail = require('../services/mail.service')
 
-exports.login = async (req, res) => res.status(200).json({ ok: true, data: req.user })
-
-exports.register = async (req, res) => {
-  const { email, password, company, name } = req.body
+/** Register User */
+exports.registerUser = async (req, res) => {
+  /**
+   * @typedef {object} req.body
+   * @property {string} email
+   * @property {string} password
+   * @property {string} company
+   * @property {object} name
+   * @property {string} name.first
+   * @property {string} name.last
+   */
+  /** @type {req.body} */
+  const { email, password, company, name, phone } = req.body
+  const verificationPIN = getRandomInt(1000, 9999)
 
   try {
-    // create Account with barebones info.
+    // Create new Account instance
     const createdAccount = await Account.register(
       {
         email,
-        roleModel: 'User',
-        verificationToken: authService.getRandomInt(1000, 9999),
+        role: 'User',
+        verificationToken: verificationPIN,
         verificationTokenExpire: new Date(Date.now() + 1000 * 3600 * 24),
       },
       password
     )
-    // TODO: send verificationToken to email via Sendgrid
 
+    // Send mail via SG with PIN to verify email
+    await sendMail(email, verificationPIN)
+
+    // Create a new User instance and link it to new Account
     const createdUser = await User.create({
       account: createdAccount._id,
       name,
       company,
+      phone,
     })
 
-    createdAccount.role = createdUser._id
+    // Link new User to new Account
+    createdAccount.profile = createdUser._id
     await createdAccount.save()
 
-    return req.login(createdAccount, err => {
-      if (err) throw new Error(err)
-      return res.status(200).json({ ok: true, data: { id: createdAccount._id } })
-    })
+    return res.status(200).json({ ok: true, data: { id: createdAccount._id } })
   } catch (error) {
     return res.status(500).json({ ok: false, data: error })
   }
 }
 
-// TODO: Verify Token
 exports.verifyToken = async (req, res) => {
-  const { token } = req.body
-  const verifiedAccount = await Account.findOne({ verificationToken: token })
+  const { pin } = req.body
 
-  if (verifiedAccount !== null) {
+  try {
+    const verifiedAccount = await Account.findOne({ verificationToken: pin })
+
+    if (verifiedAccount === null) return res.status(404).json({ ok: false, message: 'No Account with this PIN' })
+    if (verifiedAccount.emailVerified) return res.status(409).json({ ok: false, message: 'Email already verified' })
+
     verifiedAccount.emailVerified = true
     await verifiedAccount.save()
-  }
 
-  return res.status(200).json({ ok: true, data: verifiedAccount })
+    return res.status(200).json({ ok: true, message: 'Email verified' })
+  } catch (err) {
+    return res.status(500).json({ ok: false, data: err })
+  }
 }
 
 exports.logout = (req, res) => {
@@ -63,10 +80,7 @@ exports.logout = (req, res) => {
   }
 }
 
-exports.getUser = (req, res) => {
-  return res.status(200).json({ ok: true, data: req.user })
-}
-
+// Controllers to create and verify Ghost-invites
 exports.sendInvite = async (req, res) => {
   const token = req.headers.authorization.split(' ')[1]
 
@@ -74,13 +88,7 @@ exports.sendInvite = async (req, res) => {
 
   const { email } = req.body
 
-  const signedToken = jwt.sign(
-    {
-      email,
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: '1d' }
-  )
+  const signedToken = signJWT(email)
 
   const t = new Token({
     token: signedToken,
@@ -95,7 +103,7 @@ exports.verifyInvite = async (req, res) => {
   const { token } = req.params
 
   try {
-    const { email } = jwt.verify(token, process.env.JWT_SECRET)
+    const email = verifyJWT(token, process.env.JWT_SECRET)
     const hasAccount = await Account.exists({ email })
     const hasToken = await Token.exists({ token })
     if (!hasToken || hasAccount)
