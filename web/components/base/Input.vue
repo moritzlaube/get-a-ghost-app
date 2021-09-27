@@ -28,8 +28,7 @@ export default {
 <style lang="scss" scoped>
 input {
   background-color: var(--bg-dark-grey);
-  box-shadow: inset 5px 5px 12px var(--shadow-dark),
-    inset -5px -5px 12px var(--shadow-light);
+  box-shadow: var(--box-shadow);
   border-radius: 5px;
   border: none;
   width: 100%;
@@ -41,6 +40,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
+  box-shadow: inset 5px 5px 12px var(--shadow-dark);
   -webkit-box-shadow: 0 0 1000px var(--bg-dark-grey) inset;
   -webkit-text-fill-color: var(--text-light);
 }
