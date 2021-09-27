@@ -234,7 +234,7 @@ const ghostSchema = new Schema(
   }
 )
 
-ghostSchema.virtual('getEssentialData').get(function () {
+ghostSchema.virtual('getPublicData').get(function () {
   return {
     id: this._id,
     name: `${this.name.first} ${this.name.last}`,
