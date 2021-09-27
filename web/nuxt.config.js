@@ -61,7 +61,7 @@ export default {
   css: ['@/assets/scss/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['@/plugins/pincode.client.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -96,13 +96,14 @@ export default {
         endpoints: {
           login: { url: '/auth/login', method: 'post' },
           logout: { url: '/auth/logout', method: 'get' },
-          user: { url: '/auth/me', method: 'get' },
+          user: { url: '/users/me', method: 'get' },
+          home: '/',
         },
       },
     },
     redirect: {
       login: '/login',
-      logout: '/',
+      logout: '/login',
       home: '/',
     },
     fullPathRedirect: true,
