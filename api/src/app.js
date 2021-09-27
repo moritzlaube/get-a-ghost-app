@@ -7,12 +7,13 @@ const passport = require('passport')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 
-const { db, clientPromise } = require('./config/database')
+const clientPromise = require('./config/database')
+
 const Account = require('./models/account.model')
-const isAuthenticated = require('./middleware/is-authenticated')
 
 const ghostsRouter = require('./routes/ghosts')
 const authRouter = require('./routes/auth')
+const usersRouter = require('./routes/users')
 
 const cookie = {
   path: '/',
@@ -23,10 +24,11 @@ const cookie = {
 }
 
 /* CONNECT TO MONGODB */
-db.on('error', console.error.bind(console, 'connection error:'))
-db.once('open', () => {
-  console.log('Connected to MongoDB!')
-})
+// mongoose.connect(process.env.MONGODB_CONNECTION_STRING)
+// clientPromise = new Promise(function (resolve, reject) {
+//   resolve(mongoose.connection.getClient())
+//   reject(new Error('MongoClient Error'))
+// })
 
 const app = express()
 
@@ -57,8 +59,6 @@ app.use(
     cookie,
     store: MongoStore.create({
       clientPromise,
-      dbName: 'get-a-ghost',
-      stringify: false,
     }),
   })
 )
@@ -77,6 +77,7 @@ passport.deserializeUser(Account.deserializeUser())
 /* ROUTES */
 app.use('/ghosts', ghostsRouter)
 app.use('/auth', authRouter)
+app.use('/users', usersRouter)
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
