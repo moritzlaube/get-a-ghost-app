@@ -6,11 +6,12 @@ const passportLocalMongoose = require('passport-local-mongoose')
 const { Schema } = mongoose
 
 const accountSchema = new Schema({
-  role: {
+  profile: {
     type: Schema.Types.ObjectId,
-    refPath: 'roleModel',
+    refPath: 'role',
+    autopopulate: true,
   },
-  roleModel: {
+  role: {
     type: String,
     enum: ['User', 'Ghost'],
   },
@@ -30,5 +31,6 @@ accountSchema.plugin(passportLocalMongoose, {
   usernameField: 'email',
   usernameLowerCase: true,
 })
+accountSchema.plugin(require('mongoose-autopopulate'))
 
 module.exports = mongoose.model('Account', accountSchema)
