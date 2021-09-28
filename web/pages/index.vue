@@ -10,18 +10,14 @@
       form(@submit.prevent="onSubmit")
         div
           p Find me a
-          BaseSelect(label="Find Ghostwriter or Moodscout")
-            option(disabled selected) Select profession ...
-            option Ghostwriter
-            option Moodcscout
-            option Both
+          BaseSelect(label="Find Ghostwriter or Moodscout" placeholder="Select a profession" id="profession" tabindex="0" :options="['Ghostwriter', 'Moodscout', 'Both']")
 
         div
           p writing in
-          BaseSelect(label="Select language")
-            option(disabled selected) Select language ...
-            option german
-            option english
+          //- BaseSelect(label="Select language")
+          //-   option(disabled selected) Select language ...
+          //-   option german
+          //-   option english
 
         div
           p available on
