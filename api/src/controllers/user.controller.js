@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 exports.getUser = (req, res) => {
   const user = {
     account_id: req.user._id,
@@ -13,7 +14,7 @@ exports.getUser = (req, res) => {
     },
   }
 
-  return res.status(200).json({
+  res.status(200).json({
     ok: true,
     data: user,
   })
