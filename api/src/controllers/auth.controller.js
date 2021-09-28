@@ -33,7 +33,11 @@ exports.registerUser = async (req, res) => {
     )
 
     // Send mail via SG with PIN to verify email
-    await sendMail(email, verificationPIN)
+    try {
+      await sendMail(email, verificationPIN)
+    } catch (error) {
+      console.error('Sendgrid Error', error.message)
+    }
 
     // Create a new User instance and link it to new Account
     const createdUser = await User.create({
@@ -109,9 +113,9 @@ exports.verifyInvite = async (req, res) => {
     if (!hasToken || hasAccount)
       return res.status(404).json({ ok: false, message: 'Wrong Token or Account with that email already exists' })
 
-    const token = await Account.find({ token })
-    token.verfied = true
-    await token.save()
+    const returnedToken = await Account.find({ token })
+    returnedToken.verfied = true
+    await returnedToken.save()
 
     return res.status(200).json({ ok: true, data: { email }, message: 'Token verified' })
   } catch (error) {
