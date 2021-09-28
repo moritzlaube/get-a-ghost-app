@@ -1,69 +1,69 @@
 <template lang="pug">
-    div
-        label.sr-only(:for="id") {{ label }}
-        div.select
-            select(:id="id")
-                slot
+  div
+    label.sr-only(:for="id") {{ label }}
+    div.select(:tabindex="tabindex" :placeholder="placeholder" @blur="open = false" @click="open = !open" :id="id")
+      div.select__selected(:class="{ 'select--open': open }") {{ selected_option ? selected_option : placeholder }}
+      div.options(:class="{ 'select--hide': !open }")
+        div(v-for="(option, i) in options" :key="i" @click="selected_option = option; open = false; $emit('input', option)") {{ option }}
 </template>
 
 <script>
 export default {
   name: 'BaseSelect',
-  inheritAttrs: false,
   props: {
     label: {
       type: String,
       default: 'Label',
     },
-    value: {
+    placeholder: {
       type: String,
-      default: '',
+      required: true,
+    },
+    options: {
+      type: Array,
+      required: true,
     },
     id: {
       type: String,
-      default: '',
+      required: true,
     },
+    tabindex: {
+      type: Number,
+      default: 0,
+    },
+  },
+  data() {
+    return {
+      open: false,
+      selected_option: null,
+    }
   },
 }
 </script>
 
 <style lang="scss" scoped>
-// Reset select element
-select {
-  // A reset of styles, including removing the default dropdown arrow
-  appearance: none;
-  // Additional resets for further consistency
-  border: none;
-  background-color: transparent;
-  margin: 0;
-  width: 100%;
-  font-family: inherit;
-  font-size: inherit;
-  cursor: inherit;
-  line-height: inherit;
-  color: inherit;
-}
-
-select::-ms-expand {
-  display: none;
-}
-
-select:focus {
-  outline: none;
-}
-
-// style select element
 .select {
-  display: flex;
+  position: relative;
   width: 100%;
   box-shadow: 5px 5px 12px var(--shadow-dark),
     -5px -5px 12px var(--shadow-light);
   border-radius: 10px;
+  border: 1px solid red;
   padding: var(--space-xs) 35px var(--space-xs) var(--space-sm);
   background-image: url('@/assets/images/arrow-down.svg');
   background-repeat: no-repeat;
   background-position: right var(--space-sm) top 50%;
   cursor: pointer;
   color: var(--text-mid-grey);
+}
+
+.select .options {
+  background-color: var(--bg-dark-grey);
+  border-radius: 10px;
+  padding: var(--space-xs) 35px var(--space-xs) var(--space-sm);
+}
+
+.select--hide {
+  display: none;
 }
 </style>
