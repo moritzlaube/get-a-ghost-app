@@ -15,6 +15,7 @@ div.container.register-page
 export default {
   name: 'RegisterPage',
   auth: false,
+  middleware: 'guest',
   data() {
     return {
       form: {},
@@ -23,6 +24,7 @@ export default {
       currentStep: 1,
     }
   },
+
   methods: {
     processStep(stepData) {
       Object.assign(this.form, stepData)
