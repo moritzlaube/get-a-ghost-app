@@ -10,14 +10,11 @@
       form(@submit.prevent="onSubmit")
         div
           p Find me a
-          BaseSelect(label="Find Ghostwriter or Moodscout" placeholder="Select a profession" id="profession" tabindex="0" :options="['Ghostwriter', 'Moodscout', 'Both']")
+          BaseSelect(label="Find Ghostwriter or Moodscout" placeholder="Select a profession ..." id="profession" tabindex="0" :options="['Ghostwriter', 'Moodscout', 'All-in-1']" @input="handleSelect")
 
         div
           p writing in
-          //- BaseSelect(label="Select language")
-          //-   option(disabled selected) Select language ...
-          //-   option german
-          //-   option english
+          BaseSelect(label="Select a language" placeholder="Select a language" id="language" tabindex="0" :options="['English', 'German', 'French']" @input="handleSelect")
 
         div
           p available on
@@ -44,6 +41,9 @@ export default {
     ...mapGetters(['isAuthenticated', 'loggedInUser']),
   },
   methods: {
+    handleSelect(payload) {
+      Object.assign(this.form, payload)
+    },
     async onsubmit() {},
     async logout() {
       await this.$auth.logout()
