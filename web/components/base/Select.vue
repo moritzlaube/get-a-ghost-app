@@ -2,9 +2,11 @@
   div
     label.sr-only(:for="id") {{ label }}
     div.select(:tabindex="tabindex" :placeholder="placeholder" @blur="open = false" @click="open = !open" :id="id")
-      div.select__selected(:class="{ 'select--open': open }") {{ selected_option ? selected_option : placeholder }}
+      div.flex
+        div.select__selected(:class="{ 'select--open': open }") {{ selected_option ? selected_option : placeholder }}
+        <svg width="10" height="8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.8.8 5 4.8 1.2.8 0 2l5 5.2L10 2 8.8.8Z" fill="#C4C4C4"/></svg>
       div.options(:class="{ 'select--hide': !open }")
-        div(v-for="(option, i) in options" :key="i" @click="selected_option = option; open = false; $emit('input', option)") {{ option }}
+        div(v-for="(option, i) in options" :key="i" @click="selected_option = option; $emit('input', option)") {{ option }}
 </template>
 
 <script>
@@ -43,27 +45,44 @@ export default {
 
 <style lang="scss" scoped>
 .select {
-  position: relative;
   width: 100%;
   box-shadow: 5px 5px 12px var(--shadow-dark),
     -5px -5px 12px var(--shadow-light);
   border-radius: 10px;
   border: 1px solid red;
-  padding: var(--space-xs) 35px var(--space-xs) var(--space-sm);
-  background-image: url('@/assets/images/arrow-down.svg');
   background-repeat: no-repeat;
   background-position: right var(--space-sm) top 50%;
   cursor: pointer;
   color: var(--text-mid-grey);
 }
 
+.select__selected {
+  padding: var(--space-xs);
+
+  & + svg {
+    display: block;
+    margin: var(--space-xs);
+  }
+}
+
 .select .options {
   background-color: var(--bg-dark-grey);
   border-radius: 10px;
-  padding: var(--space-xs) 35px var(--space-xs) var(--space-sm);
+  max-height: 500px;
 }
 
-.select--hide {
-  display: none;
+.select .options > * {
+  padding: 0.25rem var(--space-xs);
+}
+
+.select .options.select--hide {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>
