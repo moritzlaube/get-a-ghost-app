@@ -30,8 +30,8 @@ export default {
       required: true,
     },
     tabindex: {
-      type: Number,
-      default: 0,
+      type: String,
+      default: '0',
     },
   },
   data() {
