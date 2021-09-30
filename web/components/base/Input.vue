@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     label.sr-only(:for="id") {{ label }}
-    input(v-bind="$attrs" :id="id" :value="value" @input="$emit('input', $event.target.value)")
+    input(v-bind="$attrs" :id="id" :value="value" v-on="customListeners")
 </template>
 
 <script>
@@ -20,6 +20,16 @@ export default {
     id: {
       type: String,
       default: '',
+    },
+  },
+  computed: {
+    customListeners() {
+      return {
+        ...this.$listeners,
+        input: (e) => {
+          this.$emit('input', e.target.value)
+        },
+      }
     },
   },
 }
