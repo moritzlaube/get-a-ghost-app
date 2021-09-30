@@ -15,10 +15,16 @@
         div
           p writing in
           BaseSelect(label="Select a language" placeholder="Select a language" id="language" tabindex="0" :options="['English', 'German', 'French']" @input="handleSelect")
-
-        div
-          p available on
-
+        
+        client-only
+          div
+            p available on
+            v-date-picker(v-model="form.range" mode="date" color="pink" is-dark is-range)
+              template(v-slot="{ inputValue, inputEvents, isDragging }")
+                div
+                  BaseInput(:value="inputValue.start" v-on="inputEvents.start" placeholder="Start Date")
+                div
+                  BaseInput(:value="inputValue.end" v-on="inputEvents.end" placeholder="End Date")
       pre 
         code {{isAuthenticated}}
         br
@@ -34,7 +40,12 @@ export default {
   auth: false,
   data() {
     return {
-      form: {},
+      form: {
+        range: {
+          start: null,
+          end: null,
+        },
+      },
     }
   },
   computed: {
