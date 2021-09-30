@@ -1,6 +1,6 @@
+const { isWithinInterval, parseISO } = require('date-fns')
 const Ghost = require('../models/ghost.model')
 const Account = require('../models/account.model')
-const { isWithinInterval, parseISO } = require('date-fns')
 
 exports.getAllGhosts = async (req, res) => {
   let ghosts
@@ -10,7 +10,7 @@ exports.getAllGhosts = async (req, res) => {
     if (Object.keys(req.query).length === 0 && req.query.constructor === Object) {
       ghosts = await Ghost.find()
     } else {
-      //otherwise use query params to query db
+      // otherwise use query params to query db
       const { type, startDate, endDate, language } = req.query
       if (typeof type === 'string') {
         if (type === 'ghostwriter' && language !== undefined) {
@@ -26,14 +26,13 @@ exports.getAllGhosts = async (req, res) => {
 
       if (startDate && endDate) {
         // check if startDate && endDate are within blocked date range and filter ghosts accordingly
-        ghosts = ghosts.filter(ghost => {
-          return ghost.blocked.every(({ start, end }) => {
-            return (
+        ghosts = ghosts.filter(ghost =>
+          ghost.blocked.every(
+            ({ start, end }) =>
               !isWithinInterval(parseISO(startDate), { start, end }) &&
               !isWithinInterval(parseISO(endDate), { start, end })
-            )
-          })
-        })
+          )
+        )
       }
     }
 
@@ -53,12 +52,12 @@ exports.getAllGhosts = async (req, res) => {
 }
 
 exports.getGhostById = async (req, res) => {
-  const id = req.params.id
+  const { id } = req.params
 
   try {
-    const ghost = await Ghost.findById(id)
+    const ghost = await Ghost.findById(id, 'getEssentialData')
 
-    return res.status(200).json({ ok: true, data: ghost.getEssentialData })
+    return res.status(200).json({ ok: true, data: ghost })
   } catch (error) {
     return res.status(500).json({ ok: false, error })
   }
@@ -91,7 +90,7 @@ exports.createGhost = async (req, res) => {
 exports.updateGhost = async (req, res) => {
   // TODO Check parameter and then update object one by one
   // ex: ghost.name.first = 'Max'
-  const id = req.params.id
+  const { id } = req.params
 
   if (req.user.role !== req.params.id) return res.status(401).json({ ok: false, message: 'Unauthorized' })
 
