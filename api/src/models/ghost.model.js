@@ -32,6 +32,8 @@ const ghostSchema = new Schema(
       zip: String,
       country: String,
     },
+    categories: [],
+    timezone: String,
     language: [
       {
         type: String,
@@ -233,13 +235,5 @@ const ghostSchema = new Schema(
     timestamps: { createdAt: 'createdAt', updatedAt: 'modifiedAt' },
   }
 )
-
-ghostSchema.virtual('getPublicData').get(function () {
-  return {
-    id: this._id,
-    name: `${this.name.first} ${this.name.last}`,
-    type: this.type,
-  }
-})
 
 module.exports = mongoose.model('Ghost', ghostSchema)
