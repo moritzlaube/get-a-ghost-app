@@ -1,7 +1,9 @@
 <template lang="pug">
-  div
+  div.input-container
     label.sr-only(:for="id") {{ label }}
-    input(v-bind="$attrs" :id="id" :value="value" v-on="customListeners")
+    i(v-if="icon")
+      slot(name="icon")
+    input(v-bind="$attrs" :id="id" :value="value" v-on="customListeners" :class="{ 'input--icon': icon }")
 </template>
 
 <script>
@@ -21,6 +23,10 @@ export default {
       type: String,
       default: '',
     },
+    icon: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     customListeners() {
@@ -36,6 +42,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.input-container {
+  position: relative;
+}
+
 input {
   background-color: var(--bg-dark-grey);
   box-shadow: var(--box-shadow);
@@ -46,7 +56,21 @@ input {
   color: var(--text-light);
 }
 
-input:-webkit-autofill,
+.input--icon {
+  padding-left: 36px;
+}
+
+.input-container i {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  width: 16px;
+  color: var(--text-light);
+}
+
+input input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
