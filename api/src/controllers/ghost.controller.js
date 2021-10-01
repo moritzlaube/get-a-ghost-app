@@ -8,20 +8,27 @@ exports.getAllGhosts = async (req, res) => {
   try {
     // if no query params present, get all ghosts
     if (Object.keys(req.query).length === 0 && req.query.constructor === Object) {
-      ghosts = await Ghost.find()
+      ghosts = await Ghost.find({}, 'ghostName type phone categories language blocked timezone').lean()
     } else {
       // otherwise use query params to query db
-      const { type, startDate, endDate, language } = req.query
-      if (typeof type === 'string') {
+      const { type, startDate, endDate, language, category } = req.query
+
+      if (type !== 'all-in-1') {
         if (type === 'ghostwriter' && language !== undefined) {
-          ghosts = await Ghost.find().where('type').in([type]).where('language').in([language])
+          ghosts = await Ghost.find(
+            { type, language },
+            'ghostName type phone categories language blocked timezone'
+          ).lean()
         } else {
-          ghosts = await Ghost.find().where('type').in([type])
+          ghosts = await Ghost.find({ type }, 'ghostName type phone categories language blocked timezone').lean()
         }
       } else {
-        ghosts = await Ghost.find()
-          .where('type')
-          .in([...type])
+        ghosts = await Ghost.find({ type }, 'ghostName type phone categories language blocked timezone').lean()
+      }
+
+      // filter by category
+      if (category) {
+        ghosts = ghosts.filter(ghost => ghost.categories.includes(category))
       }
 
       if (startDate && endDate) {
@@ -113,6 +120,8 @@ exports.updateGhost = async (req, res) => {
 }
 
 exports.init = async (req, res) => {
+  const localTimezone = 'Europe/Berlin'
+
   await Ghost.insertMany([
     {
       type: ['ghostwriter', 'moodscout'],
@@ -122,6 +131,9 @@ exports.init = async (req, res) => {
       },
       ghostName: 'Schrulchen',
       language: ['de', 'en'],
+      phone: '+491703301300',
+      categories: ['people', 'slice-of-life'],
+      timezone: localTimezone,
       blocked: [
         {
           start: new Date(2021, 1, 10),
@@ -148,6 +160,9 @@ exports.init = async (req, res) => {
         last: 'Gsänger',
       },
       language: ['de'],
+      phone: '+491703301300',
+      categories: [],
+      timezone: localTimezone,
       blocked: [
         {
           start: new Date(2021, 3, 22),
@@ -174,6 +189,9 @@ exports.init = async (req, res) => {
         last: 'Werner',
       },
       language: [],
+      phone: '+491703301300',
+      categories: ['people', 'cars', 'table-top'],
+      timezone: localTimezone,
       blocked: [
         {
           start: new Date(2021, 3, 22),
