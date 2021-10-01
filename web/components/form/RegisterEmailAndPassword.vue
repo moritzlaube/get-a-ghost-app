@@ -3,7 +3,7 @@
     fieldset.flow
       BaseInput(type="email" id="email" name="email" v-model="form.email" placeholder="Email" label="Email")
       BaseInput(type="password" id="password" name="password" v-model="form.password" placeholder="Password" label="Password")
-    BaseButton(type="button" @click="nextStep").mt-xxl NEXT
+    BaseButton(type="button" @click="nextStep").mt-xxl.has-shadow NEXT
 </template>
 
 <script>

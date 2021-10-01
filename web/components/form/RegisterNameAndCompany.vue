@@ -5,7 +5,7 @@
       BaseInput(type="text" id="lname" name="lname" v-model="form.name.last" placeholder="Last Name" label="Last Name")
       BaseInput(type="text" id="company" name="company" v-model="form.company" placeholder="Company (optional)" label="Company")
       BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="+491511234567" label="Phone")
-    BaseButton(type="submit").mt-xxl REGISTER
+    BaseButton(type="submit").mt-xxl.has-shadow REGISTER
 </template>
 
 <script>

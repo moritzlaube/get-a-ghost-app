@@ -2,7 +2,7 @@
   div.flow
     div.vue-pincode-wrapper
         PincodeInput(v-model="code" placeholder="·" @input="onFormInput")
-    BaseButton(type="button" @click="onSubmit") VERIFY
+    BaseButton(type="button" @click="onSubmit").has-shadow VERIFY
 </template>
 
 <script>

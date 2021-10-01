@@ -1,6 +1,6 @@
 <template lang="pug">
-    div.profile
-        div.profile__initials
+    .profile
+        .profile__initials
             slot
 </template>
 
