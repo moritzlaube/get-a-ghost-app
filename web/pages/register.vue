@@ -14,8 +14,7 @@ div.container.register-page
 <script>
 export default {
   name: 'RegisterPage',
-  auth: false,
-  middleware: 'guest',
+  auth: 'guest',
   data() {
     return {
       form: {},
