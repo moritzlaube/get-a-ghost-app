@@ -52,7 +52,13 @@ exports.getAllGhosts = async (req, res) => {
       })
     }
 
-    return res.status(200).json({ ok: true, data: ghosts })
+    // Strip out blocked dates
+    const ghostsStripped = ghosts.map(ghost => {
+      const { blocked, ...rest } = ghost
+      return rest
+    })
+
+    return res.status(200).json({ ok: true, data: ghostsStripped })
   } catch (error) {
     return res.status(500).json({ ok: false, error })
   }
