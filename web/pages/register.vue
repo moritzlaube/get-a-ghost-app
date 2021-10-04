@@ -14,7 +14,8 @@ div.container.register-page
 <script>
 export default {
   name: 'RegisterPage',
-  auth: 'guest',
+  auth: false,
+  layout: 'onboarding',
   data() {
     return {
       form: {},
