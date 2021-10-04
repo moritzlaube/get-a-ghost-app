@@ -37,8 +37,7 @@ button.has-shadow {
     -5px -5px 12px var(--shadow-light);
 }
 
-form.loading button span,
-div.loading button span {
+.loading button span {
   visibility: hidden;
   opacity: 0;
 }
@@ -56,7 +55,7 @@ div.loading button span {
   bottom: 0;
 }
 
-form.loading button .spinner {
+.loading button .spinner {
   visibility: visible;
   opacity: 1;
 }
