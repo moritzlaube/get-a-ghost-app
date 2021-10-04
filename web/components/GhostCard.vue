@@ -1,20 +1,23 @@
 <template lang="pug">
-  li.card.flow
-    .card__top
-      div
+  li.card(ref="card" :class="{ loading: Card.request.pending }")
+    .card__top(@click="expand")
+      div.flow
         h2.card__name {{ ghost.ghostName }}
         .card__type {{ uppercaseFirstLetter(ghost.type).join(' & ') }}
-      i 
+      BaseButton(v-if="expanded" @click.stop="handleRequest") Request
+      i(v-else)
         svg(xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#FFF")
           path(d="M0 0h24v24H0V0z" fill="none")
           path(d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z")
-    .card__content.flow
-      .card__content__section
-        h3.subtitle About
-        p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus nisi, cursus porta fames faucibus sed volutpat pulvinar fames.   
-      .card__content__section
-        h3.subtitle Tags
-        p {{ uppercaseFirstLetter(ghost.categories).join(', ') }}
+    transition(name="expand" @enter="enter" @leave="leave")
+      div(v-show="expanded").card__content.flow
+        .card__content__section.flow
+          h3.subheading About
+          p {{ ghost.about }}
+        .card__content__section.flow
+          .subheading Tags:
+            span &nbsp;{{ uppercaseFirstLetter(ghost.categories).join(', ') }}
+    transition
     .card__bottom.mt-sm
         div.timezone 
           svg(width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg")
@@ -29,13 +32,22 @@
 <script>
 export default {
   name: 'GhostCard',
+  inject: ['Card'],
   props: {
     ghost: {
       type: Object,
       required: true,
     },
   },
+  data() {
+    return {
+      collapsedCardHeight: null,
+    }
+  },
   computed: {
+    expanded() {
+      return this.ghost._id === this.Card.active
+    },
     availableDates() {
       const { startDate, endDate } = this.$route.query
       const start = new Date(startDate).toLocaleDateString('en-En', {})
@@ -44,6 +56,33 @@ export default {
     },
   },
   methods: {
+    handleRequest() {
+      this.Card.request.pending = true
+
+      // ping backend to send request with ghostId
+
+      this.Card.request = {
+        pending: false,
+        success: true,
+        ghost: this.ghost,
+      }
+    },
+    expand() {
+      if (this.expanded) {
+        this.Card.active = null
+      } else {
+        this.Card.active = this.ghost._id
+      }
+    },
+    enter(el) {
+      el.style.height = el.scrollHeight + 'px'
+      el.style.marginTop = '1rem'
+      el.style.visibility = 'visible'
+    },
+    leave(el) {
+      el.style.height = ''
+      el.style.marginTop = ''
+    },
     uppercaseFirstLetter(a) {
       return a.map((el) => el.charAt(0).toUpperCase() + el.slice(1))
     },
@@ -60,10 +99,34 @@ export default {
   padding: var(--space-md);
 }
 
+.card__content {
+  font-size: var(--text-sm);
+  height: 0;
+  visibility: hidden;
+  overflow: hidden;
+  display: block !important;
+
+  & .subheading {
+    font-weight: var(--fw-regular);
+    font-size: var(--text-sm);
+    color: var(--clr-pink);
+  }
+}
+
+.card__content__section.flow > * {
+  --flow-spacer: 0.25rem;
+}
+
+.card__content__section span {
+  color: var(--text-mid-grey);
+}
+
 .card__top {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+
+  --flow-spacer: 0.25rem;
 }
 
 .card__top button {
@@ -101,5 +164,17 @@ export default {
 .card__bottom .available svg,
 .card__bottom .timezone svg {
   margin-right: 0.5rem;
+}
+
+.expand-enter,
+.expand-leave-to {
+  opacity: 0;
+}
+
+.expand-enter-active,
+.expand-leave-active {
+  will-change: height, opacity, margin;
+  transition: height 0.25s ease-out, opacity 0.25s ease-out,
+    margin 0.25s ease-out;
 }
 </style>
