@@ -1,10 +1,20 @@
 <template lang="pug">
-  li.card
+  li.card.flow
     .card__top
       div
-        .card__name {{ ghost.ghostName }}
-        .card__type {{ uppercaseFirstLetter.join(' & ') }}
-      BaseButton Request
+        h2.card__name {{ ghost.ghostName }}
+        .card__type {{ uppercaseFirstLetter(ghost.type).join(' & ') }}
+      i 
+        svg(xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#FFF")
+          path(d="M0 0h24v24H0V0z" fill="none")
+          path(d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z")
+    .card__content.flow
+      .card__content__section
+        h3.subtitle About
+        p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus nisi, cursus porta fames faucibus sed volutpat pulvinar fames.   
+      .card__content__section
+        h3.subtitle Tags
+        p {{ uppercaseFirstLetter(ghost.categories).join(', ') }}
     .card__bottom.mt-sm
         div.timezone 
           svg(width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg")
@@ -26,16 +36,16 @@ export default {
     },
   },
   computed: {
-    uppercaseFirstLetter() {
-      return this.ghost.type.map(
-        (el) => el.charAt(0).toUpperCase() + el.slice(1)
-      )
-    },
     availableDates() {
       const { startDate, endDate } = this.$route.query
       const start = new Date(startDate).toLocaleDateString('en-En', {})
       const end = new Date(endDate).toLocaleDateString('en-En', {})
       return `${start} - ${end}`
+    },
+  },
+  methods: {
+    uppercaseFirstLetter(a) {
+      return a.map((el) => el.charAt(0).toUpperCase() + el.slice(1))
     },
   },
 }
@@ -53,10 +63,17 @@ export default {
 .card__top {
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
 }
 
 .card__top button {
   width: min-content;
+}
+
+.card__top i {
+  display: flex;
+  padding: 6px 0 6px 10px;
+  height: min-content;
 }
 
 .card__name {
