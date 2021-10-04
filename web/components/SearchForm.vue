@@ -1,12 +1,12 @@
 <template lang="pug">
   div.container.flow
     p Find all the availabe Ghosts for a given timeframe. If your dates are flexible, please check the appropriate box.
-    form.flow(@submit.prevent="onSubmit")
+    form(@submit.prevent="onSubmit" :class="{ loading: isLoading }").flow
       div
         p Find me a ...
         BaseSelect(label="Find Ghostwriter or Moodscout" placeholder="Select a profession ..." :id="'profession'" tabindex="0" :options="['Ghostwriter', 'Moodscout', 'All-in-1']" @input="handleSelect")
 
-      div(v-if="form.profession === 'Ghostwriter'")
+      div(v-if="form.profession === 'Ghostwriter' || form.profession === 'All-in-1'")
         p writing in ...
         BaseSelect(label="Select a language" placeholder="Select a language" :id="'language'" tabindex="0" :options="['English', 'German', 'French']" @input="handleSelect")
     
@@ -40,6 +40,7 @@ export default {
   name: 'SearchForm',
   data() {
     return {
+      isLoading: false,
       form: {
         profession: null,
         language: null,
@@ -69,6 +70,8 @@ export default {
         this.form.language = null
     },
     onSubmit() {
+      this.loading = true
+
       const SHORTCODES = {
         english: 'en',
         german: 'de',
