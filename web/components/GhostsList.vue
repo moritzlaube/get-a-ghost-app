@@ -9,7 +9,9 @@
         p Your available Ghosts. Click on the card for more info. Or tap the button  to send a request.
         transition-group(name="list" tag="ul" :css="false" @before-enter="beforeEnter" @enter="enter").flow
           GhostCard(v-for="(ghost, index) in ghosts" :key="ghost._id" :ghost="ghost" :data-index="index")
-    code {{ghosts}}
+    NotificationModal(v-if="Card.request.success")
+      template(#heading) Thanks for your interest in this Ghost!
+      template(#content) We have notified #[span {{ Card.request.ghost.ghostName }}] of your request. 
 </template>
 
 <script>
@@ -17,11 +19,22 @@ import { gsap } from 'gsap'
 
 export default {
   name: 'GhostsList',
+  provide() {
+    return { Card: this.Card }
+  },
   layout: 'onboarding',
   data() {
     return {
-      response: '',
+      requestedGhost: null,
       ghosts: [],
+      Card: {
+        active: null,
+        request: {
+          ghost: null,
+          pending: false,
+          success: null,
+        },
+      },
     }
   },
   async fetch() {
@@ -36,6 +49,9 @@ export default {
   //   '$route.query': '$fetch',
   // },
   methods: {
+    handleClick(index) {
+      this.clickedCard = index
+    },
     beforeEnter(el) {
       el.style.opacity = 0
       el.style.transform = 'translateY(10px)'
