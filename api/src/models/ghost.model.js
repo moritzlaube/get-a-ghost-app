@@ -33,6 +33,7 @@ const ghostSchema = new Schema(
       country: String,
     },
     categories: [],
+    about: String,
     timezone: String,
     language: [
       {
