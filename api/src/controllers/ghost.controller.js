@@ -8,7 +8,7 @@ exports.getAllGhosts = async (req, res) => {
   try {
     // if no query params present, get all ghosts
     if (Object.keys(req.query).length === 0 && req.query.constructor === Object) {
-      ghosts = await Ghost.find({}, 'ghostName type phone categories language blocked timezone').lean()
+      ghosts = await Ghost.find({}, 'ghostName type categories language blocked timezone about').lean()
     } else {
       // otherwise use query params to query db
       const { type, startDate, endDate, language, category } = req.query
@@ -17,13 +17,21 @@ exports.getAllGhosts = async (req, res) => {
         if (type === 'ghostwriter' && language !== undefined) {
           ghosts = await Ghost.find(
             { type, language },
-            'ghostName type phone categories language blocked timezone'
+            'ghostName type categories language blocked timezone about'
           ).lean()
         } else {
-          ghosts = await Ghost.find({ type }, 'ghostName type phone categories language blocked timezone').lean()
+          ghosts = await Ghost.find({ type }, 'ghostName type categories language blocked timezone about').lean()
         }
+      } else if (type === 'all-in-1' && language !== undefined) {
+        ghosts = await Ghost.find(
+          { type: ['ghostwriter', 'moodscout'], language },
+          'ghostName type categories language blocked timezone about'
+        ).lean()
       } else {
-        ghosts = await Ghost.find({ type }, 'ghostName type phone categories language blocked timezone').lean()
+        ghosts = await Ghost.find(
+          { type: ['ghostwriter', 'moodscout'] },
+          'ghostName type categories language blocked timezone about'
+        ).lean()
       }
 
       // filter by category
@@ -140,6 +148,8 @@ exports.init = async (req, res) => {
       phone: '+491703301300',
       categories: ['people', 'slice-of-life'],
       timezone: localTimezone,
+      about:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus nisi, cursus porta fames faucibus sed volutpat pulvinar fames.',
       blocked: [
         {
           start: new Date(2021, 1, 10),
@@ -169,6 +179,7 @@ exports.init = async (req, res) => {
       phone: '+491703301300',
       categories: [],
       timezone: localTimezone,
+      about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus nisi, cursus porta.',
       blocked: [
         {
           start: new Date(2021, 3, 22),
@@ -198,6 +209,7 @@ exports.init = async (req, res) => {
       phone: '+491703301300',
       categories: ['people', 'cars', 'table-top'],
       timezone: localTimezone,
+      about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       blocked: [
         {
           start: new Date(2021, 3, 22),
