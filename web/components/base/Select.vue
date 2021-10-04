@@ -4,7 +4,7 @@
     .select(ref="select" :tabindex="tabindex" :placeholder="placeholder" :class="{ 'select--open': open }" @blur="open = false" @click="open = !open" :id="id")
       .flex
         .select__selected {{ selected_option ? selected_option : placeholder }}
-        dv.arrow(:class="{ open: open }")
+        .arrow(:class="{ open: open }")
           <svg width="10" height="8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.8.8 5 4.8 1.2.8 0 2l5 5.2L10 2 8.8.8Z" fill="#C4C4C4"/></svg>
       transition(name="expand" @before-enter="beforeEnter" @enter="enter" @leave="leave")
         .options(v-if="open")
