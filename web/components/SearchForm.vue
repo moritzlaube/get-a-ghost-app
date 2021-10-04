@@ -61,9 +61,12 @@ export default {
       },
     }
   },
+
   methods: {
     handleSelect(payload) {
       Object.assign(this.form, payload)
+      if (this.form.profession === 'Moodscout' && this.form.language !== null)
+        this.form.language = null
     },
     onSubmit() {
       const SHORTCODES = {
@@ -86,7 +89,7 @@ export default {
           .reduce((a, k) => ({ ...a, [k]: queryModel[k] }), {})
       )
 
-      this.$router.push('/search?' + query)
+      this.$router.push('/ghosts?' + query)
     },
   },
 }
