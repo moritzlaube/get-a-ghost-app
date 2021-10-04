@@ -1,7 +1,6 @@
 <template lang="pug">
   div
     GhostsList
-    NuxtChild
 </template>
 
 <script>
