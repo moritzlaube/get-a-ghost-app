@@ -7,7 +7,7 @@ const passport = require('passport')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 
-const clientPromise = require('./config/database') // automatically connects to db through config/database.js
+const client = require('./config/database') // automatically connects to db through config/database.js
 
 const Account = require('./models/account.model')
 
@@ -51,7 +51,7 @@ app.use(
     resave: false, // don't save session if unmodified
     cookie,
     store: MongoStore.create({
-      clientPromise,
+      client,
     }),
   })
 )
