@@ -1,22 +1,13 @@
 <template lang="pug">
   div 
     SearchForm
-    pre 
-      code {{isAuthenticated}}
-      br
-      code {{loggedInUser}}
     button(@click="logout") Logout
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'Homepage',
   auth: false,
-  computed: {
-    ...mapGetters(['isAuthenticated', 'loggedInUser']),
-  },
   methods: {
     async logout() {
       await this.$auth.logout()
