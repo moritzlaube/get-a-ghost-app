@@ -9,13 +9,16 @@
         p Your available Ghosts. Click on the card for more info. Or tap the button  to send a request.
         transition-group(name="list" tag="ul" :css="false" @before-enter="beforeEnter" @enter="enter").flow
           GhostCard(v-for="(ghost, index) in ghosts" :key="ghost._id" :ghost="ghost" :data-index="index")
-    NotificationModal(v-if="Card.request.success")
+    NotificationModal(v-if="modalIsOpen")
       template(#heading) Thanks for your interest in this Ghost!
       template(#content) We have notified #[span {{ Card.request.ghost.ghostName }}] of your request. 
+      template(#button)
+        BaseButton(@click="modalIsOpen=false") GOT IT!
 </template>
 
 <script>
 import { gsap } from 'gsap'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'GhostsList',
@@ -25,14 +28,15 @@ export default {
   layout: 'onboarding',
   data() {
     return {
-      requestedGhost: null,
       ghosts: [],
+      modalIsOpen: false,
       Card: {
         active: null,
         request: {
           ghost: null,
           pending: false,
           success: null,
+          error: null,
         },
       },
     }
@@ -45,12 +49,22 @@ export default {
     this.ghosts = data.data
   },
   fetchOnServer: false,
-  // watch: {
-  //   '$route.query': '$fetch',
-  // },
+  computed: {
+    ...mapGetters(['isAuthenticated', 'loggedInUser']),
+  },
+  watch: {
+    'Card.request.pending': 'handleRequest',
+  },
   methods: {
-    handleClick(index) {
-      this.clickedCard = index
+    handleRequest(newVal, oldVal) {
+      // send request to backend including data of requesting user
+
+      // if successful set Card.request.pending = false und succes = true
+      setTimeout(() => {
+        this.Card.request.pending = false
+        this.modalIsOpen = true
+        this.Card.request.success = true
+      }, 1000)
     },
     beforeEnter(el) {
       el.style.opacity = 0

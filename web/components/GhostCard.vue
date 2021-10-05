@@ -39,11 +39,6 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      collapsedCardHeight: null,
-    }
-  },
   computed: {
     expanded() {
       return this.ghost._id === this.Card.active
@@ -58,14 +53,7 @@ export default {
   methods: {
     handleRequest() {
       this.Card.request.pending = true
-
-      // ping backend to send request with ghostId
-
-      this.Card.request = {
-        pending: false,
-        success: true,
-        ghost: this.ghost,
-      }
+      this.Card.request.ghost = this.ghost
     },
     expand() {
       if (this.expanded) {

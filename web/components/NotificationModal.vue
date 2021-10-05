@@ -5,7 +5,9 @@
       h2
         slot(name="heading")
       p
-        slot(name="content")
+        slot(name="content") 
+      div
+        slot(name="button")
 </template>
 
 <script>
