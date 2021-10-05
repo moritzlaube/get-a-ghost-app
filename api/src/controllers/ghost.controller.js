@@ -60,8 +60,14 @@ exports.getAllGhosts = async (req, res) => {
       })
     }
 
-    // Strip out blocked dates
-    const ghostsStripped = ghosts.map(ghost => {
+    const compare = (a, b) => {
+      if (a.ghostName < b.ghostName) return -1
+      if (a.ghostName > b.ghostName) return 1
+      return 0
+    }
+
+    // Strip out blocked dates and sort
+    const ghostsStripped = ghosts.sort(compare).map(ghost => {
       const { blocked, ...rest } = ghost
       return rest
     })
