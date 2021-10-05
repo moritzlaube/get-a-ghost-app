@@ -90,6 +90,15 @@ exports.getGhostById = async (req, res) => {
   }
 }
 
+exports.requestGhost = async (req, res) => {
+  const { id: ghostId } = req.params
+  const { user } = req.body
+
+  const requestedGhost = await Ghost.findById(ghostId)
+
+  return res.status(200).json({ ok: true, data: { ghost: requestedGhost, user }, message: 'Request successful' })
+}
+
 exports.createGhost = async (req, res) => {
   const { type, name } = req.body
 
