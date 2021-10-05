@@ -1,5 +1,5 @@
 <template lang="pug">
-  li.card(ref="card" :class="{ loading: Card.request.pending }")
+  li.card(ref="card" :class="{ loading: isLoading }")
     .card__top(@click="expand")
       div.flow
         h2.card__name {{ ghost.ghostName }}
@@ -38,6 +38,10 @@ export default {
       type: Object,
       required: true,
     },
+    isLoading: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     expanded() {
@@ -52,8 +56,7 @@ export default {
   },
   methods: {
     handleRequest() {
-      this.Card.request.pending = true
-      this.Card.request.ghost = this.ghost
+      this.$emit('request', this.ghost)
     },
     expand() {
       if (this.expanded) {

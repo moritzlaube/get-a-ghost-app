@@ -8,10 +8,13 @@
       div(v-else).flow
         p Your available Ghosts. Click on the card for more info. Or tap the button  to send a request.
         transition-group(name="list" tag="ul" :css="false" @before-enter="beforeEnter" @enter="enter").flow
-          GhostCard(v-for="(ghost, index) in ghosts" :key="ghost._id" :ghost="ghost" :data-index="index")
-    NotificationModal(v-if="modalIsOpen")
+          GhostCard(v-for="(ghost, index) in ghosts" :key="ghost._id" :ghost="ghost" :data-index="index" :loading="requestingGhost" @request="handleRequest")
+    
+    NotificationModal(:open="modalIsOpen")
       template(#heading) Thanks for your interest in this Ghost!
-      template(#content) We have notified #[span {{ Card.request.ghost.ghostName }}] of your request. 
+      template(#content) 
+        p We have delivered a request to #[span(style="color: #ed408d; font-weight: 700") {{ requestedGhost.ghostName }}] and sent your contact details (email and phone) along with it. Your Ghost will get back to you shortly. 
+        p Until then, we'd like to thank you for using our services and hope to hear from you soon. Please don't hesitate to shoot as an #[a(href="mailto:hi@get-a-ghost.com") email] should you have any questions or comments.
       template(#button)
         BaseButton(@click="modalIsOpen=false") GOT IT!
 </template>
@@ -29,15 +32,11 @@ export default {
   data() {
     return {
       ghosts: [],
+      requestedGhost: null,
+      requestingGhost: false,
       modalIsOpen: false,
       Card: {
         active: null,
-        request: {
-          ghost: null,
-          pending: false,
-          success: null,
-          error: null,
-        },
       },
     }
   },
@@ -52,19 +51,21 @@ export default {
   computed: {
     ...mapGetters(['isAuthenticated', 'loggedInUser']),
   },
-  watch: {
-    'Card.request.pending': 'handleRequest',
-  },
   methods: {
-    handleRequest(newVal, oldVal) {
+    async handleRequest(ghost) {
+      this.requestingGhost = true
+      this.requestedGhost = ghost
       // send request to backend including data of requesting user
-
-      // if successful set Card.request.pending = false und succes = true
-      setTimeout(() => {
-        this.Card.request.pending = false
+      try {
+        const { data: response } = await this.$axios.post(
+          `/ghosts/${ghost._id}/request`,
+          { user: this.loggedInUser }
+        )
+        // eslint-disable-next-line no-console
+        console.log(response)
+        this.requestingGhost = true
         this.modalIsOpen = true
-        this.Card.request.success = true
-      }, 1000)
+      } catch (error) {}
     },
     beforeEnter(el) {
       el.style.opacity = 0
