@@ -62,10 +62,19 @@ app.use(passport.session())
 
 // use static authenticate method of model in LocalStrategy
 passport.use(Account.createStrategy())
-
-// use static serialize and deserialize of model for passport session support
 passport.serializeUser(Account.serializeUser())
 passport.deserializeUser(Account.deserializeUser())
+
+// use Account._id to store into session
+
+// passport.serializeUser(function (account, done) {
+//   done(null, account._id)
+// })
+// passport.deserializeUser(function (id, done) {
+//   Account.findById(id, function (err, account) {
+//     done(err, account)
+//   })
+// })
 
 /* ROUTES */
 app.use('/ghosts', ghostsRouter)
