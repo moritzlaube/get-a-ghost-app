@@ -28,6 +28,11 @@ button {
   height: min-content;
 }
 
+button:disabled {
+  background-color: var(--mid-grey);
+  cursor: not-allowed;
+}
+
 button span {
   line-height: 1;
 }
