@@ -1,20 +1,10 @@
 const User = require('../models/user.model')
+const Account = require('../models/account.model')
+const { getRandomInt } = require('../services/auth.service')
+const sendMail = require('../services/mail.service')
+
 /* eslint-disable no-underscore-dangle */
 exports.getUser = (req, res) => {
-  // const user = {
-  //   account_id: req.user._id,
-  //   email: req.user.email,
-  //   emailVerified: req.user.emailVerified,
-  //   userData: {
-  //     user_id: req.user.profile._id,
-  //     name: req.user.profile.name,
-  //     initials: req.user.profile.initials,
-  //     company: req.user.profile.company,
-  //     phone: req.user.profile.phone,
-  //     address: req.user.profile.address,
-  //   },
-  // }
-
   res.status(200).json({
     ok: true,
     data: req.user,
@@ -23,12 +13,34 @@ exports.getUser = (req, res) => {
 
 exports.updateUser = async (req, res) => {
   // destructure info from frontend and then mutate Object by user[key] = value
-  const newUserInfo = req.body
+  const { name, company, phone, email: newEmail } = req.body
   const user = await User.findById(req.user.profile.id)
 
-  const updatedUser = Object.assign(user, newUserInfo)
+  user.name = name
+  user.company = company
+  user.phone = phone
 
-  // const savedUser = await user.save()
+  const updatedUser = await user.save()
 
-  res.status(200).json({ ok: true, data: updatedUser })
+  if (req.user.email !== newEmail) {
+    const verificationPIN = getRandomInt(1000, 9999)
+    const account = await Account.findByUsername(req.user.email)
+    account.email = newEmail
+    account.emailVerified = false
+    account.verificationToken = verificationPIN
+    account.verificationTokenExpire = new Date(Date.now() + 1000 * 3600 * 24)
+    await account.save()
+
+    req.session.passport.user = newEmail
+    req.session.save()
+
+    // Send mail via SG with PIN to verify email
+    try {
+      await sendMail(newEmail, verificationPIN)
+    } catch (error) {
+      console.error('Sendgrid Error', error.message)
+    }
+  }
+
+  res.status(200).json({ ok: true, data: req.session })
 }
