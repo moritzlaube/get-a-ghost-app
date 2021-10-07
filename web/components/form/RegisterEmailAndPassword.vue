@@ -1,9 +1,9 @@
 <template lang="pug">
   form(@input="onFormInput")
     fieldset.flow
-      BaseInput(type="email" id="email" name="email" v-model="form.email" placeholder="Email" label="Email")
-      BaseInput(type="password" id="password" name="password" v-model="form.password" placeholder="Password" label="Password")
-    BaseButton(type="button" @click="nextStep").mt-xxl.has-shadow NEXT
+      BaseInput(type="email" id="email" name="email" v-model="form.email" placeholder="Email" label="Email" required)
+      BaseInput(type="password" id="password" name="password" v-model="form.password" placeholder="Password" label="Password" required)
+    BaseButton(type="button" @click="nextStep" :disabled="!(form.email && form.password)").mt-xxl.has-shadow NEXT
 </template>
 
 <script>

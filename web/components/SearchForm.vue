@@ -32,7 +32,7 @@
       div
           p Choose your preferred category
           BaseSelect(label="Choose your category" placeholder="Choose a category (optional)" id="category" tabindex="0" :options="['None', 'People', 'Cars', 'Table-top', 'Slice-of-Life']" @input="handleSelect")
-      BaseButton(type="submit").btn-mt.has-shadow GO FIND!
+      BaseButton(type="submit" :disabled="!(form.dateRange.start && form.profession)").btn-mt.has-shadow GO FIND!
 </template>
 
 <script>

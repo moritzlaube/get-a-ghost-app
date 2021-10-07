@@ -1,10 +1,10 @@
 <template lang="pug">
   form(@input="onFormInput" @submit.prevent="onSubmit")
     fieldset.flow
-      BaseInput(type="text" id="fname" name="fname" v-model="form.name.first" placeholder="First Name" label="First Name")
-      BaseInput(type="text" id="lname" name="lname" v-model="form.name.last" placeholder="Last Name" label="Last Name")
+      BaseInput(type="text" id="fname" name="fname" v-model="form.name.first" placeholder="First Name" label="First Name" required)
+      BaseInput(type="text" id="lname" name="lname" v-model="form.name.last" placeholder="Last Name" label="Last Name" required)
       BaseInput(type="text" id="company" name="company" v-model="form.company" placeholder="Company (optional)" label="Company")
-      BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="+491511234567" label="Phone")
+      BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="+491511234567" label="Phone" required)
     BaseButton(type="submit").mt-xxl.has-shadow REGISTER
 </template>
 
