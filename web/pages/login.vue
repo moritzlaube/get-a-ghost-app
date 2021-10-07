@@ -9,7 +9,8 @@ div.container.login-page
       BaseInput(type="email" id="email" name="email" v-model="email" placeholder="Email" label="Email")
       BaseInput(type="password" id="password" name="password" v-model="password" placeholder="Password" label="Password")
     BaseButton(:disabled="!(email && password)").mt-xxl.has-shadow LOG IN
-    p.mt-md.center-align No account yet? #[NuxtLink(to="/register") Register] to get started right away and get 30 days for free.
+    p.mt-md.center-align Forgot your password? Go and reset.
+    p.mt-md.center-align No account yet? #[NuxtLink(to="/register") Register] to get started right away.
 </template>
 
 <script>
@@ -20,6 +21,7 @@ export default {
     return {
       email: '',
       password: '',
+      resetPassword: false,
       isLoading: false,
       response: null,
       error: null,
