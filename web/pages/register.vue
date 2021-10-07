@@ -8,6 +8,7 @@ div.container.register-page
     FormRegisterEmailAndPassword(v-if="currentStep === 1" @update="processStep" @next="currentStep++")
     FormRegisterNameAndCompany(v-if="currentStep === 2" @update="processStep" @sendForm="registerUser" :class="{ loading: isLoading }")
     FormVerifyPIN(v-if="currentStep === 3" @update="processStep" @verify-pin="verifyPin" :class="{ loading: isLoading }")
+    p(v-if="currentStep === 3").mt-md You can #[NuxtLink(to="/") skip] this step for now and start your search immediately.
     p.mt-md.center-align(v-if="currentStep === 1") You already have an account? #[NuxtLink(to="/login") Login] instead.
 </template>
 
@@ -16,6 +17,12 @@ export default {
   name: 'RegisterPage',
   auth: false,
   layout: 'onboarding',
+  middleware({ store, redirect }) {
+    // If the user is authenticated
+    if (store.state.auth.user) {
+      return redirect('/')
+    }
+  },
   data() {
     return {
       form: {},
