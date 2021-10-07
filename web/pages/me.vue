@@ -1,6 +1,6 @@
 <template lang="pug">
   div.container
-    h1 Edit Profile
+    h1 Edit Account
     form(@submit.prevent="handleSubmit" :class="{ loading: isLoading }").mt-xxl
       fieldset.flow
         div.split
