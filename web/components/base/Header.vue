@@ -1,7 +1,9 @@
 <template lang="pug">
 header
+  NotificationToast(:loggedInUser="loggedInUser")
   div.container
-    BaseGhostLogo(style="width: 65%")
+    NuxtLink(to="/" style="display: flex; max-width: 65%;")
+      BaseGhostLogo
     div(v-if="isAuthenticated")
       BaseProfileIcon(:isOpen="navIsOpen" @click="navIsOpen = !navIsOpen") {{ loggedInUser.profile.initials }}
       BaseNav(:isOpen="navIsOpen" @close="navIsOpen = false")
