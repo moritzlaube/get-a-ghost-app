@@ -81,8 +81,8 @@ app.use('/ghosts', ghostsRouter)
 app.use('/auth', authRouter)
 app.use('/users', usersRouter)
 
-app.use((err, req, res) => {
-  res.status(err.status || 500).json({
+app.use((err, req, res, next) => {
+  res.status(err.status).json({
     ok: false,
     message: err.message,
     error: {},
