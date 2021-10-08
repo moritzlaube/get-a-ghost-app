@@ -1,13 +1,14 @@
 const sgMail = require('@sendgrid/mail')
+
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-module.exports = async (email, verificationToken) => {
+module.exports = async (email, subject, html) => {
   const msg = {
     to: email,
     from: 'ml@moritzlaube.com',
-    subject: 'Sending with SendGrid is Fun',
+    subject,
     text: 'and easy to do anywhere, even with Node.js',
-    html: `${verificationToken}<strong>and easy to do anywhere, even with Node.js</strong>`,
+    html,
   }
 
   return sgMail.send(msg)
