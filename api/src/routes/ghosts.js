@@ -4,7 +4,7 @@ const isAuthenticated = require('../middleware/is-authenticated')
 const checkRole = require('../middleware/check-role')
 
 /* GET ghost listing. */
-router.get('/', ghostController.getAllGhosts)
+router.get('/', ghostController.searchGhosts)
 
 /* Init Ghosts in DB */
 router.get('/init', ghostController.init)

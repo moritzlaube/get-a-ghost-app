@@ -2,7 +2,7 @@ const { isWithinInterval, parseISO } = require('date-fns')
 const Ghost = require('../models/ghost.model')
 const Account = require('../models/account.model')
 
-exports.getAllGhosts = async (req, res) => {
+exports.searchGhosts = async (req, res) => {
   let ghosts
 
   try {
@@ -117,7 +117,7 @@ exports.createGhost = async (req, res) => {
       type,
       name,
     })
-    return res.status(200).json({ ok: true, data: createdGhost.getEssentialData })
+    return res.status(200).json({ ok: true, data: createdGhost._id })
   } catch (error) {
     return res.status(500).json({ ok: false, error })
   }
