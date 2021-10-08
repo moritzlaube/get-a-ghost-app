@@ -33,8 +33,11 @@ exports.registerUser = async (req, res) => {
     )
 
     // Send mail via SG with PIN to verify email
+    const subject = '👻 Please verify your Email address'
+    const html = `Please verify your email with this pin: <strong>${verificationPIN}</strong><br>Note that it will expire in 24 hours.`
+
     try {
-      await sendMail(email, verificationPIN)
+      await sendMail(email, subject, html)
     } catch (error) {
       console.error('Sendgrid Error', error.message)
     }
@@ -100,25 +103,38 @@ exports.sendInvite = async (req, res) => {
 
   await t.save()
 
+  const subject = '👻 Welcome to Get-A-Ghost!'
+  const html = `Just a few more steps and you're one of us! Please follow this link to finish your sign-up process:<br>${process.env.BASE_URL}/invite?token=${signedToken}`
+
+  try {
+    await sendMail(email, subject, html)
+  } catch (error) {
+    console.log(error)
+  }
+
   return res.status(200).json({ ok: true, data: { token: signedToken } })
 }
 
 exports.verifyInvite = async (req, res) => {
   const { token } = req.params
 
-  try {
-    const email = verifyJWT(token, process.env.JWT_SECRET)
-    const hasAccount = await Account.exists({ email })
-    const hasToken = await Token.exists({ token })
-    if (!hasToken || hasAccount)
-      return res.status(404).json({ ok: false, message: 'Wrong Token or Account with that email already exists' })
+  const { email } = verifyJWT(token)
 
-    const returnedToken = await Account.find({ token })
-    returnedToken.verfied = true
-    await returnedToken.save()
+  // try {
+  //   console.log(email)
+  // } catch (error) {
+  //   return res.status(401).json({ ok: false, data: error })
+  // }
 
-    return res.status(200).json({ ok: true, data: { email }, message: 'Token verified' })
-  } catch (error) {
-    return res.status(401).json({ ok: false, data: error })
-  }
+  const hasAccount = await Account.exists({ email })
+  const hasToken = await Token.exists({ token })
+
+  if (!hasToken || hasAccount)
+    return res.status(401).json({ ok: false, message: 'Wrong Token or Account with that email already exists' })
+
+  // const returnedToken = await Token.find({ token })
+  // returnedToken.verfied = true
+  // await returnedToken.save()
+
+  return res.status(200).json({ ok: true, data: email })
 }

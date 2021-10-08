@@ -20,7 +20,7 @@ exports.updateUser = async (req, res) => {
   user.company = company
   user.phone = phone
 
-  const updatedUser = await user.save()
+  await user.save()
 
   if (req.user.email !== newEmail) {
     const verificationPIN = getRandomInt(1000, 9999)
@@ -35,12 +35,15 @@ exports.updateUser = async (req, res) => {
     req.session.save()
 
     // Send mail via SG with PIN to verify email
+    const subject = '👻 You successfully changed your email address'
+    const html = `Please verify your new email address with the following pin: ${verificationPIN}`
+
     try {
-      await sendMail(newEmail, verificationPIN)
+      await sendMail(newEmail, subject, html)
     } catch (error) {
       console.error('Sendgrid Error', error.message)
     }
   }
 
-  res.status(200).json({ ok: true, data: req.session })
+  res.status(200).json({ ok: true, message: 'Successfully updated user' })
 }

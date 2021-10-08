@@ -1,6 +1,7 @@
 const { isWithinInterval, parseISO } = require('date-fns')
 const Ghost = require('../models/ghost.model')
 const Account = require('../models/account.model')
+const { authService } = require('../services/auth.service')
 
 exports.searchGhosts = async (req, res) => {
   let ghosts
@@ -8,47 +9,48 @@ exports.searchGhosts = async (req, res) => {
   try {
     // if no query params present, get all ghosts
     if (Object.keys(req.query).length === 0 && req.query.constructor === Object) {
-      ghosts = await Ghost.find({}, 'ghostName type categories language blocked timezone about').lean()
-    } else {
-      // otherwise use query params to query db
-      const { type, startDate, endDate, language, category } = req.query
+      return res
+        .status(400)
+        .json({ ok: false, message: 'Please provide at least the type and a date range for a successful search.' })
+    }
+    // otherwise use query params to query db
+    const { type, startDate, endDate, language, category } = req.query
 
-      if (type !== 'all-in-1') {
-        if (type === 'ghostwriter' && language !== undefined) {
-          ghosts = await Ghost.find(
-            { type, language },
-            'ghostName type categories language blocked timezone about'
-          ).lean()
-        } else {
-          ghosts = await Ghost.find({ type }, 'ghostName type categories language blocked timezone about').lean()
-        }
-      } else if (type === 'all-in-1' && language !== undefined) {
+    if (type !== 'all-in-1') {
+      if (type === 'ghostwriter' && language !== undefined) {
         ghosts = await Ghost.find(
-          { type: ['ghostwriter', 'moodscout'], language },
+          { type, language },
           'ghostName type categories language blocked timezone about'
         ).lean()
       } else {
-        ghosts = await Ghost.find(
-          { type: ['ghostwriter', 'moodscout'] },
-          'ghostName type categories language blocked timezone about'
-        ).lean()
+        ghosts = await Ghost.find({ type }, 'ghostName type categories language blocked timezone about').lean()
       }
+    } else if (type === 'all-in-1' && language !== undefined) {
+      ghosts = await Ghost.find(
+        { type: ['ghostwriter', 'moodscout'], language },
+        'ghostName type categories language blocked timezone about'
+      ).lean()
+    } else {
+      ghosts = await Ghost.find(
+        { type: ['ghostwriter', 'moodscout'] },
+        'ghostName type categories language blocked timezone about'
+      ).lean()
+    }
 
-      // filter by category
-      if (category) {
-        ghosts = ghosts.filter(ghost => ghost.categories.includes(category))
-      }
+    // filter by category
+    if (category) {
+      ghosts = ghosts.filter(ghost => ghost.categories.includes(category))
+    }
 
-      if (startDate && endDate) {
-        // check if startDate && endDate are within blocked date range and filter ghosts accordingly
-        ghosts = ghosts.filter(ghost =>
-          ghost.blocked.every(
-            ({ start, end }) =>
-              !isWithinInterval(parseISO(startDate), { start, end }) &&
-              !isWithinInterval(parseISO(endDate), { start, end })
-          )
+    if (startDate && endDate) {
+      // check if startDate && endDate are within blocked date range and filter ghosts accordingly
+      ghosts = ghosts.filter(ghost =>
+        ghost.blocked.every(
+          ({ start, end }) =>
+            !isWithinInterval(parseISO(startDate), { start, end }) &&
+            !isWithinInterval(parseISO(endDate), { start, end })
         )
-      }
+      )
     }
 
     if (!req.user) {
