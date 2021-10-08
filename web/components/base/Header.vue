@@ -1,10 +1,10 @@
 <template lang="pug">
 header
-  NotificationToast(:loggedInUser="loggedInUser")
+  NotificationToast(:loggedInUser="loggedInUser ? loggedInUser : {}")
   div.container
     NuxtLink(to="/" style="display: flex; max-width: 65%;")
       BaseGhostLogo
-    div.nav-wrapper(v-if="isAuthenticated" @click="clickOutsideNav")
+    div(v-if="isAuthenticated" tabindex="0" @blur="navIsOpen = false" @keyup.enter="navIsOpen = !navIsOpen")
       BaseProfileIcon(:isOpen="navIsOpen" @click="navIsOpen = !navIsOpen") {{ loggedInUser.profile.initials }}
       BaseNav(:isOpen="navIsOpen" @close="navIsOpen = false")
     NuxtLink(v-else to="/login").login
@@ -25,13 +25,6 @@ export default {
   },
   computed: {
     ...mapGetters(['loggedInUser', 'isAuthenticated']),
-  },
-  methods: {
-    clickOutsideNav(e) {
-      if (e.target.closest('.nav-wrapper') === null) {
-        this.navIsOpen = false
-      }
-    },
   },
 }
 </script>
