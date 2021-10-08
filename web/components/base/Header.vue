@@ -4,7 +4,7 @@ header
   div.container
     NuxtLink(to="/" style="display: flex; max-width: 65%;")
       BaseGhostLogo
-    div(v-if="isAuthenticated")
+    div.nav-wrapper(v-if="isAuthenticated" @click="clickOutsideNav")
       BaseProfileIcon(:isOpen="navIsOpen" @click="navIsOpen = !navIsOpen") {{ loggedInUser.profile.initials }}
       BaseNav(:isOpen="navIsOpen" @close="navIsOpen = false")
     NuxtLink(v-else to="/login").login
@@ -25,6 +25,13 @@ export default {
   },
   computed: {
     ...mapGetters(['loggedInUser', 'isAuthenticated']),
+  },
+  methods: {
+    clickOutsideNav(e) {
+      if (e.target.closest('.nav-wrapper') === null) {
+        this.navIsOpen = false
+      }
+    },
   },
 }
 </script>
