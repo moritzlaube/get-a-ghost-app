@@ -1,12 +1,12 @@
 <template lang="pug">
   .container.flow
     p(v-if="$fetchState.pending") Loading...
-    p(v-else-if="$fetchState.error") Error while loading Ghosts.
+    p(v-else-if="error") Error while loading Ghosts. {{ error.message }}
     div(v-else)
       p(v-if="ghosts.ghostCount === 0") There are no Ghosts available based on your query. Try a broader query or a different date.
       p(v-else-if="ghosts.ghostCount") We have {{ ghosts.ghostCount }} Ghosts available for you based on your query. Please login or register to get in contact with them.
       div(v-else).flow
-        p Your available Ghosts. Click on the card for more info. Or tap the button  to send a request.
+        p Your available Ghosts. Click on the card for more info. Then tap the button to send a request.
         transition-group(name="list" tag="ul" :css="false" @before-enter="beforeEnter" @enter="enter").flow
           GhostCard(v-for="(ghost, index) in ghosts" :key="ghost._id" :ghost="ghost" :data-index="index" :loading="requestingGhost" @request="handleRequest")
     
@@ -38,16 +38,22 @@ export default {
       Card: {
         active: null,
       },
+      error: null,
     }
   },
   async fetch() {
-    const { data } = await this.$axios.get('/ghosts', {
-      params: this.$route.query,
-    })
+    try {
+      const { data } = await this.$axios.get('/ghosts', {
+        params: this.$route.query,
+      })
 
-    this.ghosts = data.data
+      this.ghosts = data.data
+    } catch (error) {
+      this.error = error.response.data
+    }
   },
   fetchOnServer: false,
+  fetchDelay: 500,
   computed: {
     ...mapGetters(['isAuthenticated', 'loggedInUser']),
   },
