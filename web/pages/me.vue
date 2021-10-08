@@ -67,9 +67,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-h1 {
-  color: var(--clr-pink);
-}
-</style>

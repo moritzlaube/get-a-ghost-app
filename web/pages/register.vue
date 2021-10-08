@@ -4,12 +4,13 @@ div.container.register-page
     BaseGhostLogo.mt-md.center-align
     p(v-if="currentStep === 1") Register and find an available Moodscout and/or Ghostwriter within seconds. No more chain calling your handwritten, out-of-date list of Ghosts.
     p(v-if="currentStep === 2") Please let us know your name, company (if applicable) and phone. Your phone will come in handy when your requested Ghost needs to get in contact with you.
-  div   
-    FormRegisterEmailAndPassword(v-if="currentStep === 1" @update="processStep" @next="currentStep++")
-    FormRegisterNameAndCompany(v-if="currentStep === 2" @update="processStep" @sendForm="registerUser" :class="{ loading: isLoading }")
-    FormVerifyPIN(v-if="currentStep === 3" @update="processStep" @verify-pin="verifyPin" :class="{ loading: isLoading }")
+  div.flow
+    h1 Register
+    transition(name="slide" mode="out-in")   
+      FormRegisterEmailAndPassword(v-if="currentStep === 1" @update="processStep" @next="currentStep++")
+      FormRegisterNameAndCompany(v-if="currentStep === 2" @update="processStep" @sendForm="registerUser" :class="{ loading: isLoading }")
+      FormVerifyPIN(v-if="currentStep === 3" @update="processStep" @verify-pin="verifyPin" :class="{ loading: isLoading }")
     p(v-if="currentStep === 3").mt-md You can #[NuxtLink(to="/") skip] this step for now and start your search immediately.
-    p.mt-md.center-align(v-if="currentStep === 1") You already have an account? #[NuxtLink(to="/login") Login] instead.
 </template>
 
 <script>
@@ -90,5 +91,20 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
+}
+
+.slide-enter {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+.slide-leave-to {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.25s ease-in-out;
 }
 </style>
