@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.toast-bg(v-if="loggedInUser && !loggedInUser.emailVerified" :class="{'toast-active': loggedInUser && !loggedInUser.emailVerified}")
+  div.toast-bg(v-if="loggedInUser.emailVerified && !loggedInUser.emailVerified" :class="{'toast-active': loggedInUser.emailVerified && !loggedInUser.emailVerified}")
       .container
         span Please follow this 
         NuxtLink(to="/verify") link
@@ -12,7 +12,9 @@ export default {
   props: {
     loggedInUser: {
       type: Object,
-      default: null,
+      default() {
+        return {}
+      },
     },
   },
 }
