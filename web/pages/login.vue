@@ -3,7 +3,6 @@ div.container.login-page
   div.flow
     BaseGhostLogo.mt-md.center-align
     p Login and find an available Moodscout and/or Ghostwriter within seconds. No more chain calling your handwritten, out-of-date list of Ghosts.
-    p(v-if="error") {{error}}
   div.flow
     h1 Login
     transition(name="slide" mode="out-in")
@@ -15,6 +14,7 @@ div.container.login-page
         fieldset.flow
           BaseInput(type="email" id="email" name="email" v-model="email" placeholder="Email" label="Email" required)
           BaseInput(type="password" id="password" name="password" v-model="password" placeholder="Password" label="Password" required)
+        p.error.center-align.mt-sm(v-if="error === 401") Wrong email or password. Please try again.
         BaseButton(:disabled="!(email && password)").mt-xxl.has-shadow LOG IN
         p.mt-md.center-align Forgot your password? Go and #[span(@click="resetPassword = true").reset reset] it.
         p.mt-md.center-align No account yet? #[NuxtLink(to="/register") Register] to get started right away.
@@ -30,7 +30,6 @@ export default {
       password: '',
       resetPassword: false,
       isLoading: false,
-      response: null,
       error: null,
     }
   },
@@ -46,7 +45,7 @@ export default {
           },
         })
       } catch (error) {
-        this.error = error.response.data
+        this.error = error.response.status
       }
 
       this.isLoading = false
@@ -74,6 +73,10 @@ form {
   color: var(--clr-pink);
   text-decoration: underline;
   cursor: pointer;
+}
+
+.error {
+  color: red;
 }
 
 .slide-enter {
