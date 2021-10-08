@@ -1,18 +1,12 @@
 <template lang="pug">
   div 
     SearchForm
-    button(@click="logout") Logout
 </template>
 
 <script>
 export default {
   name: 'Homepage',
   auth: false,
-  methods: {
-    async logout() {
-      await this.$auth.logout()
-    },
-  },
 }
 </script>
 
