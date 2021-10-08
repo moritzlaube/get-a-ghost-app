@@ -1,21 +1,18 @@
 const jwt = require('jsonwebtoken')
 
 exports.getRandomInt = (min, max) => {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min + 1)) + min
+  const minInt = Math.ceil(min)
+  const maxInt = Math.floor(max)
+  return Math.floor(Math.random() * (maxInt - minInt + 1)) + minInt
 }
 
-exports.signJWT = email => {
-  return jwt.sign(
+exports.signJWT = email =>
+  jwt.sign(
     {
       email,
     },
     process.env.JWT_SECRET,
     { expiresIn: '1d' }
   )
-}
 
-exports.verifyJWT = token => {
-  return jwt.verify(token, process.env.JWT_SECRET)
-}
+exports.verifyJWT = token => jwt.verify(token, process.env.JWT_SECRET)
