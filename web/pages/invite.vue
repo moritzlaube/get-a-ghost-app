@@ -2,6 +2,7 @@
   div.container
     p(v-if="$fetchState.pending") Loading ...
     p(v-else-if="error") {{error.message}}
+    p(v-else) {{email}}
 </template>
 
 <script>
