@@ -20,7 +20,7 @@ const userSchema = new Schema(
       country: String,
     },
   },
-  { toObject: { virtuals: true }, toJSON: { virtuals: true } }
+  { toObject: { virtuals: true }, toJSON: { virtuals: true }, timestamps: true }
 )
 
 userSchema.virtual('initials').get(function () {

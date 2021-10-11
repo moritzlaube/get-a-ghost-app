@@ -5,27 +5,30 @@ const passportLocalMongoose = require('passport-local-mongoose')
 
 const { Schema } = mongoose
 
-const accountSchema = new Schema({
-  profile: {
-    type: Schema.Types.ObjectId,
-    refPath: 'role',
-    autopopulate: true,
+const accountSchema = new Schema(
+  {
+    profile: {
+      type: Schema.Types.ObjectId,
+      refPath: 'role',
+      autopopulate: true,
+    },
+    role: {
+      type: String,
+      enum: ['User', 'Ghost'],
+    },
+    isGhost: {
+      type: Boolean,
+      default: false,
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: Number, // possible candidate for index (index: true)
+    verificationTokenExpire: Date,
   },
-  role: {
-    type: String,
-    enum: ['User', 'Ghost'],
-  },
-  isGhost: {
-    type: Boolean,
-    default: false,
-  },
-  emailVerified: {
-    type: Boolean,
-    default: false,
-  },
-  verificationToken: Number, // possible candidate for index (index: true)
-  verificationTokenExpire: Date,
-})
+  { timestamps: true }
+)
 
 accountSchema.plugin(passportLocalMongoose, {
   usernameField: 'email',
