@@ -117,24 +117,31 @@ exports.sendInvite = async (req, res) => {
 
 exports.verifyInvite = async (req, res) => {
   const { token } = req.params
+  let email
 
-  const { email } = verifyJWT(token)
-
-  // try {
-  //   console.log(email)
-  // } catch (error) {
-  //   return res.status(401).json({ ok: false, data: error })
-  // }
+  try {
+    email = verifyJWT(token).email
+  } catch (error) {
+    return res
+      .status(404)
+      .json({ ok: false, message: 'Your Token expired. Please send us an email and require a new one.' })
+  }
 
   const hasAccount = await Account.exists({ email })
   const hasToken = await Token.exists({ token })
 
-  if (!hasToken || hasAccount)
+  if (!hasToken || hasAccount) {
     return res.status(409).json({ ok: false, message: 'Wrong Token or Account with that email already exists' })
+  }
 
-  // const returnedToken = await Token.find({ token })
-  // returnedToken.verfied = true
-  // await returnedToken.save()
+  const returnedToken = await Token.findOne({ token })
+
+  if (returnedToken.verified) {
+    return res.status(409).json({ ok: false, message: 'You already have been verified' })
+  }
+
+  returnedToken.verified = true
+  await returnedToken.save()
 
   return res.status(200).json({ ok: true, data: email })
 }
