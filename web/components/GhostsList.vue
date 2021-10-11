@@ -63,12 +63,9 @@ export default {
       this.requestedGhost = ghost
       // send request to backend including data of requesting user
       try {
-        const { data: response } = await this.$axios.post(
-          `/ghosts/${ghost._id}/request`,
-          { user: this.loggedInUser }
-        )
-        // eslint-disable-next-line no-console
-        console.log(response)
+        await this.$axios.post(`/ghosts/${ghost._id}/request`, {
+          user: this.loggedInUser,
+        })
         this.requestingGhost = true
         this.modalIsOpen = true
       } catch (error) {}
