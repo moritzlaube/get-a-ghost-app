@@ -130,7 +130,7 @@ exports.verifyInvite = async (req, res) => {
   const hasToken = await Token.exists({ token })
 
   if (!hasToken || hasAccount)
-    return res.status(401).json({ ok: false, message: 'Wrong Token or Account with that email already exists' })
+    return res.status(409).json({ ok: false, message: 'Wrong Token or Account with that email already exists' })
 
   // const returnedToken = await Token.find({ token })
   // returnedToken.verfied = true
