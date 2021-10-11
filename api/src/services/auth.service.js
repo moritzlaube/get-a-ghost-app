@@ -12,7 +12,7 @@ exports.signJWT = email =>
       email,
     },
     process.env.JWT_SECRET,
-    { expiresIn: '1d' }
+    { expiresIn: '3d' }
   )
 
 exports.verifyJWT = token => jwt.verify(token, process.env.JWT_SECRET)
