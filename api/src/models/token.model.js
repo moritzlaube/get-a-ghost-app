@@ -7,10 +7,11 @@ const tokenSchema = new Schema({
     type: String,
     required: true,
   },
-  verfied: {
+  verified: {
     type: Boolean,
     default: false,
   },
+  expires: { type: Date, expires: '1d', default: Date.now },
 })
 
 module.exports = mongoose.model('Token', tokenSchema)
