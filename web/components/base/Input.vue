@@ -70,6 +70,15 @@ input {
   color: var(--text-light);
 }
 
+input::placeholder,
+input:disabled {
+  color: #9c9c9c;
+}
+
+input:disabled {
+  cursor: not-allowed;
+}
+
 input input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -77,9 +86,5 @@ input:-webkit-autofill:active {
   box-shadow: inset 5px 5px 12px var(--shadow-dark);
   -webkit-box-shadow: 0 0 1000px var(--bg-dark-grey) inset;
   -webkit-text-fill-color: var(--text-light);
-}
-
-input::placeholder {
-  color: #c4c4c4;
 }
 </style>
