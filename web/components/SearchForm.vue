@@ -4,11 +4,11 @@
     form(@submit.prevent="onSubmit" :class="{ loading: isLoading }").flow
       div
         p Find me a ...
-        BaseSelect(label="Find Ghostwriter or Moodscout" placeholder="Select a profession ..." :id="'profession'" tabindex="0" :options="['Ghostwriter', 'Moodscout', 'All-in-1']" @input="handleSelect")
+        BaseSelect(label="Find Ghostwriter or Moodscout" placeholder="Select a profession ..." :id="'profession'" tabindex="0" :options="['Ghostwriter', 'Moodscout', 'All-in-1']" @input="handleSelect" v-model="form.profession")
 
       div(v-if="form.profession === 'Ghostwriter' || form.profession === 'All-in-1'")
         p writing in ...
-        BaseSelect(label="Select a language" placeholder="Select a language" :id="'language'" tabindex="0" :options="['English', 'German', 'French']" @input="handleSelect")
+        BaseSelect(label="Select a language" placeholder="Select a language" :id="'language'" tabindex="0" :options="languages" @input="handleSelect" v-model="form.language")
     
       client-only
         div
@@ -31,11 +31,13 @@
                         path(d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z")
       div
           p Choose your preferred category
-          BaseSelect(label="Choose your category" placeholder="Choose a category (optional)" id="category" tabindex="0" :options="['None', 'People', 'Cars', 'Table-top', 'Slice-of-Life']" @input="handleSelect")
+          BaseSelect(label="Choose your category" placeholder="Choose a category (optional)" id="category" tabindex="0" :options="['None', 'People', 'Cars', 'Table-top', 'Slice-of-Life']" @input="handleSelect" v-model="form.category")
       BaseButton(type="submit" :disabled="!(form.dateRange.start && form.profession)").btn-mt.has-shadow GO FIND!
 </template>
 
 <script>
+import languages from '@/assets/languages.json'
+
 export default {
   name: 'SearchForm',
   data() {
@@ -62,25 +64,24 @@ export default {
       },
     }
   },
-
+  computed: {
+    languages() {
+      return languages.map((language) => language.language)
+    },
+  },
   methods: {
     handleSelect(payload) {
-      Object.assign(this.form, payload)
       if (this.form.profession === 'Moodscout' && this.form.language !== null)
         this.form.language = null
     },
     onSubmit() {
       this.loading = true
 
-      const SHORTCODES = {
-        english: 'en',
-        german: 'de',
-        french: 'fr',
-      }
-
       const queryModel = {
         type: this.form.profession?.toLowerCase(),
-        language: SHORTCODES[this.form.language?.toLowerCase()] || null,
+        language:
+          languages.find((lang) => lang.language === this.form.language).code ||
+          null,
         category: this.form.category?.toLowerCase() || null,
         startDate: this.form.dateRange.start?.toISOString(),
         endDate: this.form.dateRange.end?.toISOString(),
@@ -112,12 +113,5 @@ export default {
 
 .btn-mt {
   margin-top: var(--space-xxl) !important;
-}
-</style>
-
-<style lang="scss">
-.vc-container.vc-is-dark {
-  background-color: var(--bg-dark-grey) !important;
-  border-color: var(--mid-grey);
 }
 </style>
