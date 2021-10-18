@@ -93,9 +93,9 @@ exports.sendInvite = async (req, res) => {
 
   if (token !== process.env.BEARER_TOKEN) return res.status(401).json({ ok: false, message: 'Unauthorized' })
 
-  const { email } = req.body
+  const { email, firstName, lastName } = req.body
 
-  const signedToken = signJWT(email)
+  const signedToken = signJWT(email, firstName, lastName)
 
   const t = new Token({
     token: signedToken,
@@ -117,10 +117,18 @@ exports.sendInvite = async (req, res) => {
 
 exports.verifyInvite = async (req, res) => {
   const { token } = req.params
-  let email
+  const hasToken = await Token.exists({ token })
+  if (!hasToken)
+    return res.status(404).json({
+      ok: false,
+      message:
+        "We don't have your token in our database. It might be wrong or expired. Please send us an email and require a new one.",
+    })
+
+  let email, firstName, lastName
 
   try {
-    email = verifyJWT(token).email
+    ;({ email, firstName, lastName } = verifyJWT(token))
   } catch (error) {
     return res
       .status(404)
@@ -128,20 +136,19 @@ exports.verifyInvite = async (req, res) => {
   }
 
   const hasAccount = await Account.exists({ email })
-  const hasToken = await Token.exists({ token })
 
-  if (!hasToken || hasAccount) {
-    return res.status(409).json({ ok: false, message: 'Wrong Token or Account with that email already exists' })
-  }
+  if (hasAccount) return res.status(409).json({ ok: false, message: 'You already have an account.' })
 
   const returnedToken = await Token.findOne({ token })
 
   if (returnedToken.verified) {
-    return res.status(409).json({ ok: false, message: 'You already have been verified' })
+    return res
+      .status(200)
+      .json({ ok: true, data: { email, firstName, lastName }, message: 'You already have been verified.' })
   }
 
   returnedToken.verified = true
   await returnedToken.save()
 
-  return res.status(200).json({ ok: true, data: email })
+  return res.status(200).json({ ok: true, data: { email, firstName, lastName } })
 }
