@@ -10,6 +10,10 @@ const ghostSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Account',
     },
+    active: {
+      type: Boolean,
+      default: false,
+    },
     type: [
       {
         type: String,
@@ -32,6 +36,7 @@ const ghostSchema = new Schema(
       zip: String,
       country: String,
     },
+    website: String,
     categories: [],
     about: String,
     timezone: String,
