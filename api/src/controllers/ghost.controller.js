@@ -19,20 +19,23 @@ exports.searchGhosts = async (req, res) => {
     if (type !== 'all-in-1') {
       if (type === 'ghostwriter' && language !== undefined) {
         ghosts = await Ghost.find(
-          { type, language },
+          { type, language, active: true },
           'ghostName type categories language blocked timezone about'
         ).lean()
       } else {
-        ghosts = await Ghost.find({ type }, 'ghostName type categories language blocked timezone about').lean()
+        ghosts = await Ghost.find(
+          { type, active: true },
+          'ghostName type categories language blocked timezone about'
+        ).lean()
       }
     } else if (type === 'all-in-1' && language !== undefined) {
       ghosts = await Ghost.find(
-        { type: ['ghostwriter', 'moodscout'], language },
+        { type: ['ghostwriter', 'moodscout'], language, active: true },
         'ghostName type categories language blocked timezone about'
       ).lean()
     } else {
       ghosts = await Ghost.find(
-        { type: ['ghostwriter', 'moodscout'] },
+        { type: ['ghostwriter', 'moodscout'], active: true },
         'ghostName type categories language blocked timezone about'
       ).lean()
     }
@@ -102,23 +105,26 @@ exports.requestGhost = async (req, res) => {
 }
 
 exports.createGhost = async (req, res) => {
-  const { type, name } = req.body
+  const { type, name, password } = req.body
 
   try {
     const createdAccount = await Account.register(
       {
         email,
-        roleModel: 'User',
-        verificationToken: authService.getRandomInt(1000, 9999),
-        verificationTokenExpire: new Date(Date.now() + 1000 * 3600 * 24),
+        role: 'Ghost',
       },
       password
     )
 
     const createdGhost = await Ghost.create({
+      account: createdAccount._id,
       type,
       name,
     })
+
+    createdAccount.profile = createdGhost._id
+    await createdAccount.save()
+
     return res.status(200).json({ ok: true, data: createdGhost._id })
   } catch (error) {
     return res.status(500).json({ ok: false, error })
@@ -151,11 +157,12 @@ exports.updateGhost = async (req, res) => {
 }
 
 exports.init = async (req, res) => {
-  const localTimezone = 'Europe/Berlin'
+  const localTimezone = 'GMT+02:00 Europe/Berlin'
 
   await Ghost.insertMany([
     {
       type: ['ghostwriter', 'moodscout'],
+      active: true,
       name: {
         first: 'Andrea',
         last: 'Schrul',
@@ -163,6 +170,7 @@ exports.init = async (req, res) => {
       ghostName: 'Schrulchen',
       language: ['de', 'en'],
       phone: '+491703301300',
+      website: 'https://www.example.com',
       categories: ['people', 'slice-of-life'],
       timezone: localTimezone,
       about:
@@ -188,12 +196,14 @@ exports.init = async (req, res) => {
     },
     {
       type: ['ghostwriter'],
+      active: true,
       name: {
         first: 'Fintan',
         last: 'Gsänger',
       },
       language: ['de'],
       phone: '+491703301300',
+      website: 'https://www.example.com',
       categories: [],
       timezone: localTimezone,
       about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus nisi, cursus porta.',
@@ -218,12 +228,14 @@ exports.init = async (req, res) => {
     },
     {
       type: ['moodscout'],
+      active: true,
       name: {
         first: 'Kai',
         last: 'Werner',
       },
       language: [],
       phone: '+491703301300',
+      website: 'https://www.example.com',
       categories: ['people', 'cars', 'table-top'],
       timezone: localTimezone,
       about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
