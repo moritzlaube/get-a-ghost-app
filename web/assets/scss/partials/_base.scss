@@ -17,3 +17,8 @@ h2,
 h3 {
   color: var(--clr-pink);
 }
+
+.vc-container.vc-is-dark {
+  background-color: var(--bg-dark-grey) !important;
+  border-color: var(--mid-grey) !important;
+}
