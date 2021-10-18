@@ -6,10 +6,12 @@ exports.getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (maxInt - minInt + 1)) + minInt
 }
 
-exports.signJWT = email =>
+exports.signJWT = (email, firstName, lastName) =>
   jwt.sign(
     {
       email,
+      firstName,
+      lastName,
     },
     process.env.JWT_SECRET,
     { expiresIn: '3d' }
