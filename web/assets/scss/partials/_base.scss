@@ -22,3 +22,10 @@ h3 {
   background-color: var(--bg-dark-grey) !important;
   border-color: var(--mid-grey) !important;
 }
+
+.label {
+  display: inline-block;
+  font-size: var(--text-sm);
+  color: var(--clr-pink);
+  margin-bottom: 0.25rem;
+}
