@@ -16,7 +16,7 @@ router.get('/:id', isAuthenticated, ghostController.getGhostById)
 router.post('/:id/request', isAuthenticated, ghostController.requestGhost)
 
 /* CREATE new ghost. */
-router.post('/', isAuthenticated, checkRole('Ghost'), ghostController.createGhost)
+router.post('/', ghostController.createGhost)
 
 /* UPDATE ghost. */
 router.put('/:id', isAuthenticated, checkRole('Ghost'), ghostController.updateGhost)
