@@ -64,7 +64,12 @@ export default {
         // eslint-disable-next-line no-console
         console.log(response)
       } catch (error) {
-        this.error = error.response.data
+        this.isLoading = false
+
+        this.error = {
+          message: error.response.data.message,
+          status: error.response.status,
+        }
       }
     },
   },
