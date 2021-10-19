@@ -1,6 +1,6 @@
 <template lang="pug">
 header
-  NotificationToast(:loggedInUser="loggedInUser ? loggedInUser : {}")
+  NotificationToast(:loggedInUser="loggedInUser ? loggedInUser : null")
   div.container
     NuxtLink(to="/" style="display: flex; max-width: 65%;")
       BaseGhostLogo
