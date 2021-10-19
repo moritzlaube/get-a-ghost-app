@@ -29,6 +29,7 @@ export default {
         company: null,
         phone: null,
       },
+      error: null,
     }
   },
   computed: {
@@ -62,7 +63,9 @@ export default {
         this.isLoading = false
         // eslint-disable-next-line no-console
         console.log(response)
-      } catch (error) {}
+      } catch (error) {
+        this.error = error.response.data
+      }
     },
   },
 }
