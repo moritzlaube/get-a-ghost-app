@@ -9,40 +9,28 @@
       div
         p Welcome on board {{form.firstName}}!
         p We are happy to have you. Please fill out this form. As soon as you're finished you'll be instantly discoverable by anyone who seeks help.
-      form.flow
-      div
-        span Email
-        BaseInput(type="email" id="email" name="email" v-model="form.email" placeholder="Email" label="Email" disabled)
-      div.split
+      form.flow(@submit.prevent="handleSubmit" :class="{ loading: isLoading }")
         div
-          span First Name
-          BaseInput(type="text" id="firstName" name="firstName" v-model="form.firstName" placeholder="First Name" label="First Name" required)
+          span Email
+          BaseInput(type="email" id="email" name="email" v-model="form.email" placeholder="Email" label="Email" disabled)
         div
-          span Last Name
-          BaseInput(type="text" id="lastName" name="lastName" v-model="form.lastName" placeholder="Last Name" label="Last Name" required)
-      div
-        span Ghost Name (optional)
-        BaseInput(type="text" id="ghostName" name="ghostName" v-model="form.ghostName" :placeholder="form.firstName + ' ' + form.lastName" label="Ghost Name")
-      div
-        span Select your profession
-        BaseSelect(label="What's your field of expertise?" placeholder="Select ..." :id="'profession'" tabindex="0" :options="['Ghostwriter', 'Moodscout', 'Both']" v-model="form.profession")
-      div(v-if="form.profession && form.profession === 'Ghostwriter'")
-        span Select your language
-        BaseSelect(label="Select your language" placeholder="Select ..." :id="'language'" tabindex="0" :options="languages" v-model="form.language")
-      div
-        span Phone
-        BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="+491511234567" label="Phone" required)
-      div
-        span Website (optional)
-        BaseInput(type="text" id="website" name="website" v-model="form.website" placeholder="www.example.com" label="Website")
-      div
-        span About (english)
-        BaseTextarea(id="about" name="about" v-model="form.about" rows="5" cols="33" placeholder="About You")
-      div
-        span Timezone
-        BaseSelect(label="Select your timezone" placeholder="Select ..." :id="'timezone'" tabindex="0" :options="timezones" v-model="form.timezone")
-      v-date-picker(:value="null" color="pink" v-model="selectedDates" :model-config="modelConfig" :attributes="attrs" locale="en" is-dark is-range is-expanded @input="handleDatePicker" @dayclick="handleDelete")
-      BaseButton Create Account
+          span Password
+          BaseInput(type="password" id="password" name="password" v-model="form.password" placeholder="Password" label="Password" required)
+        div.split
+          div
+            span First Name
+            BaseInput(type="text" id="firstName" name="firstName" v-model="form.firstName" placeholder="First Name" label="First Name" required)
+          div
+            span Last Name
+            BaseInput(type="text" id="lastName" name="lastName" v-model="form.lastName" placeholder="Last Name" label="Last Name" required)
+        div
+          span Ghost Name (optional)
+          BaseInput(type="text" id="ghostName" name="ghostName" v-model="form.ghostName" :placeholder="form.firstName + ' ' + form.lastName" label="Ghost Name")
+        div
+          span Phone
+          BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="+491511234567" label="Phone" required)
+        BaseButton(:disabled="!(this.form.phone && this.form.password)") Create Account
+        p(v-if="error") {{error}}
 </template>
 
 <script>
@@ -55,6 +43,7 @@ export default {
   auth: false,
   data() {
     return {
+      isLoading: false,
       form: {
         firstName: 'First Name',
         lastName: 'Last Name',
@@ -119,6 +108,33 @@ export default {
     )
   },
   methods: {
+    async handleSubmit() {
+      try {
+        this.isLoading = true
+
+        await this.$axios.post('/ghosts', {
+          email: this.form.email,
+          password: this.form.password,
+          name: {
+            first: this.form.firstName,
+            last: this.form.lastName,
+          },
+          phone: this.form.phone,
+        })
+
+        await this.$auth.loginWith('local', {
+          data: {
+            email: this.form.email,
+            password: this.form.password,
+          },
+        })
+
+        this.isLoading = false
+        this.$router.push('/profile')
+      } catch (error) {
+        this.error = error.response.data
+      }
+    },
     handleDatePicker(range) {
       const index = this.dates.findIndex((date) =>
         areIntervalsOverlapping(range, date, { inclusive: true })
