@@ -237,9 +237,11 @@ const ghostSchema = new Schema(
       default: 0,
     },
   },
-  {
-    timestamps: { createdAt: 'createdAt', updatedAt: 'modifiedAt' },
-  }
+  { toObject: { virtuals: true }, toJSON: { virtuals: true }, timestamps: true }
 )
+
+ghostSchema.virtual('initials').get(function () {
+  return this.name.first.charAt(0).toUpperCase() + this.name.last.charAt(0).toUpperCase()
+})
 
 module.exports = mongoose.model('Ghost', ghostSchema)
