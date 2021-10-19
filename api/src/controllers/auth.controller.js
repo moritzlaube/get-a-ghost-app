@@ -125,7 +125,9 @@ exports.verifyInvite = async (req, res) => {
         "We don't have your token in our database. It might be wrong or expired. Please send us an email and require a new one.",
     })
 
-  let email, firstName, lastName
+  let email
+  let firstName
+  let lastName
 
   try {
     ;({ email, firstName, lastName } = verifyJWT(token))
@@ -137,7 +139,10 @@ exports.verifyInvite = async (req, res) => {
 
   const hasAccount = await Account.exists({ email })
 
-  if (hasAccount) return res.status(409).json({ ok: false, message: 'You already have an account.' })
+  if (hasAccount)
+    return res
+      .status(409)
+      .json({ ok: false, message: 'You already have an account. Please login and fill out your profile.' })
 
   const returnedToken = await Token.findOne({ token })
 
