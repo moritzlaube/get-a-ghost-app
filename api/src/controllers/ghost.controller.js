@@ -105,12 +105,13 @@ exports.requestGhost = async (req, res) => {
 }
 
 exports.createGhost = async (req, res) => {
-  const { type, name, password } = req.body
+  const { name, password, phone, email } = req.body
 
   try {
     const createdAccount = await Account.register(
       {
         email,
+        isGhost: true,
         role: 'Ghost',
       },
       password
@@ -118,7 +119,7 @@ exports.createGhost = async (req, res) => {
 
     const createdGhost = await Ghost.create({
       account: createdAccount._id,
-      type,
+      phone,
       name,
     })
 
