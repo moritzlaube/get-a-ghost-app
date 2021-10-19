@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const { isWithinInterval, parseISO } = require('date-fns')
 const Ghost = require('../models/ghost.model')
 const Account = require('../models/account.model')
@@ -112,6 +113,7 @@ exports.createGhost = async (req, res) => {
       {
         email,
         isGhost: true,
+        emailVerified: true,
         role: 'Ghost',
       },
       password
