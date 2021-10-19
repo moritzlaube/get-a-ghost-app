@@ -1,79 +1,52 @@
 <template lang="pug">
   div.container
+    BaseGhostLogo.mt-md.center-align
     div(v-if="$fetchState.pending")
       BaseGhostIcon.centered
       p.center-align.mt-md Loading ...
-    p(v-if="error") {{error.message}}
-      pre {{ form }}
+    p.mt-md(v-else-if="error") {{error.message}}
     div.flow(v-else)
       div
         p Welcome on board {{form.firstName}}!
-        p We are happy to have you. Please fill out this form. As soon as you're finished you'll be instantly discoverable by anyone who seeks help.
+        p We are happy to have you. Please fill out this form to create your account. On the following page you'll be able to complete your details.
       form.flow(@submit.prevent="handleSubmit" :class="{ loading: isLoading }")
         div
-          span Email
-          BaseInput(type="email" id="email" name="email" v-model="form.email" placeholder="Email" label="Email" disabled)
+          span.label Email
+          div.email {{form.email}}
         div
-          span Password
+          span.label Password
           BaseInput(type="password" id="password" name="password" v-model="form.password" placeholder="Password" label="Password" required)
         div.split
           div
-            span First Name
+            span.label First Name
             BaseInput(type="text" id="firstName" name="firstName" v-model="form.firstName" placeholder="First Name" label="First Name" required)
           div
-            span Last Name
+            span.label Last Name
             BaseInput(type="text" id="lastName" name="lastName" v-model="form.lastName" placeholder="Last Name" label="Last Name" required)
         div
-          span Ghost Name (optional)
+          span.label Ghost Name #[br]
+            | (this name will be your public alias)
           BaseInput(type="text" id="ghostName" name="ghostName" v-model="form.ghostName" :placeholder="form.firstName + ' ' + form.lastName" label="Ghost Name")
         div
-          span Phone
+          span.label Phone
           BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="+491511234567" label="Phone" required)
         BaseButton(:disabled="!(this.form.phone && this.form.password)") Create Account
-        p(v-if="error") {{error}}
 </template>
 
 <script>
-import { isWithinInterval, parseISO, areIntervalsOverlapping } from 'date-fns'
-import timezones from '@/assets/timezones.json'
-import languages from '@/assets/languages.json'
-
 export default {
   name: 'VerifyAndOnboard',
   auth: false,
+  layout: 'onboarding',
   data() {
     return {
       isLoading: false,
       form: {
+        email: 'Email',
         firstName: 'First Name',
         lastName: 'Last Name',
-        timezone: null,
       },
-      timer: null,
-      clicks: 0,
-      delay: 200,
       error: null,
-      selectedDates: null,
-      modelConfig: {
-        type: 'string',
-        mask: 'iso',
-        start: {
-          timeAdjust: '12:00:00',
-        },
-        end: {
-          timeAdjust: '12:00:00',
-        },
-      },
-      attrs: [
-        {
-          highlight: {
-            start: { fillMode: 'outline' },
-            base: { fillMode: 'light' },
-            end: { fillMode: 'outline' },
-          },
-          dates: [],
-        },
-      ],
     }
   },
   async fetch() {
@@ -82,30 +55,14 @@ export default {
       const { data } = await this.$axios.$get(`/auth/invite/${token}`)
       this.form = data
     } catch (error) {
-      if (error.response.data) this.form = error.response.data.data
+      // throw Error
       this.error = {
         message: error.response.data.message,
         status: error.response.status,
       }
+      // if (this.error.status === 404)
+      //   this.$nuxt.error({ statusCode: 404, message: 'Page not found' })
     }
-  },
-  computed: {
-    dates() {
-      return this.attrs[0].dates
-    },
-    timezones() {
-      return timezones.map((zone) => {
-        return zone.offset + ' ' + zone.name
-      })
-    },
-    languages() {
-      return languages.map((language) => language.language)
-    },
-  },
-  mounted() {
-    this.form.timezone = this.timezones.find((zone) =>
-      zone.includes(Intl.DateTimeFormat().resolvedOptions().timeZone)
-    )
   },
   methods: {
     async handleSubmit() {
@@ -132,31 +89,12 @@ export default {
         this.isLoading = false
         this.$router.push('/profile')
       } catch (error) {
-        this.error = error.response.data
-      }
-    },
-    handleDatePicker(range) {
-      const index = this.dates.findIndex((date) =>
-        areIntervalsOverlapping(range, date, { inclusive: true })
-      )
-      if (index > -1) {
-        this.attrs[0].dates.splice(index, 1)
-      }
-      this.attrs[0].dates.push(range)
-    },
-    handleDelete(event) {
-      this.clicks++
-      if (this.clicks === 1) {
-        this.timer = setTimeout(() => {
-          this.clicks = 0
-        }, this.delay)
-      } else {
-        clearTimeout(this.timer)
-        const index = this.dates.findIndex((date) => {
-          return isWithinInterval(parseISO(event.id), date)
-        })
-        this.attrs[0].dates.splice(index, 1)
-        this.clicks = 0
+        this.isLoading = false
+
+        this.error = {
+          message: error.response.data.message,
+          status: error.response.status,
+        }
       }
     },
   },
@@ -164,9 +102,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.pill-background {
-  background-color: white;
-  padding: 10px;
-  border-radius: 10px;
+.email {
+  color: #9c9c9c;
 }
 </style>
