@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import languages from '@/assets/languages.json'
+import availableLanguages from '@/assets/json/languages.json'
 
 export default {
   name: 'SearchForm',
@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     languages() {
-      return languages.map((language) => language.language)
+      return availableLanguages
     },
   },
   methods: {
@@ -79,9 +79,7 @@ export default {
 
       const queryModel = {
         type: this.form.profession?.toLowerCase(),
-        language:
-          languages.find((lang) => lang.language === this.form.language).code ||
-          null,
+        language: this.form.language?.toLowerCase() || null,
         category: this.form.category?.toLowerCase() || null,
         startDate: this.form.dateRange.start?.toISOString(),
         endDate: this.form.dateRange.end?.toISOString(),
