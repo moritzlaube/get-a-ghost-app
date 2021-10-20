@@ -24,8 +24,13 @@ h3 {
 }
 
 .label {
-  display: inline-block;
   font-size: var(--text-sm);
   color: var(--clr-pink);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.4rem;
+}
+
+.label--subline {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--text-light);
 }
