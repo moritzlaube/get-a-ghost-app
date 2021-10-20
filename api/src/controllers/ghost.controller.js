@@ -2,7 +2,6 @@
 const { isWithinInterval, parseISO } = require('date-fns')
 const Ghost = require('../models/ghost.model')
 const Account = require('../models/account.model')
-const { authService } = require('../services/auth.service')
 
 exports.searchGhosts = async (req, res) => {
   let ghosts
@@ -171,7 +170,7 @@ exports.init = async (req, res) => {
         last: 'Schrul',
       },
       ghostName: 'Schrulchen',
-      language: ['de', 'en'],
+      language: ['German', 'English'],
       phone: '+491703301300',
       website: 'https://www.example.com',
       categories: ['people', 'slice-of-life'],
@@ -204,7 +203,7 @@ exports.init = async (req, res) => {
         first: 'Fintan',
         last: 'Gsänger',
       },
-      language: ['de'],
+      language: ['German'],
       phone: '+491703301300',
       website: 'https://www.example.com',
       categories: [],
