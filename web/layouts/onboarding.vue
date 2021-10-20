@@ -1,5 +1,8 @@
 <template>
-  <Nuxt />
+  <div>
+    <Nuxt />
+    <notifications />
+  </div>
 </template>
 
 <script>

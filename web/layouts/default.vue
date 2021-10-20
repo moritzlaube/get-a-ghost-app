@@ -2,6 +2,7 @@
   <div>
     <BaseHeader />
     <Nuxt />
+    <notifications />
   </div>
 </template>
 
