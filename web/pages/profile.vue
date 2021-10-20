@@ -6,7 +6,12 @@
       BaseSelect(label="What's your field of expertise?" placeholder="Select ..." :id="'profession'" tabindex="0" :options="['Ghostwriter', 'Moodscout', 'Both']" v-model="form.profession")
     div(v-if="form.profession && form.profession === 'Ghostwriter'")
       span.label Select your language(s)
-      div(v-for="lang in form.selectedLanguages" :key="lang") {{lang}}
+      ul.pill-bg
+        li.pill(v-for="lang in form.selectedLanguages" :key="lang") 
+          span {{lang}}
+          svg(xmlns='http://www.w3.org/2000/svg' viewBox="0 0 24 24" width="18" fill='#FFF')
+            path(d='M0 0h24v24H0V0z' fill='none' opacity='.9')
+            path(d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.6L15.6 17 12 13.4 8.4 17 7 15.6l3.6-3.6L7 8.4 8.4 7l3.6 3.6L15.6 7 17 8.4 13.4 12l3.6 3.6z')
       BaseSelect(label="Select your language" placeholder="Select ..." :id="'language'" tabindex="0" :options="languages" @input="handleLanguageSelect")
     div
       span.label Website (optional)
@@ -123,3 +128,20 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 10px;
+  border: 1px solid var(--mid-grey);
+  padding: 0.25rem 0.5rem;
+}
+
+.pill > svg {
+  cursor: pointer;
+}
+
+.pill > * + * {
+  margin-left: var(--space-xs);
+}
+</style>
