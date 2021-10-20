@@ -44,9 +44,7 @@ export default {
             password: this.password,
           },
         })
-      } catch (error) {
-        this.error = error.response.status
-      }
+      } catch (error) {}
 
       this.isLoading = false
     },
