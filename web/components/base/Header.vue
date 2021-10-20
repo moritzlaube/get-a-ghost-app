@@ -6,7 +6,7 @@ header
       BaseGhostLogo
     div(v-if="isAuthenticated" tabindex="0" @blur="navIsOpen = false" @keyup.enter="navIsOpen = !navIsOpen")
       BaseProfileIcon(:isOpen="navIsOpen" @click="navIsOpen = !navIsOpen") {{ loggedInUser.profile.initials }}
-      BaseNav(:isOpen="navIsOpen" @close="navIsOpen = false")
+      BaseNav(:isOpen="navIsOpen" :isGhost="loggedInUser.emailVerified" @close="navIsOpen = false")
     NuxtLink(v-else to="/login").login
       svg(xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor")
         path(fill="none" d="M0 0h24v24H0z")
