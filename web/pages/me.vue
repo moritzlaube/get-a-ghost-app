@@ -58,11 +58,9 @@ export default {
     async handleSubmit() {
       this.isLoading = true
       try {
-        const { data: response } = await this.$axios.put('/users/me', this.user)
+        await this.$axios.put('/users/me', this.user)
         await this.$auth.fetchUser()
         this.isLoading = false
-        // eslint-disable-next-line no-console
-        console.log(response)
       } catch (error) {
         this.isLoading = false
 
