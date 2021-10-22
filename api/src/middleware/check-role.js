@@ -1,4 +1,4 @@
 module.exports = role => (req, res, next) => {
-  if (req.user.roleModel !== role) return next({ status: 403, message: 'Unauthorized' })
+  if (req.user.role !== role) return next({ status: 403, message: 'Forbidden' })
   return next()
 }

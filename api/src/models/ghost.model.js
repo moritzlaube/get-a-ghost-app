@@ -18,11 +18,19 @@ const ghostSchema = new Schema(
       {
         type: String,
         enum: ['moodscout', 'ghostwriter'],
+        lowercase: true,
+        trim: true,
       },
     ],
     name: {
-      first: String,
-      last: String,
+      first: {
+        type: String,
+        trim: true,
+      },
+      last: {
+        type: String,
+        trim: true,
+      },
     },
     ghostName: {
       type: String,
@@ -37,15 +45,27 @@ const ghostSchema = new Schema(
       country: String,
     },
     website: String,
-    categories: [],
-    about: String,
-    timezone: String,
-    language: [],
-    blocked: [{ start: Date, end: Date }],
-    profileVisits: {
-      type: Number,
-      default: 0,
+    categories: [
+      {
+        type: String,
+        lowercase: true,
+        trim: true,
+      },
+    ],
+    about: {
+      type: String,
+      trim: true,
     },
+    timezone: String,
+    languages: [
+      {
+        type: String,
+        lowercase: true,
+        trim: true,
+      },
+    ],
+    blocked: [{ start: Date, end: Date }],
+    // requests: [{ type: Schema.Types.ObjectId, ref: Request }],
   },
   { toObject: { virtuals: true }, toJSON: { virtuals: true }, timestamps: true }
 )

@@ -20,23 +20,23 @@ exports.searchGhosts = async (req, res) => {
       if (type === 'ghostwriter' && language !== undefined) {
         ghosts = await Ghost.find(
           { type, language, active: true },
-          'ghostName type categories language blocked timezone about'
+          'ghostName type categories language blocked timezone about website'
         ).lean()
       } else {
         ghosts = await Ghost.find(
           { type, active: true },
-          'ghostName type categories language blocked timezone about'
+          'ghostName type categories language blocked timezone about website'
         ).lean()
       }
     } else if (type === 'all-in-1' && language !== undefined) {
       ghosts = await Ghost.find(
         { type: ['ghostwriter', 'moodscout'], language, active: true },
-        'ghostName type categories language blocked timezone about'
+        'ghostName type categories language blocked timezone about website'
       ).lean()
     } else {
       ghosts = await Ghost.find(
         { type: ['ghostwriter', 'moodscout'], active: true },
-        'ghostName type categories language blocked timezone about'
+        'ghostName type categories language blocked timezone about website'
       ).lean()
     }
 
@@ -138,18 +138,19 @@ exports.updateGhost = async (req, res) => {
   // ex: ghost.name.first = 'Max'
   const { id } = req.params
 
-  if (req.user.role !== req.params.id) return res.status(401).json({ ok: false, message: 'Unauthorized' })
+  if (req.user._id.toString() !== req.params.id) return res.status(403).json({ ok: false, message: 'Forbidden' })
 
   try {
-    const ghost = await Ghost.findById(id)
-    Object.keys(req.body).forEach(key => {
-      if (key === 'blocked') {
-        ghost[key].push(...req.body[key])
-      } else {
+    const {
+      profile: { _id: ghostId },
+    } = await Account.findById(id)
+    const ghost = await Ghost.findById(ghostId)
+    Object.keys(req.body)
+      .filter(key => req.body[key] != null)
+      .forEach(key => {
         ghost[key] = req.body[key]
-      }
-    })
-
+      })
+    if (ghost.active === false) ghost.active = true
     await ghost.save()
 
     return res.status(200).json({ ok: true, data: ghost })
@@ -170,7 +171,7 @@ exports.init = async (req, res) => {
         last: 'Schrul',
       },
       ghostName: 'Schrulchen',
-      language: ['German', 'English'],
+      languages: ['german', 'english'],
       phone: '+491703301300',
       website: 'https://www.example.com',
       categories: ['people', 'slice-of-life'],
@@ -203,7 +204,7 @@ exports.init = async (req, res) => {
         first: 'Fintan',
         last: 'Gsänger',
       },
-      language: ['German'],
+      languages: ['german'],
       phone: '+491703301300',
       website: 'https://www.example.com',
       categories: [],
@@ -235,7 +236,7 @@ exports.init = async (req, res) => {
         first: 'Kai',
         last: 'Werner',
       },
-      language: [],
+      languages: [],
       phone: '+491703301300',
       website: 'https://www.example.com',
       categories: ['people', 'cars', 'table-top'],
