@@ -5,7 +5,7 @@
       BaseGhostIcon.centered
       p.center-align.mt-md Loading ...
     p.mt-md(v-else-if="error") {{error.message}}
-    div.flow(v-else)
+    div.mt-md.flow(v-else)
       div
         p Welcome on board {{form.firstName}}!
         p We are happy to have you. Please fill out this form to create your account. On the following page you'll be able to complete your details.
@@ -24,13 +24,12 @@
             span.label Last Name
             BaseInput(type="text" id="lastName" name="lastName" v-model="form.lastName" placeholder="Last Name" label="Last Name" required)
         div
-          span.label Ghost Name #[br]
-            | (this name will be your public alias)
+          span.label Your public alias
           BaseInput(type="text" id="ghostName" name="ghostName" v-model="form.ghostName" :placeholder="form.firstName + ' ' + form.lastName" label="Ghost Name")
         div
           span.label Phone
           BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="+491511234567" label="Phone" required)
-        BaseButton(:disabled="!(this.form.phone && this.form.password)") Create Account
+        BaseButton(:disabled="!(this.form.phone && this.form.password)" type="submit") Create Account
 </template>
 
 <script>
