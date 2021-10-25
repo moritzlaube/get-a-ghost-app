@@ -22,7 +22,7 @@
               path(d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.6L15.6 17 12 13.4 8.4 17 7 15.6l3.6-3.6L7 8.4 8.4 7l3.6 3.6L15.6 7 17 8.4 13.4 12l3.6 3.6z')
         BaseSelect(label="Select your language" placeholder="Select ..." :id="'language'" tabindex="0" :options="languages" @input="handleLanguageSelect")
       div
-        .label Select your favorite categories (max. 3)
+        .label Select your favorite categories
         ul.pill-bg(v-if="form.categories && form.categories.length > 0")
           li.pill(v-for="(cat, i) in form.categories" :key="cat") 
             span {{cat}}
@@ -101,9 +101,6 @@ export default {
   },
   computed: {
     ...mapGetters(['loggedInUser']),
-    dates() {
-      return this.attrs[0].dates
-    },
     timezones() {
       return timezones.map((zone) => {
         return zone.offset + ' ' + zone.name
@@ -119,28 +116,39 @@ export default {
   created() {
     // get user info if there are any and prefill form
     if (this.loggedInUser) {
-      // this.form.type =
-      //   this.loggedInUser.profile.type.length > 0
-      //     ? this.loggedInUser.profile.type
-      //     : null
+      this.form.type = this.loggedInUser.profile
+        ? this.loggedInUser.profile.type.map((i) => {
+            return i.charAt(0).toUpperCase() + i.slice(1)
+          })
+        : []
 
-      this.form.languages =
-        this.loggedInUser.profile.languages.length > 0
-          ? this.loggedInUser.profile.language.map((i) => {
-              return i.charAt(0).toUpperCase() + i.slice(1)
-            })
-          : []
+      this.form.languages = this.loggedInUser.profile
+        ? this.loggedInUser.profile.languages.map((i) => {
+            return i.charAt(0).toUpperCase() + i.slice(1)
+          })
+        : []
 
-      this.form.categories =
-        this.loggedInUser.profile.categories.length > 0
-          ? this.loggedInUser.profile.categories.map((i) => {
-              return i.charAt(0).toUpperCase() + i.slice(1)
-            })
-          : []
+      this.form.categories = this.loggedInUser.profile
+        ? this.loggedInUser.profile.categories.map((i) => {
+            return i.charAt(0).toUpperCase() + i.slice(1)
+          })
+        : []
+
+      this.attrs[0].dates = this.loggedInUser.profile.blocked
+        ? [...this.loggedInUser.profile.blocked]
+        : []
+
+      this.form.website = this.loggedInUser.profile.website
+        ? this.loggedInUser.profile.website
+        : null
+
+      this.form.about = this.loggedInUser.profile.about
+        ? this.loggedInUser.profile.about
+        : null
     }
 
     // get local timezone
-    if (this.timezones !== undefined) {
+    if (!this.timezone && this.timezones !== undefined) {
       this.form.timezone = this.timezones.find((zone) =>
         zone.includes(Intl.DateTimeFormat().resolvedOptions().timeZone)
       )
@@ -164,9 +172,24 @@ export default {
         await this.$axios.put(`/ghosts/${this.loggedInUser._id}`, query)
         await this.$auth.fetchUser()
         this.isLoading = false
-      } catch (error) {
+
+        this.$notify({
+          type: 'success',
+          title: 'Profile updated',
+          text: 'You successfully updated your profile.',
+          duration: 5000,
+        })
+      } catch (errors) {
         this.isLoading = false
-        this.error = error.response
+
+        const errorResponse = this.$errorHandler.setAndParse(errors)
+
+        this.$notify({
+          type: 'error',
+          title: errorResponse.status,
+          text: errorResponse.message,
+          duration: 5000,
+        })
       }
     },
     deleteLanguage(i) {
@@ -184,7 +207,6 @@ export default {
       )
     },
     handleCategorySelect(category) {
-      if (this.form.categories.length === 3) return
       this.form.categories = Array.from(
         new Set([...this.form.categories, category])
       )
@@ -200,7 +222,7 @@ export default {
       this.form.type = Array.from(new Set([...this.form.type, type]))
     },
     handleDatePicker(range) {
-      const index = this.dates.findIndex((date) =>
+      const index = this.attrs[0].dates.findIndex((date) =>
         areIntervalsOverlapping(range, date, { inclusive: true })
       )
       if (index > -1) {

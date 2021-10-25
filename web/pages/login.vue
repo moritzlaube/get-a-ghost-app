@@ -44,9 +44,19 @@ export default {
             password: this.password,
           },
         })
-      } catch (error) {}
+        this.isLoading = false
+      } catch (errors) {
+        this.isLoading = false
 
-      this.isLoading = false
+        const errorResponse = this.$errorHandler.setAndParse(errors)
+
+        this.$notify({
+          type: 'error',
+          title: errorResponse.status,
+          text: errorResponse.message,
+          duration: 5000,
+        })
+      }
     },
     async reset() {},
   },
