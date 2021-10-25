@@ -1,4 +1,5 @@
 const User = require('../models/user.model')
+const Ghost = require('../models/ghost.model')
 const Account = require('../models/account.model')
 const { getRandomInt } = require('../services/auth.service')
 const sendMail = require('../services/mail.service')
@@ -14,10 +15,17 @@ exports.getUser = (req, res) => {
 exports.updateUser = async (req, res) => {
   // destructure info from frontend and then mutate Object by user[key] = value
   const { name, company, phone, email: newEmail } = req.body
-  const user = await User.findById(req.user.profile.id)
+
+  let user
+
+  if (req.user.isGhost) {
+    user = await Ghost.findById(req.user.profile.id)
+  } else {
+    user = await User.findById(req.user.profile.id)
+    user.company = company
+  }
 
   user.name = name
-  user.company = company
   user.phone = phone
 
   await user.save()
