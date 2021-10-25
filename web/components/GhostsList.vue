@@ -3,7 +3,7 @@
     p(v-if="$fetchState.pending") Loading...
     p(v-else-if="error") Error while loading Ghosts. {{ error.message }}
     div(v-else)
-      p(v-if="ghosts.ghostCount === 0") There are no Ghosts available based on your query. Try a broader query or a different date.
+      p(v-if="ghosts.ghostCount === 0 || ghosts.length === 0") There are no Ghosts available based on your query. Try a broader query or a different date.
       p(v-else-if="ghosts.ghostCount") We have {{ ghosts.ghostCount }} Ghosts available for you based on your query. Please login or register to get in contact with them.
       div(v-else).flow
         p Your available Ghosts. Click on the card for more info. Then tap the button to send a request.
