@@ -14,12 +14,13 @@ exports.getUser = (req, res) => {
 
 exports.updateUser = async (req, res) => {
   // destructure info from frontend and then mutate Object by user[key] = value
-  const { name, company, phone, email: newEmail } = req.body
+  const { name, company = null, ghostName = null, phone, email: newEmail } = req.body
 
   let user
 
   if (req.user.isGhost) {
     user = await Ghost.findById(req.user.profile.id)
+    user.ghostName = ghostName
   } else {
     user = await User.findById(req.user.profile.id)
     user.company = company
