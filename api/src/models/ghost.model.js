@@ -48,7 +48,6 @@ const ghostSchema = new Schema(
     categories: [
       {
         type: String,
-        lowercase: true,
         trim: true,
       },
     ],

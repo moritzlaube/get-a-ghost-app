@@ -9,8 +9,14 @@ const userSchema = new Schema(
       ref: 'Account',
     },
     name: {
-      first: String,
-      last: String,
+      first: {
+        type: String,
+        trim: true,
+      },
+      last: {
+        type: String,
+        trim: true,
+      },
     },
     company: String,
     phone: String, // E.164 format -> npm package 'phone'
