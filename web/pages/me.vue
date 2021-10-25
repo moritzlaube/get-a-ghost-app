@@ -6,7 +6,8 @@
         div.split
           BaseInput(type="text" id="fname" name="fname" v-model="user.name.first" :placeholder="user.name.first" label="First Name")
           BaseInput(type="text" id="lname" name="lname" v-model="user.name.last" :placeholder="user.name.last" label="Last Name")
-        BaseInput(type="text" id="company" name="company" v-model="user.company" :placeholder="user.company" label="Company")
+        BaseInput(v-if="!loggedInUser.isGhost" type="text" id="company" name="company" v-model="user.company" :placeholder="user.company" label="Company")
+        BaseInput(v-else type="text" id="ghost-name" name="ghost-name" v-model="user.ghostName" :placeholder="user.ghostName" label="Your Ghost Name")
         BaseInput(type="text" id="email" name="email" v-model="user.email" :placeholder="user.email" label="Email")
         BaseInput(type="tel" id="phone" name="phone" v-model="user.phone" :placeholder="user.phone" label="Phone")
       BaseButton(type="submit").mt-xxl.has-shadow SAVE
@@ -27,6 +28,7 @@ export default {
         },
         email: null,
         company: null,
+        ghostName: null,
         phone: null,
       },
       error: null,
@@ -44,6 +46,7 @@ export default {
         profile: {
           name: { first, last },
           company,
+          ghostName,
           phone,
         },
       } = this.$auth.user
@@ -51,6 +54,7 @@ export default {
       this.user.name.first = first
       this.user.name.last = last
       this.user.company = company
+      this.user.ghostName = ghostName
       this.user.phone = phone
     }
   },
