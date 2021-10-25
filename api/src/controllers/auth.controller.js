@@ -1,13 +1,18 @@
 /* eslint-disable no-underscore-dangle */
-const { verifyJWT, signJWT, getRandomInt } = require('../services/auth.service')
 const pug = require('pug')
 const path = require('path')
+
+const { verifyJWT, signJWT, getRandomInt } = require('../services/auth.service')
+const sendMail = require('../services/mail.service')
+
 const Account = require('../models/account.model')
 const User = require('../models/user.model')
 const Token = require('../models/token.model')
-const sendMail = require('../services/mail.service')
 
-/** Register User */
+/* **************
+  REGISTER USER
+************** */
+
 exports.registerUser = async (req, res) => {
   /**
    * @typedef {object} req.body
@@ -29,20 +34,10 @@ exports.registerUser = async (req, res) => {
         email,
         role: 'User',
         verificationToken: verificationPIN,
-        verificationTokenExpire: new Date(Date.now() + 1000 * 3600 * 24),
+        verificationTokenExpire: new Date(Date.now() + 1000 * 3600 * 24 * 3),
       },
       password
     )
-
-    // Send mail via SG with PIN to verify email
-    const subject = '👻 Please verify your Email address'
-    const html = `Please verify your email with this pin: <strong>${verificationPIN}</strong><br>Note that it will expire in 24 hours.`
-
-    try {
-      await sendMail(email, subject, html)
-    } catch (error) {
-      console.error('Sendgrid Error', error.message)
-    }
 
     // Create a new User instance and link it to new Account
     const createdUser = await User.create({
@@ -56,11 +51,28 @@ exports.registerUser = async (req, res) => {
     createdAccount.profile = createdUser._id
     await createdAccount.save()
 
+    // Send mail via SG with PIN to verify email
+    const subject = '👻 Welcome to Get A Ghost!'
+    const html = pug.renderFile(path.join(__dirname, '../', 'templates', 'verification.pug'), {
+      verificationPIN,
+      firstName: name.first,
+    })
+
+    try {
+      await sendMail(email, subject, html)
+    } catch (error) {
+      console.error('Sendgrid Error', error.message)
+    }
+
     return res.status(200).json({ ok: true, data: { id: createdAccount._id } })
   } catch (error) {
     return res.status(500).json({ ok: false, data: error })
   }
 }
+
+/* **************
+  VERIFY EMAIL
+************** */
 
 exports.verifyToken = async (req, res) => {
   const { pin } = req.body
@@ -80,6 +92,10 @@ exports.verifyToken = async (req, res) => {
   }
 }
 
+/* **************
+  LOGOUT USER
+************** */
+
 exports.logout = (req, res) => {
   try {
     req.logout()
@@ -89,7 +105,10 @@ exports.logout = (req, res) => {
   }
 }
 
-// Controllers to create and verify Ghost-invites
+/* *******************
+  SEND INVITE TO GHOST
+******************* */
+
 exports.sendInvite = async (req, res) => {
   const token = req.headers.authorization.split(' ')[1]
 
@@ -120,6 +139,10 @@ exports.sendInvite = async (req, res) => {
 
   return res.status(200).json({ ok: true, data: { token: signedToken } })
 }
+
+/* ******************
+  VERIFY GHOST INVITE
+****************** */
 
 exports.verifyInvite = async (req, res) => {
   const { token } = req.params
