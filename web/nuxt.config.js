@@ -65,6 +65,7 @@ export default {
     '@/plugins/notify.server.js',
     '@/plugins/notify.client.js',
     '@/plugins/axios.js',
+    '@/plugins/error-handler.js',
     '@/plugins/pincode.client.js',
     '@/plugins/vcalendar.client.js',
   ],
