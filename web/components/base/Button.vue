@@ -35,6 +35,7 @@ button:disabled {
 
 button span {
   line-height: 1;
+  text-transform: uppercase;
 }
 
 button.has-shadow {
