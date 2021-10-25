@@ -3,16 +3,16 @@
     p Find all the availabe Ghosts for a given timeframe. If your dates are flexible, please check the appropriate box.
     form(@submit.prevent="onSubmit" :class="{ loading: isLoading }").flow
       div
-        p Find me a ...
+        p.label Find me a ...
         BaseSelect(label="Find Ghostwriter or Moodscout" placeholder="Select a profession ..." :id="'profession'" tabindex="0" :options="['Ghostwriter', 'Moodscout', 'All-in-1']" @input="handleSelect" v-model="form.profession")
 
       div(v-if="form.profession === 'Ghostwriter' || form.profession === 'All-in-1'")
-        p writing in ...
+        p.label writing in ...
         BaseSelect(label="Select a language" placeholder="Select a language" :id="'language'" tabindex="0" :options="languages" @input="handleSelect" v-model="form.language")
     
       client-only
         div
-          p available on ...
+          p.label available on ...
           v-date-picker(v-model="form.dateRange" :model-config="modelConfig" mode="date" color="pink" is-dark is-range)
             template(v-slot="{ inputValue, inputEvents, isDragging }")
               .date-range
@@ -30,7 +30,7 @@
                       svg(fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor")
                         path(d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z")
       div
-          p Choose your preferred category
+          p.label Choose your preferred category
           BaseSelect(label="Choose your category" placeholder="Choose a category (optional)" id="category" tabindex="0" :options="['None', 'People', 'Cars', 'Table-top', 'Slice-of-Life']" @input="handleSelect" v-model="form.category")
       BaseButton(type="submit" :disabled="!(form.dateRange.start && form.profession)").btn-mt.has-shadow GO FIND!
 </template>
