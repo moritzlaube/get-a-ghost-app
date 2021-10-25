@@ -7,7 +7,6 @@ module.exports = async (email, subject, html) => {
     to: email,
     from: 'ml@moritzlaube.com',
     subject,
-    text: 'and easy to do anywhere, even with Node.js',
     html,
   }
 
