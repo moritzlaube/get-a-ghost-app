@@ -21,7 +21,8 @@
     "mongoose-autopopulate": "^0.15.0",
     "morgan": "~1.9.1",
     "passport": "^0.4.1",
-    "passport-local-mongoose": "^6.1.0"
+    "passport-local-mongoose": "^6.1.0",
+    "pug": "^3.0.2"
   },
   "devDependencies": {
     "dotenv": "^10.0.0",

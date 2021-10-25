@@ -1,5 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const { verifyJWT, signJWT, getRandomInt } = require('../services/auth.service')
+const pug = require('pug')
+const path = require('path')
 const Account = require('../models/account.model')
 const User = require('../models/user.model')
 const Token = require('../models/token.model')
@@ -104,7 +106,11 @@ exports.sendInvite = async (req, res) => {
   await t.save()
 
   const subject = '👻 Welcome to Get-A-Ghost!'
-  const html = `Just a few more steps and you're one of us! Please follow this link to finish your sign-up process:<br>${process.env.BASE_URL}/invite?token=${signedToken}`
+  const html = pug.renderFile(path.join(__dirname, '../', 'templates', 'invite.pug'), {
+    firstName,
+    signedToken,
+    baseUrl: process.env.BASE_URL,
+  })
 
   try {
     await sendMail(email, subject, html)
