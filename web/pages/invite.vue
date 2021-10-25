@@ -5,11 +5,11 @@
       BaseGhostIcon.centered
       p.center-align.mt-md Loading ...
     p.mt-md(v-else-if="error") {{error.message}}
-    div.mt-md.flow(v-else)
+    div.mt-md(v-else)
       div
-        p Welcome on board {{form.firstName}}!
-        p We are happy to have you. Please fill out this form to create your account. On the following page you'll be able to complete your details.
-      form.flow(@submit.prevent="handleSubmit" :class="{ loading: isLoading }")
+        p Welcome on board, {{form.firstName}}!
+        p We are happy to have you. Please fill out this form to create your account. On the following page you'll be able to complete your profile. As soon as you're done, you'll be immediately discoverable by everyone who is in need of your excellency.
+      form.flow.mt-xl(@submit.prevent="handleSubmit" :class="{ loading: isLoading }")
         div
           span.label Email
           div.email {{form.email}}
