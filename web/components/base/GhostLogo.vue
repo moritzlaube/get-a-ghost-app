@@ -47,7 +47,7 @@
 <style lang="scss" scoped>
 svg {
   overflow: visible;
-  max-width: 24rem;
+  max-width: 20rem;
 }
 
 #ghost {
