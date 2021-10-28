@@ -28,6 +28,13 @@ button {
   height: min-content;
 }
 
+@media screen and (min-width: 32rem) {
+  button {
+    width: max-content;
+    min-width: 8rem;
+  }
+}
+
 button:disabled {
   background-color: var(--mid-grey);
   cursor: not-allowed;
