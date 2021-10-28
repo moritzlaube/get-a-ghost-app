@@ -1,0 +1,15 @@
+.vue-notification {
+  font-size: var(--text-sm) !important;
+  border-radius: 5px;
+  padding: 10px 14px !important;
+  margin: 5px 10px !important;
+
+  &.success {
+    background: var(--clr-pink) !important;
+    border: none;
+  }
+
+  &.error {
+    border: none;
+  }
+}
