@@ -7,6 +7,13 @@
   padding: var(--space-sm);
 }
 
+@media screen and (min-width: 24rem) {
+  .container {
+    max-width: 32rem;
+    padding: var(--space-lg);
+  }
+}
+
 .centered {
   margin-left: auto;
   margin-right: auto;
@@ -22,7 +29,7 @@
 
 .split {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .split > * {
@@ -30,7 +37,21 @@
 }
 
 .split > * + * {
-  margin: 0 0 0 var(--space-lg);
+  margin: var(--space-lg) 0 0 0;
+}
+
+@media screen and (min-width: 32rem) {
+  .split {
+    flex-direction: row;
+  }
+
+  .split > * + * {
+    margin: 0 0 0 var(--space-lg) !important;
+  }
+
+  .flow.split {
+    margin-top: var(--flow-spacer);
+  }
 }
 
 .sr-only {
