@@ -1,15 +1,28 @@
 <template lang="pug">
   div.container
-    h1 Edit Account
+    BaseBackButton(@click="$router.go(-1)") Go back
+    h1.mt-xxl Edit Account
     form(@submit.prevent="handleSubmit" :class="{ loading: isLoading }").mt-xxl
       fieldset.flow
         div.split
-          BaseInput(type="text" id="fname" name="fname" v-model="user.name.first" :placeholder="user.name.first" label="First Name")
-          BaseInput(type="text" id="lname" name="lname" v-model="user.name.last" :placeholder="user.name.last" label="Last Name")
-        BaseInput(v-if="!loggedInUser.isGhost" type="text" id="company" name="company" v-model="user.company" :placeholder="user.company" label="Company")
-        BaseInput(v-else type="text" id="ghost-name" name="ghost-name" v-model="user.ghostName" :placeholder="user.ghostName" label="Your Ghost Name")
-        BaseInput(type="text" id="email" name="email" v-model="user.email" :placeholder="user.email" label="Email")
-        BaseInput(type="tel" id="phone" name="phone" v-model="user.phone" :placeholder="user.phone" label="Phone")
+          div
+            p.label First Name
+            BaseInput(type="text" id="fname" name="fname" v-model="user.name.first" :placeholder="user.name.first" label="First Name")
+          div
+            p.label Last Name
+            BaseInput(type="text" id="lname" name="lname" v-model="user.name.last" :placeholder="user.name.last" label="Last Name")
+        div(v-if="!loggedInUser.isGhost")
+          p.label Company
+          BaseInput(type="text" id="company" name="company" v-model="user.company" :placeholder="user.company" label="Company")
+        div(v-else)
+          p.label Ghost Name
+          BaseInput(type="text" id="ghost-name" name="ghost-name" v-model="user.ghostName" :placeholder="user.ghostName" label="Your Ghost Name")
+        div
+          p.label Email
+          BaseInput(type="text" id="email" name="email" v-model="user.email" :placeholder="user.email" label="Email")
+        div 
+          p.label Phone
+          BaseInput(type="tel" id="phone" name="phone" v-model="user.phone" :placeholder="user.phone" label="Phone")
       BaseButton(type="submit").mt-xxl.has-shadow SAVE
 </template>
 
@@ -31,7 +44,6 @@ export default {
         ghostName: null,
         phone: null,
       },
-      error: null,
     }
   },
   computed: {
@@ -64,14 +76,24 @@ export default {
       try {
         await this.$axios.put('/users/me', this.user)
         await this.$auth.fetchUser()
-        this.isLoading = false
-      } catch (error) {
-        this.isLoading = false
 
-        this.error = {
-          message: error.response.data.message,
-          status: error.response.status,
-        }
+        this.$notify({
+          type: 'success',
+          title: 'Account updated',
+          text: 'You successfully updated your account information.',
+          duration: 3000,
+        })
+      } catch (errors) {
+        const errorResponse = this.$errorHandler.setAndParse(errors)
+
+        this.$notify({
+          type: 'error',
+          title: 'Error:' + errorResponse.status,
+          text: errorResponse.message,
+          duration: 3000,
+        })
+      } finally {
+        this.isLoading = false
       }
     },
   },

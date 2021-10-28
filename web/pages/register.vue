@@ -2,14 +2,16 @@
 div.container.register-page
   div.flow
     BaseGhostLogo.mt-md.center-align
+    h1 Register
     p(v-if="currentStep === 1") Register and find an available Moodscout and/or Ghostwriter within seconds. No more chain calling your handwritten, out-of-date list of Ghosts.
     p(v-if="currentStep === 2") Please let us know your name, company (if applicable) and phone. Your phone will come in handy when your requested Ghost needs to get in contact with you.
   div.flow
-    h1 Register
     transition(name="slide" mode="out-in")   
       FormRegisterEmailAndPassword(v-if="currentStep === 1" @update="processStep" @next="currentStep++")
-      FormRegisterNameAndCompany(v-if="currentStep === 2" @update="processStep" @sendForm="registerUser" :class="{ loading: isLoading }")
-      FormVerifyPIN(v-if="currentStep === 3" @update="processStep" @verify-pin="verifyPin" :class="{ loading: isLoading }")
+      div(v-if="currentStep === 2")
+        BaseBackButton(@click="currentStep--") Go Back
+        FormRegisterNameAndCompany(@update="processStep" @sendForm="registerUser" :class="{ loading: isLoading }")
+      FormVerifyPIN.mt-xxl(v-if="currentStep === 3" @update="processStep" @verify-pin="verifyPin" :class="{ loading: isLoading }")
     p(v-if="currentStep === 3").mt-md You can #[NuxtLink(to="/") skip] this step for now and start your search immediately.
 </template>
 
@@ -55,11 +57,18 @@ export default {
         })
 
         this.currentStep++
-      } catch (err) {
-        this.response = err.response.data
-      }
+      } catch (errors) {
+        const errorResponse = this.$errorHandler.setAndParse(errors)
 
-      this.isLoading = false
+        this.$notify({
+          type: 'error',
+          title: 'Error:' + errorResponse.status,
+          text: errorResponse.message,
+          duration: 5000,
+        })
+      } finally {
+        this.isLoading = false
+      }
     },
     async verifyPin() {
       this.isLoading = true
@@ -93,6 +102,11 @@ export default {
   height: 100vh;
 }
 
+@media screen and (min-width: 32rem) {
+  .register-page {
+    justify-content: start;
+  }
+}
 .slide-enter {
   opacity: 0;
   transform: translateX(100px);

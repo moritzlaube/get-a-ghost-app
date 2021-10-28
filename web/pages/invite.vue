@@ -45,7 +45,6 @@ export default {
         firstName: 'First Name',
         lastName: 'Last Name',
       },
-      error: null,
     }
   },
   async fetch() {
@@ -53,14 +52,15 @@ export default {
     try {
       const { data } = await this.$axios.$get(`/auth/invite/${token}`)
       this.form = data
-    } catch (error) {
-      // throw Error
-      this.error = {
-        message: error.response.data.message,
-        status: error.response.status,
-      }
-      // if (this.error.status === 404)
-      //   this.$nuxt.error({ statusCode: 404, message: 'Page not found' })
+    } catch (errors) {
+      const errorResponse = this.$errorHandler.setAndParse(errors)
+
+      this.$notify({
+        type: 'error',
+        title: 'Error:' + errorResponse.status,
+        text: errorResponse.message,
+        duration: 5000,
+      })
     }
   },
   methods: {
@@ -84,16 +84,18 @@ export default {
             password: this.form.password,
           },
         })
-
         this.isLoading = false
         this.$router.push('/profile')
-      } catch (error) {
+      } catch (errors) {
         this.isLoading = false
+        const errorResponse = this.$errorHandler.setAndParse(errors)
 
-        this.error = {
-          message: error.response.data.message,
-          status: error.response.status,
-        }
+        this.$notify({
+          type: 'error',
+          title: 'Error:' + errorResponse.status,
+          text: errorResponse.message,
+          duration: 5000,
+        })
       }
     },
   },
