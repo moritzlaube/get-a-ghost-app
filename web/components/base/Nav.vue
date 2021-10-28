@@ -20,7 +20,7 @@
             i 
               svg(width="10" height="8" fill="none" xmlns="http://www.w3.org/2000/svg")
                 path(d="M8.8.8 5 4.8 1.2.8 0 2l5 5.2L10 2 8.8.8Z" fill="#C4C4C4")
-        li(@click="$auth.logout(); $emit('close')").logout
+        li(@click="handleLogout").logout
           span Log Out
 </template>
 
@@ -35,6 +35,19 @@ export default {
     isGhost: {
       type: Boolean,
       default: false,
+    },
+  },
+  methods: {
+    handleLogout() {
+      this.$auth.logout()
+      this.$emit('close')
+
+      this.$notify({
+        type: 'success',
+        title: 'Logged out',
+        text: 'You successfully logged out.',
+        duration: 5000,
+      })
     },
   },
 }
