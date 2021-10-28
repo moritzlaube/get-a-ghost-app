@@ -41,6 +41,7 @@ svg {
   overflow: visible;
   max-width: 24rem;
   display: block;
+  margin: 0 auto;
 }
 
 #ghost {
