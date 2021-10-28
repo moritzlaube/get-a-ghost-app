@@ -5,13 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Attach Docker to Node",
+      "port": 9229,
+      "request": "attach",
+      "restart": true,
+      "address": "localhost",
+      "skipFiles": ["<node_internals>/**"],
       "type": "node",
-      "request": "launch",
-      "name": "Programm starten",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "program": "${workspaceFolder}/api/src/controllers/ghost.controller.js"
+      "localRoot": "${workspaceFolder}/api",
+      "remoteRoot": "/app",
+      "protocol": "inspector"
     }
   ]
 }
