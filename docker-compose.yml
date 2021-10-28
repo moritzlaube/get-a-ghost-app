@@ -25,6 +25,7 @@ services:
       - db
     ports:
       - 5000:5000
+      - 9229:9229
     volumes:
       - ./api/src:/app/src
       - ./api/.env:/app/.env

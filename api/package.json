@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "DEBUG=api:* nodemon -r dotenv/config ./bin/www"
+    "dev": "DEBUG=api:* nodemon --inspect=0.0.0.0:9229 -r dotenv/config ./bin/www"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.4.6",
