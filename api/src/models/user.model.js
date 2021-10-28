@@ -25,6 +25,7 @@ const userSchema = new Schema(
       zip: String,
       country: String,
     },
+    requests: [{ type: Schema.Types.ObjectId, ref: 'Request' }],
   },
   { toObject: { virtuals: true }, toJSON: { virtuals: true }, timestamps: true }
 )

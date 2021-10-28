@@ -64,7 +64,7 @@ const ghostSchema = new Schema(
       },
     ],
     blocked: [{ start: Date, end: Date }],
-    // requests: [{ type: Schema.Types.ObjectId, ref: Request }],
+    requests: [{ type: Schema.Types.ObjectId, ref: 'Request' }],
   },
   { toObject: { virtuals: true }, toJSON: { virtuals: true }, timestamps: true }
 )
