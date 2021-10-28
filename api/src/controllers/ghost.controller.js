@@ -1,7 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 const { isWithinInterval, parseISO } = require('date-fns')
+const mongoose = require('mongoose')
 const Ghost = require('../models/ghost.model')
+const User = require('../models/user.model')
 const Account = require('../models/account.model')
+const Request = require('../models/request.model')
+const sendMail = require('../services/mail.service')
+const pug = require('pug')
+const path = require('path')
 
 exports.searchGhosts = async (req, res) => {
   let ghosts
@@ -97,11 +103,73 @@ exports.getGhostById = async (req, res) => {
 
 exports.requestGhost = async (req, res) => {
   const { id: ghostId } = req.params
-  const { user } = req.body
+  const {
+    user,
+    requestedDates: { start, end },
+  } = req.body
 
-  const requestedGhost = await Ghost.findById(ghostId)
+  const startDate = new Date(start).toLocaleDateString('en-En', {})
+  const endDate = new Date(end).toLocaleDateString('en-En', {})
 
-  return res.status(200).json({ ok: true, data: { ghost: requestedGhost, user }, message: 'Request successful' })
+  try {
+    const [requestedGhost, requestedBy] = await Promise.all([
+      Ghost.findById(ghostId, 'requests account ghostName phone').populate('account'),
+      User.findById(user.profile.id, 'requests account name phone company').populate('account'),
+    ])
+
+    const newRequest = await Request.create({
+      requestedGhost: requestedGhost._id,
+      requestedBy: requestedBy._id,
+      requestedDates: {
+        start,
+        end,
+      },
+    })
+
+    requestedGhost.requests.push(newRequest._id)
+    requestedBy.requests.push(newRequest._id)
+    await Promise.all([requestedGhost.save(), requestedBy.save()])
+
+    const pugPayload = {
+      name: {
+        first: requestedBy.name.first,
+        last: requestedBy.name.last,
+      },
+      company: requestedBy.company,
+      phone: requestedBy.phone,
+      email: requestedBy.account.email,
+      requestedDates: {
+        start: startDate,
+        end: endDate,
+      },
+    }
+
+    const subjectGhost = '👻 Congratulations! You have a request!'
+    const htmlGhost = pug.renderFile(
+      path.join(__dirname, '../', 'views', 'email-templates', 'request-ghost.pug'),
+      pugPayload
+    )
+
+    const pugPayloadUser = {
+      ...pugPayload,
+      ghostName: requestedGhost.ghostName,
+    }
+
+    const subjectUser = '👻 We have successfully forwarded your request!'
+    const htmlUser = pug.renderFile(
+      path.join(__dirname, '../', 'views', 'email-templates', 'request-user.pug'),
+      pugPayloadUser
+    )
+
+    await Promise.all([
+      sendMail(requestedGhost.account.email, subjectGhost, htmlGhost),
+      sendMail(requestedBy.account.email, subjectUser, htmlUser),
+    ])
+
+    return res.status(200).json({ ok: true, data: newRequest })
+  } catch (error) {
+    return res.status(500).json({ ok: false, error })
+  }
 }
 
 exports.createGhost = async (req, res) => {
