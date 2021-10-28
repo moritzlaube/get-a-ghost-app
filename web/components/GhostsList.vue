@@ -1,5 +1,5 @@
 <template lang="pug">
-  .container.flow
+  .flow
     p(v-if="$fetchState.pending") Loading...
     p(v-else-if="error") Error while loading Ghosts. {{ error.message }}
     div(v-else)
@@ -8,7 +8,7 @@
       div(v-else).flow
         p Your available Ghosts. Click on the card for more info. Then tap the button to send a request.
         transition-group(name="list" tag="ul" :css="false" @before-enter="beforeEnter" @enter="enter").flow
-          GhostCard(v-for="(ghost, index) in ghosts" :key="ghost._id" :ghost="ghost" :data-index="index" :loading="requestingGhost" @request="handleRequest")
+          GhostCard(v-for="(ghost, index) in ghosts" :key="ghost._id" :ghost="ghost" :data-index="index" :isAuthenticated="isAuthenticated" :userIsGhost="loggedInUser ? loggedInUser.isGhost : false" :loading="requestingGhost" @request="handleRequest")
     
     NotificationModal(:open="modalIsOpen")
       template(#heading) Thanks for your interest in this Ghost!
@@ -65,10 +65,20 @@ export default {
       try {
         await this.$axios.post(`/ghosts/${ghost._id}/request`, {
           user: this.loggedInUser,
+          requestedDates: ghost.requestedDates,
         })
         this.requestingGhost = true
         this.modalIsOpen = true
-      } catch (error) {}
+      } catch (errors) {
+        const errorResponse = this.$errorHandler.setAndParse(errors)
+
+        this.$notify({
+          type: 'error',
+          title: 'Error:' + errorResponse.status,
+          text: errorResponse.message,
+          duration: 5000,
+        })
+      }
     },
     beforeEnter(el) {
       el.style.opacity = 0

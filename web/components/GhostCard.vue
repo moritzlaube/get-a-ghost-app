@@ -4,7 +4,7 @@
       div.flow
         h2.card__name {{ ghost.ghostName }}
         .card__type {{ uppercaseFirstLetter(ghost.type).join(' & ') }}
-      BaseButton(v-if="expanded" @click.stop="handleRequest") Request
+      BaseButton(v-if="expanded && isAuthenticated && !userIsGhost" @click.stop="handleRequest") Request
       i(v-else)
         svg(xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="#FFF")
           path(d="M0 0h24v24H0V0z" fill="none")
@@ -14,7 +14,7 @@
         .card__content__section.flow
           h3.subheading About
           p {{ ghost.about }}
-        .card__content__section.flow
+        .card__content__section.flow(v-if="ghost.categories && ghost.categories.length > 0")
           .subheading Tags:
             span &nbsp;{{ uppercaseFirstLetter(ghost.categories).join(', ') }}
     transition
@@ -22,7 +22,7 @@
         div.timezone 
           svg(width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg")
             path(d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm0-18a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm.5 5v5.3l4.5 2.6-.8 1.3L9 11V5h1.5Z" fill="currentColor")
-          span {{ ghost.timezone }}
+          span {{ ghost.timezone.split(' ')[1] }}
         div(v-if="$route.query.startDate").available 
           svg(width="19" height="20" fill="none" xmlns="http://www.w3.org/2000/svg")
             path(d="M16.9 18H2V7H17v11Zm0-16h-1V0h-2.2v2H5.3V0H3.2v2h-1A2 2 0 0 0 0 4v14c0 .5.2 1 .6 1.4.4.4 1 .6 1.5.6H17c.5 0 1-.2 1.5-.6.4-.4.6-.9.6-1.4V4c0-.5-.2-1-.6-1.4-.4-.4-1-.6-1.5-.6Zm-2.6 8-1.1-1L8 13.9l-2.2-2.1-1.1 1L8 16l6.3-6Z" fill="currentColor")
@@ -42,6 +42,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    isAuthenticated: {
+      type: Boolean,
+      default: false,
+    },
+    userIsGhost: {
+      type: Boolean,
+      required: true,
+    },
   },
   computed: {
     expanded() {
@@ -51,12 +59,21 @@ export default {
       const { startDate, endDate } = this.$route.query
       const start = new Date(startDate).toLocaleDateString('en-En', {})
       const end = new Date(endDate).toLocaleDateString('en-En', {})
-      return `${start} - ${end}`
+      return `${start.split('/').slice(0, 2).join('/')} - ${end
+        .split('/')
+        .slice(0, 2)
+        .join('/')}`
     },
   },
   methods: {
     handleRequest() {
-      this.$emit('request', this.ghost)
+      this.$emit('request', {
+        ...this.ghost,
+        requestedDates: {
+          start: this.$route.query.startDate,
+          end: this.$route.query.endDate,
+        },
+      })
     },
     expand() {
       if (this.expanded) {
