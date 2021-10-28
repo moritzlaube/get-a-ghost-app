@@ -14,16 +14,6 @@ const Token = require('../models/token.model')
 ************** */
 
 exports.registerUser = async (req, res) => {
-  /**
-   * @typedef {object} req.body
-   * @property {string} email
-   * @property {string} password
-   * @property {string} company
-   * @property {object} name
-   * @property {string} name.first
-   * @property {string} name.last
-   */
-  /** @type {req.body} */
   const { email, password, company, name, phone } = req.body
   const verificationPIN = getRandomInt(1000, 9999)
 
@@ -53,7 +43,7 @@ exports.registerUser = async (req, res) => {
 
     // Send mail via SG with PIN to verify email
     const subject = '👻 Welcome to Get A Ghost!'
-    const html = pug.renderFile(path.join(__dirname, '../', 'templates', 'verification.pug'), {
+    const html = pug.renderFile(path.join(__dirname, '../', 'views', 'email-templates', 'verification.pug'), {
       verificationPIN,
       firstName: name.first,
     })
@@ -125,7 +115,7 @@ exports.sendInvite = async (req, res) => {
   await t.save()
 
   const subject = '👻 Welcome to Get-A-Ghost!'
-  const html = pug.renderFile(path.join(__dirname, '../', 'templates', 'invite.pug'), {
+  const html = pug.renderFile(path.join(__dirname, '../', 'views', 'email-templates', 'invite.pug'), {
     firstName,
     signedToken,
     baseUrl: process.env.BASE_URL,
