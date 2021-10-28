@@ -1,7 +1,7 @@
 <template lang="pug">
   div.container.flow
-    code {{loggedInUser}}
     h1 Edit Profile
+    BaseBackButton(v-if="loggedInUser.profile.active" @click="$router.go(-1)") Go Back
     form.flow(@submit.prevent="handleSubmit" :class="{ loading: isLoading }")
       div
         .label Select your profession
@@ -75,7 +75,6 @@ export default {
       timer: null,
       clicks: 0,
       delay: 200,
-      error: null,
       selectedDates: null,
       modelConfig: {
         type: 'string',
@@ -170,8 +169,10 @@ export default {
       try {
         this.isLoading = true
         await this.$axios.put(`/ghosts/${this.loggedInUser._id}`, query)
+
+        const firstTimeUpdatingProfile = !this.loggedInUser.profile.active
+
         await this.$auth.fetchUser()
-        this.isLoading = false
 
         this.$notify({
           type: 'success',
@@ -179,17 +180,19 @@ export default {
           text: 'You successfully updated your profile.',
           duration: 5000,
         })
-      } catch (errors) {
-        this.isLoading = false
 
+        if (firstTimeUpdatingProfile) this.$router.push('/')
+      } catch (errors) {
         const errorResponse = this.$errorHandler.setAndParse(errors)
 
         this.$notify({
           type: 'error',
           title: errorResponse.status,
-          text: errorResponse.message,
+          text: 'Error:' + errorResponse.message,
           duration: 5000,
         })
+      } finally {
+        this.isLoading = false
       }
     },
     deleteLanguage(i) {
