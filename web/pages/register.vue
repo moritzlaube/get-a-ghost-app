@@ -9,8 +9,9 @@ div.container.register-page
     transition(name="slide" mode="out-in")   
       FormRegisterEmailAndPassword(v-if="currentStep === 1" @update="processStep" @next="currentStep++")
       div(v-if="currentStep === 2")
-        BaseBackButton(@click="currentStep--") Go Back
+        BaseBackButton(@click="currentStep--; error=null") Go Back
         FormRegisterNameAndCompany(@update="processStep" @sendForm="registerUser" :class="{ loading: isLoading }")
+           p.error.center-align.mt-sm(v-if="error === 409") This user already exists. Please use a different email address.
       FormVerifyPIN.mt-xxl(v-if="currentStep === 3" @update="processStep" @verify-pin="verifyPin" :class="{ loading: isLoading }")
     p(v-if="currentStep === 3").mt-md You can #[NuxtLink(to="/") skip] this step for now and start your search immediately.
 </template>
@@ -32,6 +33,7 @@ export default {
       response: '',
       isLoading: false,
       currentStep: 1,
+      error: null,
     }
   },
 
@@ -60,9 +62,14 @@ export default {
       } catch (errors) {
         const errorResponse = this.$errorHandler.setAndParse(errors)
 
+        if (errorResponse.status === 409) {
+          this.error = errorResponse.status
+          return
+        }
+
         this.$notify({
           type: 'error',
-          title: 'Error:' + errorResponse.status,
+          title: 'Error: ' + errorResponse.status,
           text: errorResponse.message,
           duration: 5000,
         })
@@ -100,6 +107,10 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
+}
+
+.error {
+  color: var(--clr-pink);
 }
 
 @media screen and (min-width: 32rem) {
