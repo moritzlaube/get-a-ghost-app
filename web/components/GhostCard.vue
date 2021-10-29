@@ -14,9 +14,11 @@
         .card__content__section.flow
           h3.subheading About
           p {{ ghost.about }}
-        .card__content__section.flow(v-if="ghost.categories && ghost.categories.length > 0")
-          .subheading Tags:
+        .card__content__section.flow(v-if="ghost.categories || ghost.languages")
+          .subheading(v-if="ghost.categories.length > 0") Tags:
             span &nbsp;{{ uppercaseFirstLetter(ghost.categories).join(', ') }}
+          .subheading(v-if="ghost.languages.length > 0") Languages:
+            span &nbsp;{{ uppercaseFirstLetter(ghost.languages).join(', ') }}
     transition
     .card__bottom.mt-sm
         div.timezone 
