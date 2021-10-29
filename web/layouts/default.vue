@@ -3,6 +3,7 @@
     <BaseHeader />
     <Nuxt />
     <notifications classes="vue-notification" position="top left" />
+    <BaseFooter />
   </div>
 </template>
 
