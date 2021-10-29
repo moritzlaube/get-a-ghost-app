@@ -56,6 +56,7 @@ exports.registerUser = async (req, res) => {
 
     return res.status(200).json({ ok: true, data: { id: createdAccount._id } })
   } catch (error) {
+    if (error.name === 'UserExistsError') return res.status(409).json({ ok: false, data: error })
     return res.status(500).json({ ok: false, data: error })
   }
 }
@@ -66,8 +67,9 @@ exports.registerUser = async (req, res) => {
 
 exports.verifyToken = async (req, res) => {
   const { pin } = req.body
-
+  // get loggedin user and compare pin
   try {
+    // use loggedin user and store req.user.emailVerified = true; await req.user.save()
     const verifiedAccount = await Account.findOne({ verificationToken: pin })
 
     if (verifiedAccount === null) return res.status(404).json({ ok: false, message: 'No Account with this PIN' })
@@ -89,7 +91,7 @@ exports.verifyToken = async (req, res) => {
 exports.logout = (req, res) => {
   try {
     req.logout()
-    return res.status(200).json({ ok: true, data: req.user })
+    return res.status(200).json({ ok: true, data: {} })
   } catch (err) {
     return res.status(500).json({ ok: false, data: err })
   }
