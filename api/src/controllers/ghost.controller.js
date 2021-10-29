@@ -1,13 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 const { isWithinInterval, parseISO } = require('date-fns')
-const mongoose = require('mongoose')
+const pug = require('pug')
+const path = require('path')
 const Ghost = require('../models/ghost.model')
 const User = require('../models/user.model')
 const Account = require('../models/account.model')
 const Request = require('../models/request.model')
 const sendMail = require('../services/mail.service')
-const pug = require('pug')
-const path = require('path')
 
 exports.searchGhosts = async (req, res) => {
   let ghosts
@@ -25,24 +24,24 @@ exports.searchGhosts = async (req, res) => {
     if (type !== 'all-in-1') {
       if (type === 'ghostwriter' && language !== undefined) {
         ghosts = await Ghost.find(
-          { type, language, active: true },
-          'ghostName type categories language blocked timezone about website'
+          { type, languages: language, active: true },
+          'ghostName type categories languages blocked timezone about website'
         ).lean()
       } else {
         ghosts = await Ghost.find(
           { type, active: true },
-          'ghostName type categories language blocked timezone about website'
+          'ghostName type categories languages blocked timezone about website'
         ).lean()
       }
     } else if (type === 'all-in-1' && language !== undefined) {
       ghosts = await Ghost.find(
-        { type: ['ghostwriter', 'moodscout'], language, active: true },
-        'ghostName type categories language blocked timezone about website'
+        { type: ['ghostwriter', 'moodscout'], languages: language, active: true },
+        'ghostName type categories languages blocked timezone about website'
       ).lean()
     } else {
       ghosts = await Ghost.find(
         { type: ['ghostwriter', 'moodscout'], active: true },
-        'ghostName type categories language blocked timezone about website'
+        'ghostName type categories languages blocked timezone about website'
       ).lean()
     }
 
@@ -84,18 +83,6 @@ exports.searchGhosts = async (req, res) => {
     })
 
     return res.status(200).json({ ok: true, data: ghostsStripped })
-  } catch (error) {
-    return res.status(500).json({ ok: false, error })
-  }
-}
-
-exports.getGhostById = async (req, res) => {
-  const { id } = req.params
-
-  try {
-    const ghost = await Ghost.findById(id, 'getEssentialData')
-
-    return res.status(200).json({ ok: true, data: ghost })
   } catch (error) {
     return res.status(500).json({ ok: false, error })
   }
