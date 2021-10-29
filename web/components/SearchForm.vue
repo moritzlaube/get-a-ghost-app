@@ -30,13 +30,15 @@
                       svg(fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor")
                         path(d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z")
       div
-          p.label Choose your preferred category
-          BaseSelect(label="Choose your category" placeholder="Choose a category (optional)" id="category" tabindex="0" :options="['None', 'People', 'Cars', 'Table-top', 'Slice-of-Life']" @input="handleSelect" v-model="form.category")
+        p.label Choose your preferred category
+          span.label--subline We recommend to start a broad search without applying a category filter.
+        BaseSelect(label="Choose your category" placeholder="Choose a category (optional)" id="category" tabindex="0" :options="['No category', ...categories]" @input="handleSelect" v-model="form.category")
       BaseButton(type="submit" :disabled="!(form.dateRange.start && form.profession)").btn-mt.has-shadow GO FIND!
 </template>
 
 <script>
 import availableLanguages from '@/assets/json/languages.json'
+import availableCategories from '@/assets/json/categories.json'
 
 export default {
   name: 'SearchForm',
@@ -68,6 +70,9 @@ export default {
     languages() {
       return availableLanguages
     },
+    categories() {
+      return availableCategories
+    },
   },
   methods: {
     handleSelect(payload) {
@@ -76,6 +81,8 @@ export default {
     },
     onSubmit() {
       this.loading = true
+
+      if (this.form.category === 'No category') this.form.category = null
 
       const queryModel = {
         type: this.form.profession?.toLowerCase(),
