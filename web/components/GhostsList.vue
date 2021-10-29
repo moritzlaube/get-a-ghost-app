@@ -1,12 +1,16 @@
 <template lang="pug">
-  .flow
+  .flow(:class="{ loading: isLoading }")
     p(v-if="$fetchState.pending") Loading...
     p(v-else-if="error") Error while loading Ghosts. {{ error.message }}
     div(v-else)
-      p(v-if="ghosts.ghostCount === 0 || ghosts.length === 0") There are no Ghosts available based on your query. Try a broader query or a different date.
+      div(v-if="ghosts.ghostCount === 0 || ghosts.length === 0") 
+        .no-ghost
+          img(src="~/assets/images/no-ghost-icon.svg")
+        p Sorry. There are no Ghosts available based on your query. Try a broader query or a different date.
       p(v-else-if="ghosts.ghostCount") We have {{ ghosts.ghostCount }} Ghosts available for you based on your query. Please login or register to get in contact with them.
       div(v-else).flow
-        p Your available Ghosts. Click on the card for more info. Then tap the button to send a request.
+        p Your available Ghosts. Click on the card for more info. Then tap the request button to send a request. 
+        p Please remember that we'll send your name, company, email and phone information to the Ghost so that he/she can get in touch with you.
         transition-group(name="list" tag="ul" :css="false" @before-enter="beforeEnter" @enter="enter").flow
           GhostCard(v-for="(ghost, index) in ghosts" :key="ghost._id" :ghost="ghost" :data-index="index" :isAuthenticated="isAuthenticated" :userIsGhost="loggedInUser ? loggedInUser.isGhost : false" :loading="requestingGhost" @request="handleRequest")
     
@@ -14,7 +18,7 @@
       template(#heading) Thanks for your interest in this Ghost!
       template(#content) 
         p We have delivered a request to #[span(style="color: #ed408d; font-weight: 700") {{ requestedGhost.ghostName }}] and sent your contact details (email and phone) along with it. Your Ghost will get back to you shortly. 
-        p Until then, we'd like to thank you for using our services and hope to hear from you soon. Please don't hesitate to shoot as an #[a(href="mailto:hi@get-a-ghost.com") email] should you have any questions or comments.
+        p Until then, we'd like to thank you for using our services and hope to hear from you soon. Please don't hesitate to send us an #[a(href="mailto:hi@get-a-ghost.com") email] should you have any questions or comments.
       template(#button)
         BaseButton(@click="modalIsOpen=false") GOT IT!
 </template>
@@ -31,6 +35,7 @@ export default {
   layout: 'onboarding',
   data() {
     return {
+      isLoading: false,
       ghosts: [],
       requestedGhost: null,
       requestingGhost: false,
@@ -48,8 +53,9 @@ export default {
       })
 
       this.ghosts = data.data
-    } catch (error) {
-      this.error = error.response.data
+    } catch (errors) {
+      const errorResponse = this.$errorHandler.setAndParse(errors)
+      this.error = errorResponse.message
     }
   },
   fetchOnServer: false,
@@ -59,6 +65,7 @@ export default {
   },
   methods: {
     async handleRequest(ghost) {
+      this.isLoading = true
       this.requestingGhost = true
       this.requestedGhost = ghost
       // send request to backend including data of requesting user
@@ -78,6 +85,8 @@ export default {
           text: errorResponse.message,
           duration: 5000,
         })
+      } finally {
+        this.isLoading = false
       }
     },
     beforeEnter(el) {
@@ -96,3 +105,11 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.no-ghost img {
+  margin: 0 auto;
+  width: 100px;
+  margin-bottom: 2rem;
+}
+</style>
