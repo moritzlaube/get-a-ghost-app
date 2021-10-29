@@ -92,7 +92,7 @@ form {
 }
 
 .error {
-  color: red;
+  color: var(--clr-pink);
 }
 
 .slide-enter {
