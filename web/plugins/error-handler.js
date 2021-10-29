@@ -1,4 +1,4 @@
-import ErrorHandler from '~/plugins/errors'
+import ErrorHandler from '~/assets/js/errors'
 
 export default (context, inject) => {
   inject('errorHandler', new ErrorHandler())
