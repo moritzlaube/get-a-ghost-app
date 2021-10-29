@@ -62,10 +62,10 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '@/plugins/error-handler.js',
     '@/plugins/notify.server.js',
     '@/plugins/notify.client.js',
     '@/plugins/axios.js',
-    '@/plugins/error-handler.client.js',
     '@/plugins/pincode.client.js',
     '@/plugins/vcalendar.client.js',
   ],
