@@ -62,6 +62,7 @@ export default {
           phone,
         },
       } = this.$auth.user
+
       this.user.email = email
       this.user.name.first = first
       this.user.name.last = last
