@@ -10,7 +10,7 @@ router.get('/', ghostController.searchGhosts)
 router.get('/init', ghostController.init)
 
 /* GET ghost by id. */
-router.get('/:id', isAuthenticated, ghostController.getGhostById)
+// router.get('/:id', isAuthenticated, ghostController.getGhostById)
 
 /* POST request to ghost by id. */
 router.post('/:id/request', isAuthenticated, checkRole('User'), ghostController.requestGhost)
