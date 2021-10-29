@@ -20,6 +20,7 @@ exports.updateUser = async (req, res) => {
 
   if (req.user.isGhost) {
     user = await Ghost.findById(req.user.profile.id)
+
     user.ghostName = ghostName
   } else {
     user = await User.findById(req.user.profile.id)
