@@ -33,7 +33,7 @@ if (app.get('env') === 'production') {
 /* MIDDLEWARES */
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.BASE_URL,
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     credentials: true,
   })
@@ -82,6 +82,7 @@ app.use('/auth', authRouter)
 app.use('/users', usersRouter)
 
 app.use((err, req, res, next) => {
+  console.error(err)
   res.status(err.status).json({
     ok: false,
     message: err.message,
