@@ -1,4 +1,4 @@
-import ErrorMessages from './error-messages'
+import ErrorMessages from '~/plugins/error-messages'
 
 export default class Errors {
   constructor(customMessages = null, customDefaultMessage = '') {
