@@ -1,5 +1,12 @@
 const mongoose = require('mongoose')
 
-mongoose.connect(process.env.MONGODB_CONNECTION_STRING)
+mongoose
+  .connect(process.env.MONGODB_CONNECTION_STRING)
+  .then(() => console.log('connection established'))
+  .catch(err => {
+    console.error(err)
+  })
 
-module.exports = mongoose.connection.getClient()
+const clientPromise = mongoose.connection.asPromise().then(connection => connection.getClient())
+
+module.exports = clientPromise
