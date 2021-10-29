@@ -55,7 +55,7 @@ head
     .ExternalClass font,
     .ExternalClass td,
     .ExternalClass div {
-    line-height: 100%;
+    line-height: 125%;
     }
     .apple-link a {
     color: inherit !important;
@@ -95,7 +95,7 @@ table.body(role='presentation' border='0' cellpadding='0' cellspacing='0' style=
                   td(style='font-family: sans-serif; font-size: 14px; vertical-align: top;' valign='top')
                     p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;') Congratulations!
                     p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;')
-                      | We have successfully forwarded your request to #{name} and shared your contact details. Below you'll find the request, that we've send to #{ghostName}.
+                      | We have successfully forwarded your request to #{ghostName}. Below you'll find the information we've been sharing with the Ghost.
                     p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;')
                       | Your Company: 
                       b #{company}
@@ -104,12 +104,10 @@ table.body(role='presentation' border='0' cellpadding='0' cellspacing='0' style=
                       b #{name.first} #{name.last}
                       br
                       |                           Your Phone: 
-                      b
-                        a(href='tel:' + phone style='color: #ed408d; text-decoration: underline;') #{phone}
+                      b #{phone}
                       br
                       |                           Your Email: 
-                      b
-                        a(href='mailto:' + email style='color: #ed408d; text-decoration: underline;') #{email}
+                      b #{email}
                       br
                       |                           Requested Dates: 
                       b #{requestedDates.start} - #{requestedDates.end}
