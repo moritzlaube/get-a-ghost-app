@@ -241,7 +241,7 @@ export default {
         }, this.delay)
       } else {
         clearTimeout(this.timer)
-        const index = this.dates.findIndex((date) => {
+        const index = this.attrs[0].dates.findIndex((date) => {
           return isWithinInterval(parseISO(event.id), date)
         })
         this.attrs[0].dates.splice(index, 1)
