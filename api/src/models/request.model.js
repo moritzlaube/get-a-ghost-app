@@ -1,8 +1,10 @@
 const mongoose = require('mongoose')
+
 const { Schema } = mongoose
 
 const requestSchema = new Schema(
   {
+    // remove word request
     requestedBy: {
       type: Schema.Types.ObjectId,
       ref: 'User',
