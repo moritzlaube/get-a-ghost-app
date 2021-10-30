@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "get-a-ghost"
+  },
+  "targets": {
+    "get-a-ghost": {
+      "hosting": {
+        "app": [
+          "get-a-ghost-app"
+        ],
+        "web": [
+          "get-a-ghost"
+        ]
+      }
+    }
+  }
+}
