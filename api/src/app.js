@@ -28,6 +28,7 @@ const app = express()
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   cookie.secure = true // serve secure cookies
+  cookie.domain = process.env.COOKIE_URL
 }
 
 /* MIDDLEWARES */
