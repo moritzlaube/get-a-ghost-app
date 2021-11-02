@@ -95,6 +95,11 @@ export default {
           },
           dates: [],
         },
+        {
+          key: 'today',
+          dot: true,
+          dates: new Date(),
+        },
       ],
     }
   },
@@ -133,8 +138,16 @@ export default {
           })
         : []
 
+      const parsedDates = this.loggedInUser.profile.blocked.map((range) => {
+        return {
+          ...range,
+          start: parseISO(range.start),
+          end: parseISO(range.end),
+        }
+      })
+
       this.attrs[0].dates = this.loggedInUser.profile.blocked
-        ? [...this.loggedInUser.profile.blocked]
+        ? [...parsedDates]
         : []
 
       this.form.website = this.loggedInUser.profile.website
@@ -225,9 +238,9 @@ export default {
       this.form.type = Array.from(new Set([...this.form.type, type]))
     },
     handleDatePicker(range) {
-      const index = this.attrs[0].dates.findIndex((date) =>
-        areIntervalsOverlapping(range, date, { inclusive: true })
-      )
+      const index = this.attrs[0].dates.findIndex((date) => {
+        return areIntervalsOverlapping(range, date, { inclusive: true })
+      })
       if (index > -1) {
         this.attrs[0].dates.splice(index, 1)
       }

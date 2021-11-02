@@ -13,7 +13,7 @@
       client-only
         div
           p.label available on ...
-          v-date-picker(v-model="form.dateRange" :model-config="modelConfig" mode="date" color="pink" :min-date="new Date()" is-dark is-range)
+          v-date-picker(v-model="form.dateRange" :model-config="modelConfig" :attributes="attrs" mode="date" color="pink" :min-date="new Date()" is-dark is-range)
             template(v-slot="{ inputValue, inputEvents, isDragging }")
               .date-range
                 div
@@ -54,6 +54,13 @@ export default {
           end: null,
         },
       },
+      attrs: [
+        {
+          key: 'today',
+          dot: true,
+          dates: new Date(),
+        },
+      ],
       modelConfig: {
         type: 'string',
         mask: 'iso',
