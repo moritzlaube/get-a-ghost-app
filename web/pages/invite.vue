@@ -4,7 +4,6 @@
     div(v-if="$fetchState.pending")
       BaseGhostIcon.centered
       p.center-align.mt-md Loading ...
-    p.mt-md(v-else-if="error") {{error.message}}
     div.mt-md(v-else)
       div
         p Welcome on board, {{form.firstName}}!
@@ -28,7 +27,9 @@
           BaseInput(type="text" id="ghostName" name="ghostName" v-model="form.ghostName" :placeholder="form.firstName + ' ' + form.lastName" label="Ghost Name")
         div
           span.label Phone
-          BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="+491511234567" label="Phone" required)
+          div.split
+            BaseSearchSelect.country-code(id="search")
+            BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="+491511234567" label="Phone" required)
         BaseButton(:disabled="!(this.form.phone && this.form.password)" type="submit") Create Account
 </template>
 
@@ -37,6 +38,10 @@ export default {
   name: 'VerifyAndOnboard',
   auth: false,
   layout: 'onboarding',
+  middleware({ redirect, route, error }) {
+    if (!Object.prototype.hasOwnProperty.call(route.query, 'token'))
+      redirect('/')
+  },
   data() {
     return {
       isLoading: false,
@@ -54,6 +59,8 @@ export default {
       this.form = data
     } catch (errors) {
       const errorResponse = this.$errorHandler.setAndParse(errors)
+
+      if (errorResponse.status === 404) this.$router.push('/')
 
       this.$notify({
         type: 'error',
@@ -105,5 +112,9 @@ export default {
 <style lang="scss" scoped>
 .email {
   color: #9c9c9c;
+}
+
+.country-code {
+  flex-basis: 30%;
 }
 </style>
