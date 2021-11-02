@@ -27,7 +27,7 @@ export default {
 
 <style lang="scss" scoped>
 .modal {
-  position: absolute;
+  position: fixed;
   display: flex;
   justify-content: center;
   top: 0;
