@@ -1,19 +1,23 @@
 <template lang="pug">
-  .flow(:class="{ loading: isLoading }")
-    p(v-if="$fetchState.pending") Loading...
-    p(v-else-if="error") Error while loading Ghosts. {{ error.message }}
-    div(v-else)
-      div(v-if="ghosts.ghostCount === 0 || ghosts.length === 0") 
-        .no-ghost
-          img(src="~/assets/images/no-ghost-icon.svg")
-        p Sorry. There are no Ghosts available based on your query. Try a broader query or a different date.
-      p(v-else-if="ghosts.ghostCount") We have {{ ghosts.ghostCount }} Ghosts available for you based on your query. Please login or register to get in contact with them.
-      div(v-else).flow
-        p Your available Ghosts. Click on the card for more info. Then tap the request button to send a request. 
-        p Please remember that we'll send your name, company, email and phone information to the Ghost so that he/she can get in touch with you.
-        transition-group(name="list" tag="ul" :css="false" @before-enter="beforeEnter" @enter="enter").flow
-          GhostCard(v-for="(ghost, index) in ghosts" :key="ghost._id" :ghost="ghost" :data-index="index" :isAuthenticated="isAuthenticated" :userIsGhost="loggedInUser ? loggedInUser.isGhost : false" :loading="requestingGhost" @request="handleRequest")
-    
+  div
+    .flow(:class="{ loading: isLoading }")
+      p(v-if="$fetchState.pending") Loading...
+      p(v-else-if="error") Error while loading Ghosts. {{ error.message }}
+      div(v-else)
+        div(v-if="ghosts.ghostCount === 0 || ghosts.length === 0") 
+          .no-ghost
+            img(src="~/assets/images/no-ghost-icon.svg")
+          p Sorry. There are no Ghosts available based on your query. Try a broader query or a different date.
+        p(v-else-if="ghosts.ghostCount") We have {{ ghosts.ghostCount }} {{ ghosts.ghostCount === 1 ? 'Ghost' : 'Ghosts' }} available for you based on your query. Please 
+          NuxtLink(to="/login") login
+          | &nbsp;or 
+          NuxtLink(to="/register") register
+          | &nbsp;to get in contact with them.
+        div(v-else).flow
+          p Your available Ghosts. Click on the card for more info. Then tap the request button to send a request. 
+          p Please remember that we'll send your name, company, email and phone information to the Ghost so that he/she can get in touch with you.
+          transition-group(name="list" tag="ul" :css="false" @before-enter="beforeEnter" @enter="enter").flow
+            GhostCard(v-for="(ghost, index) in ghosts" :key="ghost._id" :ghost="ghost" :data-index="index" :isAuthenticated="isAuthenticated" :userIsGhost="loggedInUser ? loggedInUser.isGhost : false" :loading="requestingGhost" @request="handleRequest")
     NotificationModal(:open="modalIsOpen")
       template(#heading) Thanks for your interest in this Ghost!
       template(#content) 
