@@ -1,9 +1,15 @@
 <template lang="pug">
-  div.toast-bg(v-if="loggedInUser && !loggedInUser.emailVerified" :class="{'toast-active': !loggedInUser.emailVerified}")
-      .container
-        span Please follow this 
-        NuxtLink(to="/verify") link
-        span &nbsp; to verify your email.
+.toast-bg
+  div(v-if="loggedInUser && !loggedInUser.emailVerified" :class="{'toast-active': !loggedInUser.emailVerified}")
+    .container
+      span Please follow this 
+      NuxtLink(to="/verify") link
+      span &nbsp; to verify your email.
+  div(v-if="loggedInUser && loggedInUser.isGhost && !loggedInUser.profile.active" :class="{'toast-active': !loggedInUser.active}")
+    .container
+      span Please complete your 
+      NuxtLink(to="/profile") profile
+      span &nbsp; to activate your account.
 </template>
 
 <script>
