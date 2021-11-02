@@ -18,6 +18,7 @@ div.container.login-page
         BaseButton(:disabled="!(email && password)").mt-xxl.has-shadow LOG IN
         //- p.mt-md.center-align Forgot your password? Go and #[span(@click="resetPassword = true").reset reset] it.
         p.mt-md.center-align No account yet? #[NuxtLink(to="/register") Register] to get started right away.
+    BaseFooter
 </template>
 
 <script>
