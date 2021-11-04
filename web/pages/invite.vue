@@ -24,7 +24,7 @@
         div
           span.label Phone
           div.split
-            BaseSearchSelect.country-code(type="tel" id="country-code" v-model="form.countryCode" :options="countryCodes" pre-selected="+49" required)
+            BaseSearchSelect.country-code(type="tel" id="country-code" v-model="form.countryCode" :options="Array.from(countryCodes)" pre-selected="+49" required)
             BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="1511234567" label="Phone" required)
         BaseButton(:disabled="!(this.form.phone && this.form.password)" type="submit") Create Account
     BaseFooter
@@ -80,7 +80,7 @@ export default {
   },
   computed: {
     countryCodes() {
-      return countryCodes.map((code) => code.dial_code)
+      return new Set(countryCodes.map((code) => code.dial_code))
     },
   },
   methods: {
