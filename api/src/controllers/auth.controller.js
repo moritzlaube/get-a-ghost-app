@@ -14,7 +14,7 @@ const Token = require('../models/token.model')
 ************** */
 
 exports.registerUser = async (req, res) => {
-  const { email, password, company, name, phone } = req.body
+  const { email, password, company, name, countryCode, phone } = req.body
   const verificationPIN = getRandomInt(1000, 9999)
 
   try {
@@ -34,6 +34,7 @@ exports.registerUser = async (req, res) => {
       account: createdAccount._id,
       name,
       company,
+      countryCode,
       phone,
     })
 
