@@ -49,7 +49,9 @@
     div.flow(v-else)
       h1 Congratulations!
       p You just activated your account! From now on, our registered users will be able to find you on our platform. We wish you the best of luck! Please don't hesitate to #[a(href="mailto:hi@get-a-ghost.com") contact] us if you have any questions or issues with our app.
-      p Your Get A Ghost team
+      p Your 
+        span.emphasize Get A Ghost 
+        | team
 </template>
 
 <script>
