@@ -7,7 +7,7 @@ const checkRole = require('../middleware/check-role')
 router.get('/', ghostController.searchGhosts)
 
 /* Init Ghosts in DB */
-router.get('/init', ghostController.init)
+// router.get('/init', ghostController.init)
 
 /* GET ghost by id. */
 // router.get('/:id', isAuthenticated, ghostController.getGhostById)
