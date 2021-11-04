@@ -8,6 +8,10 @@ const Account = require('../models/account.model')
 const Request = require('../models/request.model')
 const sendMail = require('../services/mail.service')
 
+/* **************
+  SEARCH GHOSTS
+************** */
+
 exports.searchGhosts = async (req, res) => {
   let ghosts
 
@@ -88,6 +92,10 @@ exports.searchGhosts = async (req, res) => {
   }
 }
 
+/* **************
+  REQUEST GHOST
+************** */
+
 exports.requestGhost = async (req, res) => {
   const { id: ghostId } = req.params
   const {
@@ -117,12 +125,13 @@ exports.requestGhost = async (req, res) => {
     requestedBy.requests.push(newRequest._id)
     await Promise.all([requestedGhost.save(), requestedBy.save()])
 
-    const pugPayload = {
+    let pugPayload = {
       name: {
         first: requestedBy.name.first,
         last: requestedBy.name.last,
       },
       company: requestedBy.company,
+      countryCode: requestedBy.countryCode,
       phone: requestedBy.phone,
       email: requestedBy.account.email,
       requestedDates: {
@@ -137,15 +146,22 @@ exports.requestGhost = async (req, res) => {
       pugPayload
     )
 
-    const pugPayloadUser = {
-      ...pugPayload,
+    pugPayload = {
+      firstName: requestedBy.name.first,
       ghostName: requestedGhost.ghostName,
+      countryCode: requestedGhost.countryCode,
+      phone: requestedGhost.phone,
+      email: requestedGhost.account.email,
+      requestedDates: {
+        start: startDate,
+        end: endDate,
+      },
     }
 
-    const subjectUser = '👻 We have successfully forwarded your request!'
+    const subjectUser = `👻 We have successfully forwarded your request to ${requestedGhost.ghostName}!`
     const htmlUser = pug.renderFile(
       path.join(__dirname, '../', 'views', 'email-templates', 'request-user.pug'),
-      pugPayloadUser
+      pugPayload
     )
 
     await Promise.all([
@@ -158,6 +174,10 @@ exports.requestGhost = async (req, res) => {
     return res.status(500).json({ ok: false, error })
   }
 }
+
+/* **************
+  CREATE GHOST
+************** */
 
 exports.createGhost = async (req, res) => {
   const { name, password, countryCode, phone, email } = req.body
@@ -189,6 +209,10 @@ exports.createGhost = async (req, res) => {
   }
 }
 
+/* **************
+  UPDATE GHOST
+************** */
+
 exports.updateGhost = async (req, res) => {
   // TODO Check parameter and then update object one by one
   // ex: ghost.name.first = 'Max'
@@ -215,108 +239,112 @@ exports.updateGhost = async (req, res) => {
   }
 }
 
-exports.init = async (req, res) => {
-  const localTimezone = 'GMT+02:00 Europe/Berlin'
+/* **************
+  INIT GHOSTS
+************** */
 
-  await Ghost.insertMany([
-    {
-      type: ['ghostwriter', 'moodscout'],
-      active: true,
-      name: {
-        first: 'Andrea',
-        last: 'Schrul',
-      },
-      ghostName: 'Schrulchen',
-      languages: ['german', 'english'],
-      phone: '+491703301300',
-      website: 'https://www.example.com',
-      categories: ['people', 'slice-of-life'],
-      timezone: localTimezone,
-      about:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus nisi, cursus porta fames faucibus sed volutpat pulvinar fames.',
-      blocked: [
-        {
-          start: new Date(2021, 1, 10),
-          end: new Date(2021, 1, 13),
-        },
-        {
-          start: new Date(2021, 2, 14),
-          end: new Date(2021, 2, 21),
-        },
-        {
-          start: new Date(2021, 3, 21),
-          end: new Date(2021, 3, 28),
-        },
-        {
-          start: new Date(2021, 5, 1),
-          end: new Date(2021, 5, 12),
-        },
-      ],
-    },
-    {
-      type: ['ghostwriter'],
-      active: true,
-      name: {
-        first: 'Fintan',
-        last: 'Gsänger',
-      },
-      languages: ['german'],
-      phone: '+491703301300',
-      website: 'https://www.example.com',
-      categories: [],
-      timezone: localTimezone,
-      about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus nisi, cursus porta.',
-      blocked: [
-        {
-          start: new Date(2021, 3, 22),
-          end: new Date(2021, 4, 5),
-        },
-        {
-          start: new Date(2021, 5, 22),
-          end: new Date(2021, 6, 3),
-        },
-        {
-          start: new Date(2021, 7, 1),
-          end: new Date(2021, 7, 8),
-        },
-        {
-          start: new Date(2021, 8, 8),
-          end: new Date(2021, 8, 22),
-        },
-      ],
-    },
-    {
-      type: ['moodscout'],
-      active: true,
-      name: {
-        first: 'Kai',
-        last: 'Werner',
-      },
-      languages: [],
-      phone: '+491703301300',
-      website: 'https://www.example.com',
-      categories: ['people', 'cars', 'table-top'],
-      timezone: localTimezone,
-      about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      blocked: [
-        {
-          start: new Date(2021, 3, 22),
-          end: new Date(2021, 4, 5),
-        },
-        {
-          start: new Date(2021, 5, 22),
-          end: new Date(2021, 6, 3),
-        },
-        {
-          start: new Date(2021, 9, 8),
-          end: new Date(2021, 9, 12),
-        },
-        {
-          start: new Date(2021, 9, 19),
-          end: new Date(2021, 10, 22),
-        },
-      ],
-    },
-  ])
-  res.status(200).json({ ok: true, message: 'Ghost docs created!' })
-}
+// exports.init = async (req, res) => {
+//   const localTimezone = 'GMT+02:00 Europe/Berlin'
+
+//   await Ghost.insertMany([
+//     {
+//       type: ['ghostwriter', 'moodscout'],
+//       active: true,
+//       name: {
+//         first: 'Andrea',
+//         last: 'Schrul',
+//       },
+//       ghostName: 'Schrulchen',
+//       languages: ['german', 'english'],
+//       phone: '+491703301300',
+//       website: 'https://www.example.com',
+//       categories: ['people', 'slice-of-life'],
+//       timezone: localTimezone,
+//       about:
+//         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus nisi, cursus porta fames faucibus sed volutpat pulvinar fames.',
+//       blocked: [
+//         {
+//           start: new Date(2021, 1, 10),
+//           end: new Date(2021, 1, 13),
+//         },
+//         {
+//           start: new Date(2021, 2, 14),
+//           end: new Date(2021, 2, 21),
+//         },
+//         {
+//           start: new Date(2021, 3, 21),
+//           end: new Date(2021, 3, 28),
+//         },
+//         {
+//           start: new Date(2021, 5, 1),
+//           end: new Date(2021, 5, 12),
+//         },
+//       ],
+//     },
+//     {
+//       type: ['ghostwriter'],
+//       active: true,
+//       name: {
+//         first: 'Fintan',
+//         last: 'Gsänger',
+//       },
+//       languages: ['german'],
+//       phone: '+491703301300',
+//       website: 'https://www.example.com',
+//       categories: [],
+//       timezone: localTimezone,
+//       about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Faucibus nisi, cursus porta.',
+//       blocked: [
+//         {
+//           start: new Date(2021, 3, 22),
+//           end: new Date(2021, 4, 5),
+//         },
+//         {
+//           start: new Date(2021, 5, 22),
+//           end: new Date(2021, 6, 3),
+//         },
+//         {
+//           start: new Date(2021, 7, 1),
+//           end: new Date(2021, 7, 8),
+//         },
+//         {
+//           start: new Date(2021, 8, 8),
+//           end: new Date(2021, 8, 22),
+//         },
+//       ],
+//     },
+//     {
+//       type: ['moodscout'],
+//       active: true,
+//       name: {
+//         first: 'Kai',
+//         last: 'Werner',
+//       },
+//       languages: [],
+//       phone: '+491703301300',
+//       website: 'https://www.example.com',
+//       categories: ['people', 'cars', 'table-top'],
+//       timezone: localTimezone,
+//       about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+//       blocked: [
+//         {
+//           start: new Date(2021, 3, 22),
+//           end: new Date(2021, 4, 5),
+//         },
+//         {
+//           start: new Date(2021, 5, 22),
+//           end: new Date(2021, 6, 3),
+//         },
+//         {
+//           start: new Date(2021, 9, 8),
+//           end: new Date(2021, 9, 12),
+//         },
+//         {
+//           start: new Date(2021, 9, 19),
+//           end: new Date(2021, 10, 22),
+//         },
+//       ],
+//     },
+//   ])
+//   res.status(200).json({ ok: true, message: 'Ghost docs created!' })
+// }
