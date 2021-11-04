@@ -19,6 +19,7 @@ const userSchema = new Schema(
       },
     },
     company: String,
+    countryCode: String,
     phone: String, // E.164 format -> npm package 'phone'
     address: {
       street: String,

@@ -38,6 +38,7 @@ const ghostSchema = new Schema(
         return `${this.name.first} ${this.name.last}`
       },
     },
+    countryCode: String,
     phone: String, // E.164 format -> npm package 'phone'
     address: {
       street: String,

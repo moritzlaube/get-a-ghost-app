@@ -14,7 +14,7 @@ exports.getUser = (req, res) => {
 
 exports.updateUser = async (req, res) => {
   // destructure info from frontend and then mutate Object by user[key] = value
-  const { name, company = null, ghostName = null, phone, email: newEmail } = req.body
+  const { name, company = null, ghostName = null, countryCode, phone, email: newEmail } = req.body
 
   let user
 
@@ -27,8 +27,9 @@ exports.updateUser = async (req, res) => {
     user.company = company
   }
 
-  user.name = name
   user.phone = phone
+  user.countryCode = countryCode
+  user.name = name
 
   await user.save()
 

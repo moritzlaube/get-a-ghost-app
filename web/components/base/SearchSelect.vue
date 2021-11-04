@@ -1,32 +1,68 @@
 <template lang="pug">
   div
-    label.sr-only
     .input-wrapper
-      input(@focus="showOptions=true" @blur="showOptions=false")
+      label.sr-only(:for="id")
+      input(@focus="openDropdown" @blur="showOptions=false" :value="selected" @input="handleInput" :id="id" v-bind="$attrs")
       transition(name="fade")
-        ul.options(v-show="showOptions")
-          li(v-for="(option, i) in countryCodes" :key="i") {{ option }}
+        ul.options(v-show="showOptions" @click="handleSelect" ref="options")
+          li(v-for="(option, i) in filteredOptions" :key="i" :class="{ selected: option === selected }") {{ option }}
 </template>
 
 <script>
 export default {
   name: 'SearchSelect',
+  props: {
+    id: {
+      type: String,
+      required: true,
+    },
+    options: {
+      type: Array,
+      required: true,
+    },
+    preSelected: {
+      type: String,
+      default: '',
+    },
+  },
   data: () => ({
     showOptions: false,
-    countryCodes: [
-      'Option1',
-      'Option2',
-      'Option3',
-      'Option4',
-      'OPtion5',
-      'Option6',
-      'OPtion7',
-      'Option9',
-      'Option10',
-      'Option11',
-      'Option11',
-    ],
+    selected: null,
+    filteredOptions: null,
+    selectedElement: null,
   }),
+  created() {
+    this.filteredOptions = this.options
+
+    if (!this.selected) {
+      this.selected = this.preSelected
+    }
+  },
+  methods: {
+    openDropdown() {
+      // const dropdown = this.$refs.options
+      // dropdown.style.opacity = 0
+      // dropdown.style.display = 'block'
+
+      // this.selectedElement = dropdown.querySelector('.selected').scrollTop
+
+      // dropdown.style.opacity = ''
+      // dropdown.style.display = 'none'
+
+      this.showOptions = true
+    },
+    handleSelect(e) {
+      this.selected = e.target.innerHTML
+      this.$emit('input', this.selected)
+    },
+    handleInput(e) {
+      this.selected = e.target.value
+      this.filteredOptions = this.options.filter((o) =>
+        o.toLowerCase().includes(e.target.value.toLowerCase())
+      )
+      this.$emit('input', this.selected)
+    },
+  },
 }
 </script>
 
@@ -68,6 +104,9 @@ input:disabled {
 
 .options > * {
   padding: 0.25rem var(--space-xs);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .options > *:hover,
