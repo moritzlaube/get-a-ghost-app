@@ -29,24 +29,32 @@ exports.searchGhosts = async (req, res) => {
       if (type === 'ghostwriter' && language !== undefined) {
         ghosts = await Ghost.find(
           { type, languages: language, active: true },
-          'ghostName type categories languages blocked timezone about website'
-        ).lean()
+          'ghostName type categories languages blocked timezone about website countryCode phone'
+        )
+          .lean()
+          .populate('account', 'email')
       } else {
         ghosts = await Ghost.find(
           { type, active: true },
-          'ghostName type categories languages blocked timezone about website'
-        ).lean()
+          'ghostName type categories languages blocked timezone about website countryCode phone'
+        )
+          .lean()
+          .populate('account', 'email')
       }
     } else if (type === 'all-in-1' && language !== undefined) {
       ghosts = await Ghost.find(
         { type: ['ghostwriter', 'moodscout'], languages: language, active: true },
-        'ghostName type categories languages blocked timezone about website'
-      ).lean()
+        'ghostName type categories languages blocked timezone about website countryCode phone'
+      )
+        .lean()
+        .populate('account', 'email')
     } else {
       ghosts = await Ghost.find(
         { type: ['ghostwriter', 'moodscout'], active: true },
-        'ghostName type categories languages blocked timezone about website'
-      ).lean()
+        'ghostName type categories languages blocked timezone about website countryCode phone'
+      )
+        .lean()
+        .populate('account', 'email')
     }
 
     // filter by category
@@ -108,8 +116,8 @@ exports.requestGhost = async (req, res) => {
 
   try {
     const [requestedGhost, requestedBy] = await Promise.all([
-      Ghost.findById(ghostId, 'requests account ghostName phone').populate('account'),
-      User.findById(user.profile.id, 'requests account name phone company').populate('account'),
+      Ghost.findById(ghostId, 'requests account name ghostName countryCode phone').populate('account', 'email'),
+      User.findById(user.profile.id, 'requests account name countryCode phone company').populate('account', 'email'),
     ])
 
     const newRequest = await Request.create({
@@ -130,6 +138,7 @@ exports.requestGhost = async (req, res) => {
         first: requestedBy.name.first,
         last: requestedBy.name.last,
       },
+      ghostFirstName: requestedGhost.name.first,
       company: requestedBy.company,
       countryCode: requestedBy.countryCode,
       phone: requestedBy.phone,
