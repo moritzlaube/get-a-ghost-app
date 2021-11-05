@@ -15,13 +15,19 @@
           | &nbsp;to get in contact with them.
         div(v-else).flow
           p Your available Ghosts. Click on the card for more info. Then tap the request button to send a request. 
-          p Please remember that we'll send your name, company, email and phone information to the Ghost so that he/she can get in touch with you.
+          p.small Please remember that we'll send your name, company, email and phone number to the Ghost so he/she can get in touch with you.
           transition-group(name="list" tag="ul" :css="false" @before-enter="beforeEnter" @enter="enter").flow
             GhostCard(v-for="(ghost, index) in ghosts" :key="ghost._id" :ghost="ghost" :data-index="index" :isAuthenticated="isAuthenticated" :userIsGhost="loggedInUser ? loggedInUser.isGhost : false" :loading="requestingGhost" @request="handleRequest")
     NotificationModal(:open="modalIsOpen")
       template(#heading) Thanks for your interest in this Ghost!
       template(#content) 
-        p We have delivered a request to #[span(style="color: #ed408d; font-weight: 700") {{ requestedGhost.ghostName }}] and sent your contact details (email and phone) along with it. Your Ghost will get back to you shortly. 
+        p We have delivered a request to #[span.emphasize {{ requestedGhost.ghostName }}] and sent your contact details (email and phone) along with it. Your Ghost will get back to you shortly. 
+        p If it's urgent, feel free to contact the Ghost directly:
+        p Email: 
+          a(:href="`mailto:${requestedGhost.account.email}`") {{requestedGhost.account.email}}
+          br 
+          | Phone: 
+          a(:href="`tel:${requestedGhost.countryCode}${requestedGhost.phone}`") {{requestedGhost.countryCode}}{{requestedGhost.phone}}
         p Until then, we'd like to thank you for using our services and hope to hear from you soon. Please don't hesitate to send us an #[a(href="mailto:hi@get-a-ghost.com") email] should you have any questions or comments.
       template(#button)
         BaseButton(@click="modalIsOpen=false") GOT IT!
@@ -115,5 +121,9 @@ export default {
   margin: 0 auto;
   width: 100px;
   margin-bottom: 2rem;
+}
+.small {
+  font-size: var(--text-sm);
+  color: var(--text-mid-grey);
 }
 </style>
