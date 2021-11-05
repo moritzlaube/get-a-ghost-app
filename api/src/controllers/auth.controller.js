@@ -86,6 +86,33 @@ exports.verifyToken = async (req, res) => {
 }
 
 /* **************
+  RESEND PIN
+************** */
+
+exports.resendEmailVerificationToken = async (req, res) => {
+  const verificationPIN = getRandomInt(1000, 9999)
+
+  req.user.verificationToken = verificationPIN
+  req.user.verificationTokenExpire = new Date(Date.now() + 1000 * 3600 * 24 * 3)
+
+  await req.user.save()
+
+  const subject = '👻 Your email verification token'
+  const html = pug.renderFile(path.join(__dirname, '../', 'views', 'email-templates', 'resend-verification.pug'), {
+    verificationPIN,
+    firstName: req.user.profile.name.first,
+  })
+
+  try {
+    await sendMail(req.user.email, subject, html)
+  } catch (error) {
+    console.error('Sendgrid Error', error.message)
+  }
+
+  return res.status(200).json({ ok: true, message: 'Email sent' })
+}
+
+/* **************
   LOGOUT USER
 ************** */
 
