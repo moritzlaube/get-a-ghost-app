@@ -36,6 +36,7 @@ export default {
 
     if (!this.selected) {
       this.selected = this.preSelected
+      this.$emit('input', this.selected)
     }
   },
   methods: {
