@@ -73,7 +73,7 @@ export default {
         lastName: 'Last Name',
         ghostName: null,
         password: null,
-        countryCode: null,
+        countryCode: '+49',
         phone: null,
       },
     }
