@@ -20,6 +20,6 @@ footer {
 
 .footer__subline {
   font-size: var(--text-xs);
-  color: var(--text-light);
+  color: var(--text-mid-grey);
 }
 </style>
