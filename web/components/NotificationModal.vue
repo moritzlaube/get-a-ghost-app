@@ -38,7 +38,6 @@ export default {
 }
 
 .modal__content {
-  text-align: center;
   height: max-content;
 
   & h2 {
