@@ -2,7 +2,7 @@ doctype html
 head
   meta(name='viewport' content='width=device-width')
   meta(http-equiv='Content-Type' content='text/html; charset=UTF-8')
-  title Congratulations! You have a request!
+  title Simple Call To Action
   style.
     @media only screen and (max-width: 620px) {
     table[class=body] h1 {
@@ -66,11 +66,11 @@ head
     text-decoration: none !important;
     }
     .btn-primary table td:hover {
-    background-color: #ed408d !important;
+    background-color: #d5075d !important;
     }
     .btn-primary a:hover {
-    background-color: #ed408d !important;
-    border-color: #ed408d !important;
+    background-color: #d5075d !important;
+    border-color: #d5075d !important;
     }
     }
 table.body(role='presentation' border='0' cellpadding='0' cellspacing='0' style='border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background-color: #ffffff; width: 100%;' width='100%' bgcolor='#ffffff')
@@ -81,11 +81,10 @@ table.body(role='presentation' border='0' cellpadding='0' cellspacing='0' style=
         table(role='presentation' border='0' cellpadding='0' cellspacing='0' style='border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;' width='100%')
           tr
             td.align-center(style='font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: center;' valign='top' align='center')
-              a(href='https://get-a-ghost.com' style='color: #ed408d; text-decoration: underline;')
+              a(href='https://get-a-ghost.com' style='color: #ec0867; text-decoration: underline;')
                 img(src='https://get-a-ghost.com/assets/ghost-logo.png' height='40' alt='Get A Ghost' style='border: none; -ms-interpolation-mode: bicubic; max-width: 100%;')
       .content(style='box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;')
         // START CENTERED WHITE CONTAINER
-        span.preheader(style='color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;') We have successfully forwarded your request!
         table.main(role='presentation' style='border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; background: #ffffff; border-radius: 3px; width: 100%;' width='100%')
           // START MAIN CONTENT AREA
           tr
@@ -93,33 +92,21 @@ table.body(role='presentation' border='0' cellpadding='0' cellspacing='0' style=
               table(role='presentation' border='0' cellpadding='0' cellspacing='0' style='border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; width: 100%;' width='100%')
                 tr
                   td(style='font-family: sans-serif; font-size: 14px; vertical-align: top;' valign='top')
-                    p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;') Congratulations, #{firstName}!
+                    p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;') Hi #{firstName},
                     p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;')
-                      | We have successfully forwarded your request to #{ghostName}. The Ghost will get in contact with you as soon as possible. But feel free to reach out as well. Here are his/her contact details:
+                      | Please find attached your new email verification PIN. Just copy and paste the undermentioned 4-digit number into the appropriate form.
+                    p.pin(style='font-family: sans-serif; margin: 0; margin-bottom: 15px; box-sizing: border-box; min-width: 100%; width: 100%; font-size: 40px; font-weight: bold; text-align: center; color: #d5075d;') #{verificationPIN}
                     p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;')
-                      | Your Ghost: 
-                      b #{ghostName}
-                      br
-                      | Phone: 
-                      b
-                        a(href='tel:' + countryCode + phone style='color: #ed408d; text-decoration: underline;') #{countryCode}#{phone}
-                      br
-                      | Email: 
-                      b
-                        a(href='mailto:' + email style='color: #ed408d; text-decoration: underline;') #{email}
-                      br
-                      | Requested Dates: 
-                      b #{requestedDates.start} - #{requestedDates.end}
+                      | If you already closed the tab, go to 
+                      a(href='https://app.get-a-ghost.com/verify' target='_blank' style='color: #ec0867; text-decoration: underline;') app.get-a-ghost.com/verify
+                      |  to fill in your PIN. You might be asked to login first.
+                    p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;') Please be aware that your unique PIN is only valid for 72 hours.
                     p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;')
-                      | Please be aware that you haven't booked your Ghost yet. Our service only connects the Ghosts with the world of the living.
-                    p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;')
-                      | We wish you the best of luck with your project and hope to hear from you soon again. If you have any further questions, please don't hesitate and contact us at 
-                      a(href='mailto:hi@get-a-ghost.com' style='color: #ed408d; text-decoration: underline;') hi@get-a-ghost.com
-                      | .
+                      | If you have any further questions, please don&apos;t hesitate to reply to this email. We&apos;ll get back to you as soon as possible.
                     p(style='font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;')
                       | Your 
                       b Get A Ghost
-                      |  team
+                      |  Team
           // END MAIN CONTENT AREA
         // END CENTERED WHITE CONTAINER
     td(style='font-family: sans-serif; font-size: 14px; vertical-align: top;' valign='top') &nbsp;
