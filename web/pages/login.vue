@@ -52,7 +52,7 @@ export default {
         } else {
           this.$notify({
             type: 'error',
-            title: 'Error:' + errorResponse.status,
+            title: 'Error: ' + errorResponse.status,
             text: errorResponse.message,
             duration: 5000,
           })
