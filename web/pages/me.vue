@@ -22,8 +22,8 @@
           BaseInput(type="text" id="email" name="email" v-model="user.email" :placeholder="user.email" label="Email")
         div 
           p.label Phone
-          .split
-            BaseSearchSelect.country-code(type="tel" id="country-code" v-model="user.countryCode" :options="Array.from(countryCodes)" :pre-selected="user.countryCode" required)
+          .phone-split
+            BaseSearchSelect(type="tel" id="country-code" v-model="user.countryCode" :options="Array.from(countryCodes)" :pre-selected="user.countryCode" required)
             BaseInput(type="tel" id="phone" name="phone" v-model="user.phone" :placeholder="user.phone" label="Phone" required)
       BaseButton(type="submit").mt-xxl.has-shadow SAVE
 </template>

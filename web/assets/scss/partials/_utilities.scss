@@ -27,6 +27,10 @@
   text-align: center;
 }
 
+.small-text {
+  font-size: var(--text-sm);
+}
+
 .flow > * + * {
   margin-top: var(--flow-spacer) !important;
 }
@@ -42,6 +46,23 @@
 
 .split > * + * {
   margin: var(--space-lg) 0 0 0;
+}
+
+.phone-split {
+  display: flex;
+  flex-direction: row;
+}
+
+.phone-split > * {
+  flex-basis: 100%;
+}
+
+.phone-split > * + * {
+  margin: 0 0 0 var(--flow-spacer);
+}
+
+.phone-split > *:first-child {
+  flex-basis: 20%;
 }
 
 @media screen and (min-width: 32rem) {
