@@ -12,12 +12,13 @@ div.container.register-page
         BaseBackButton(@click="currentStep--; error=null") Go Back
         FormRegisterNameAndCompany(@update="processStep" @sendForm="registerUser" :class="{ loading: isLoading }")
            p.error.center-align.mt-sm(v-if="error === 409") This user already exists. Please use a different email address.
-      FormVerifyPIN.mt-xxl(v-if="currentStep === 3" @update="processStep" @verify-pin="verifyPin" :class="{ loading: isLoading }")
-    p(v-if="currentStep === 3").mt-md 
-      | We have sent you an email with a verification pin that you can copy and paste. Please also check your spam.
-      br
-      | You can #[NuxtLink(to="/") skip] this step for now and start your search immediately.
-    BaseFooter
+      div(v-if="currentStep === 3")
+        p.mt-md 
+          | We have sent you an email with a verification code that you can copy and paste. Please also check your spam.
+          br
+          | You can #[NuxtLink(to="/") skip] this step for now and start your search immediately.
+        FormVerifyPIN.mt-xxl(@update="processStep" @verify-pin="verifyPin" :class="{ loading: isLoading }")
+  BaseFooter
 </template>
 
 <script>
