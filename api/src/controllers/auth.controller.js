@@ -4,6 +4,7 @@ const path = require('path')
 
 const { verifyJWT, signJWT, getRandomInt } = require('../services/auth.service')
 const sendMail = require('../services/mail.service')
+const sgClient = require('../services/sg-client.service')
 
 const Account = require('../models/account.model')
 const User = require('../models/user.model')
@@ -49,8 +50,23 @@ exports.registerUser = async (req, res) => {
       firstName: name.first,
     })
 
+    // Save user in SG contacts DB
+    const data = {
+      list_ids: [process.env.SG_USERS_LIST],
+      contacts: [
+        {
+          email,
+          first_name: name.first,
+          last_name: name.last,
+          custom_fields: {
+            country_code: countryCode,
+          },
+        },
+      ],
+    }
+
     try {
-      await sendMail(email, subject, html)
+      await Promise.all([sendMail(email, subject, html), sgClient(data, 'PUT', '/v3/marketing/contacts')])
     } catch (error) {
       console.error('Sendgrid Error', error.message)
     }
