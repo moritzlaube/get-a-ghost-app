@@ -16,7 +16,13 @@
                 path(d="M8.8.8 5 4.8 1.2.8 0 2l5 5.2L10 2 8.8.8Z" fill="#C4C4C4")
         li(@click="$emit('close')")
           NuxtLink(to="/privacy")
-            span Privacy & Security
+            span Privacy &amp; Security
+            i 
+              svg(width="10" height="8" fill="none" xmlns="http://www.w3.org/2000/svg")
+                path(d="M8.8.8 5 4.8 1.2.8 0 2l5 5.2L10 2 8.8.8Z" fill="#C4C4C4")
+        li(@click="$emit('close')")
+          NuxtLink(to="/terms-and-conditions")
+            span Terms &amp; Conditions
             i 
               svg(width="10" height="8" fill="none" xmlns="http://www.w3.org/2000/svg")
                 path(d="M8.8.8 5 4.8 1.2.8 0 2l5 5.2L10 2 8.8.8Z" fill="#C4C4C4")
