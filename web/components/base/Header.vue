@@ -2,7 +2,7 @@
 header
   NotificationToast(:loggedInUser="loggedInUser ? loggedInUser : null")
   div.container
-    NuxtLink(to="/" style="display: flex; width: 65%; max-width: 18rem;")
+    NuxtLink(to="/")
       BaseGhostLogo
     div(v-if="isAuthenticated" tabindex="0" @blur="navIsOpen = false" @keyup.enter="navIsOpen = !navIsOpen")
       BaseProfileIcon(:isOpen="navIsOpen" @click="navIsOpen = !navIsOpen") {{ loggedInUser.profile.initials }}
