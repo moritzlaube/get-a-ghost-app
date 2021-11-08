@@ -66,6 +66,14 @@ const ghostSchema = new Schema(
     ],
     blocked: [{ start: Date, end: Date }],
     requests: [{ type: Schema.Types.ObjectId, ref: 'Request' }],
+    payments: {
+      customerId: String,
+      subscriptionId: String,
+    },
+    onPaidPlan: {
+      type: Boolean,
+      default: false,
+    },
   },
   { toObject: { virtuals: true }, toJSON: { virtuals: true }, timestamps: true }
 )
