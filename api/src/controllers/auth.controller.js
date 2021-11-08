@@ -58,8 +58,10 @@ exports.registerUser = async (req, res) => {
           email,
           first_name: name.first,
           last_name: name.last,
+          phone_number: countryCode + phone,
           custom_fields: {
             country_code: countryCode,
+            company,
           },
         },
       ],
