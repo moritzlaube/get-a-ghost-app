@@ -2,9 +2,9 @@
   div.flow
     div.vue-pincode-wrapper
         PincodeInput(v-model="code" placeholder="·" @input="onFormInput")
-    p No verificytion code? Just click the 
+    p No verification code? Or the code has expired? Just click the 
       button.btn(type="button" @click="sendVerificationCode") link
-      | &nbsp;and have a new PIN sent to you.
+      |&#32;and have a new PIN sent to your inbox.
     BaseButton(type="button" @click="onSubmit").has-shadow VERIFY
 </template>
 
