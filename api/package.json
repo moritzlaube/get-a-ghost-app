@@ -7,6 +7,7 @@
     "dev": "DEBUG=api:* nodemon --inspect=0.0.0.0:9229 -r dotenv/config ./bin/www"
   },
   "dependencies": {
+    "@sendgrid/client": "^7.6.0",
     "@sendgrid/mail": "^7.4.6",
     "connect-mongo": "^4.4.1",
     "cors": "^2.8.5",
