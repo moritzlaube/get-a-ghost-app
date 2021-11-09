@@ -49,7 +49,7 @@
 
 <style lang="scss" scoped>
 div {
-  max-width: 16rem;
+  max-height: 5rem;
   line-height: 1;
   margin: 0;
   padding: 0;
