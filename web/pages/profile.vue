@@ -35,7 +35,9 @@
           .label Website (optional)
           BaseInput(type="text" id="website" name="website" v-model="form.website" placeholder="www.example.com" label="Website")
         div
-          .label About (english)
+          div.space-between
+            .label About (english) 
+            span.label(:class="{ exceed: wordCount < 0 }") {{ wordCount }}
           BaseTextarea(id="about" name="about" v-model="form.about" rows="5" cols="33" placeholder="About You")
         div
           .label Your timezone
@@ -45,7 +47,7 @@
             .label Your blocked dates
               span.label--subline Delete blocked dates by double-clicking a range
             v-date-picker(:value="null" color="pink" v-model="selectedDates" :model-config="modelConfig" :attributes="attrs" locale="en" :min-date="new Date()" is-dark is-range is-expanded @input="handleDatePicker" @dayclick="handleDateDelete")
-        BaseButton(:disabled="!(this.form.type && this.form.about && this.form.timezone)" type="submit") Update Profile
+        BaseButton(:disabled="!(form.type && form.about && form.timezone && wordCount >= 0)" type="submit") Update Profile
     div.flow(v-else)
       h1 Congratulations!
       p You just activated your account! From now on, our registered users will be able to find you on our platform. We wish you the best of luck! Please don't hesitate to #[a(href="mailto:hi@get-a-ghost.com") contact] us if you have any questions or issues with our app.
@@ -76,7 +78,7 @@ export default {
         type: [],
         languages: [],
         website: null,
-        about: null,
+        about: '',
         timezone: null,
         categories: [],
       },
@@ -124,6 +126,9 @@ export default {
     categories() {
       return availableCategories
     },
+    wordCount() {
+      return 250 - this.form.about.length
+    },
   },
   created() {
     // get user info if there are any and prefill form
@@ -164,7 +169,7 @@ export default {
 
       this.form.about = this.loggedInUser.profile.about
         ? this.loggedInUser.profile.about
-        : null
+        : ''
     }
 
     // get local timezone
@@ -295,5 +300,14 @@ export default {
 
 .pill > svg {
   cursor: pointer;
+}
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.space-between span.exceed {
+  color: red;
 }
 </style>
