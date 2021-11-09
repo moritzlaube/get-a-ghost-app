@@ -45,7 +45,7 @@
         client-only
           div
             .label Your blocked dates
-              span.label--subline Delete blocked dates by double-clicking a range
+              span.label--subline Delete blocked dates by double-clicking a day within a range
             v-date-picker(:value="null" color="pink" v-model="selectedDates" :model-config="modelConfig" :attributes="attrs" locale="en" :min-date="new Date()" is-dark is-range is-expanded @input="handleDatePicker" @dayclick="handleDateDelete")
         BaseButton(:disabled="!(form.type && form.about && form.timezone && wordCount >= 0)" type="submit") Update Profile
     div.flow(v-else)
@@ -151,13 +151,19 @@ export default {
           })
         : []
 
-      const parsedDates = this.loggedInUser.profile.blocked.map((range) => {
-        return {
-          ...range,
-          start: parseISO(range.start),
-          end: parseISO(range.end),
-        }
-      })
+      this.form.timezone = this.loggedInUser.profile.timezone
+        ? this.loggedInUser.profile.timezone
+        : null
+
+      const parsedDates = this.loggedInUser.profile.blocked
+        .map((range) => {
+          return {
+            ...range,
+            start: parseISO(range.start),
+            end: parseISO(range.end),
+          }
+        })
+        .filter((range) => range.end.getTime() > Date.now())
 
       this.attrs[0].dates = this.loggedInUser.profile.blocked
         ? [...parsedDates]
@@ -173,7 +179,7 @@ export default {
     }
 
     // get local timezone
-    if (!this.timezone && this.timezones !== undefined) {
+    if (!this.form.timezone && this.timezones !== undefined) {
       this.form.timezone = this.timezones.find((zone) =>
         zone.includes(Intl.DateTimeFormat().resolvedOptions().timeZone)
       )
