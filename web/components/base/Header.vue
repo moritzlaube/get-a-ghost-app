@@ -4,7 +4,7 @@ header
   div.container
     NuxtLink(to="/")
       BaseGhostLogo
-    div(v-if="isAuthenticated" tabindex="0" @blur="navIsOpen = false" @keyup.enter="navIsOpen = !navIsOpen")
+    div(v-if="isAuthenticated" @blur="navIsOpen = false" @keyup.enter="navIsOpen = !navIsOpen")
       BaseProfileIcon(:isOpen="navIsOpen" @click="navIsOpen = !navIsOpen") {{ loggedInUser.profile.initials }}
       BaseNav(:isOpen="navIsOpen" :isGhost="loggedInUser.isGhost" @close="navIsOpen = false")
     NuxtLink(v-else to="/login").login
