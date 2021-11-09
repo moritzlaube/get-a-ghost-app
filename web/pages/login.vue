@@ -1,7 +1,7 @@
 <template lang="pug">
 div.container.login-page
   div.flow
-    BaseGhostLogo.mt-md.center-align
+    BaseGhostLogo
     h1 Login
     p Login and find an available Moodscout and/or Ghostwriter within seconds. No more chain calling your handwritten, out-of-date list of Ghosts.
   div.flow
@@ -15,9 +15,9 @@ div.container.login-page
           BaseInput(type="email" id="email" name="email" v-model="email" placeholder="Email" label="Email" required)
           BaseInput(type="password" id="password" name="password" v-model="password" placeholder="Password" label="Password" required)
         p.error.center-align.mt-sm(v-if="error === 401") Wrong email or password. Please try again.
+        p.mt-md.center-align No account yet? #[NuxtLink(to="/register") Register] to get started right away.
         BaseButton(:disabled="!(email && password)").mt-xxl.has-shadow LOG IN
         //- p.mt-md.center-align Forgot your password? Go and #[span(@click="resetPassword = true").reset reset] it.
-        p.mt-md.center-align No account yet? #[NuxtLink(to="/register") Register] to get started right away.
   BaseFooter
 </template>
 
