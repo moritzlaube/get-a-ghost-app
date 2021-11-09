@@ -7,6 +7,7 @@ const User = require('../models/user.model')
 const Account = require('../models/account.model')
 const Request = require('../models/request.model')
 const sendMail = require('../services/mail.service')
+const sgClient = require('../services/sg-client.service')
 
 /* **************
   SEARCH GHOSTS
@@ -210,7 +211,27 @@ exports.createGhost = async (req, res) => {
     })
 
     createdAccount.profile = createdGhost._id
-    await createdAccount.save()
+
+    const data = {
+      list_ids: [process.env.SG_GHOSTS_LIST],
+      contacts: [
+        {
+          email,
+          first_name: name.first,
+          last_name: name.last,
+          phone_number: countryCode + phone,
+          custom_fields: {
+            country_code: countryCode,
+          },
+        },
+      ],
+    }
+
+    try {
+      await Promise.all([createdAccount.save(), sgClient(data, 'PUT', '/v3/marketing/contacts')])
+    } catch (error) {
+      console.log(error)
+    }
 
     return res.status(200).json({ ok: true, data: createdGhost._id })
   } catch (error) {
