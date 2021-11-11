@@ -10,7 +10,7 @@
                 path(d="M8.8.8 5 4.8 1.2.8 0 2l5 5.2L10 2 8.8.8Z" fill="#C4C4C4")
         li(v-if="isGhost" @click="$emit('close')")
           NuxtLink(to="/profile")
-            span Edit Profile
+            span Edit Profile &amp; Calendar
             i 
               svg(width="10" height="8" fill="none" xmlns="http://www.w3.org/2000/svg")
                 path(d="M8.8.8 5 4.8 1.2.8 0 2l5 5.2L10 2 8.8.8Z" fill="#C4C4C4")
