@@ -5,7 +5,8 @@
       BaseBackButton(v-if="loggedInUser.profile.active" @click="$router.go(-1)") Go Back
       form.flow(@submit.prevent="handleSubmit" :class="{ loading: isLoading }")
         div
-          .label Select your profession
+          .label Select your profession(s)
+            span.label--subline Multiple selections are possible
           ul.pill-bg(v-if="form.type && form.type.length > 0")
             li.pill(v-for="(type, i) in form.type" :key="type") 
               span {{type}}
@@ -15,6 +16,7 @@
           BaseSelect(label="What's your field of expertise?" placeholder="Select ..." :id="'profession'" tabindex="0" :options="['Ghostwriter', 'Moodscout']" @input="handleTypeSelect")
         div(v-if="form.type.includes('Ghostwriter')")  
           .label Select your language(s)
+            span.label--subline Multiple selections are possible
           ul.pill-bg(v-if="form.languages && form.languages.length > 0")
             li.pill(v-for="(lang, i) in form.languages" :key="lang") 
               span {{lang}}
