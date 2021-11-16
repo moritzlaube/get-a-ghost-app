@@ -1,6 +1,6 @@
 <template lang="pug">
   div.container.flow
-    p Find all the availabe Ghosts for a given timeframe. If your dates are flexible, please check the appropriate box.
+    p Find all the availabe Ghosts within a given date range. The selection of a Ghost type (Ghostwriter, Moodscout or both), a language (if applicable) and the requested date range are mandatory fields.
     form(@submit.prevent="onSubmit" :class="{ loading: isLoading }").flow
       div
         p.label Find me a ...
