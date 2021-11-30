@@ -1,6 +1,12 @@
 <template lang="pug">
   form(@input="onFormInput" @submit.prevent="onSubmit")
     fieldset.flow.mt-md
+      div
+        span.label Email
+        BaseInput(type="email" id="email" name="email" v-model="form.email" placeholder="Email" label="Email" required)
+      div
+        span.label Password
+        BaseInput(type="password" id="password" name="password" v-model="form.password" placeholder="Password" label="Password" required)
       div.flow.split
         div
           span.label First Name
@@ -17,7 +23,7 @@
           BaseSearchSelect(type="tel" id="country-code" v-model="form.countryCode" :options="Array.from(countryCodes)" :pre-selected="'+49'" required)
           BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="1511234567" label="Phone" required)
       slot
-    BaseButton(type="submit" :disabled="!(form.name.first && form.name.last && form.phone)").mt-xxl.has-shadow REGISTER
+    BaseButton(type="submit" :disabled="!(form.email && form.password && form.name.first && form.name.last && form.phone)").mt-xxl.has-shadow REGISTER
     p.mt-sm.small-text By registering, I agree to your &#32;
       NuxtLink(to="/terms-and-conditions") terms &amp; conditions
       | &#32; and &#32;
@@ -33,6 +39,8 @@ export default {
   data() {
     return {
       form: {
+        email: '',
+        password: '',
         name: {
           first: '',
           last: '',
@@ -51,6 +59,8 @@ export default {
   methods: {
     onFormInput() {
       this.$emit('update', {
+        email: this.form.email,
+        password: this.form.password,
         name: this.form.name,
         company: this.form.company,
         countryCode: this.form.countryCode,

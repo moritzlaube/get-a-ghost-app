@@ -3,16 +3,14 @@ div.container.register-page
   div.flow
     BaseGhostLogo.mt-md.center-align
     h1 Register
-    p(v-if="currentStep === 1") Register and find an available Moodscout and/or Ghostwriter within seconds. No more chain calling your handwritten, out-of-date list of Ghosts.
-    p(v-if="currentStep === 2") Please let us know your name, company (if applicable) and phone. Your phone will come in handy when your requested Ghost needs to get in contact with you.
+    div(v-if="currentStep === 1")
+      p Register and find an available Moodscout and/or Ghostwriter within seconds. No more chain calling your handwritten, out-of-date list of Ghosts.
+      p Please let us know your name, company (if applicable) and phone. Your phone will come in handy when your requested Ghost needs to get in touch with you.
   div.flow
     transition(name="slide" mode="out-in")   
-      FormRegisterEmailAndPassword(v-if="currentStep === 1" @update="processStep" @next="currentStep++")
+      FormRegister(v-if="currentStep === 1" @update="processStep"  @sendForm="registerUser" :class="{ loading: isLoading }")
+        p.error.center-align.mt-sm(v-if="error === 409") This user already exists. Please use a different email address.
       div(v-if="currentStep === 2")
-        BaseBackButton(@click="currentStep--; error=null") Go Back
-        FormRegisterNameAndCompany(@update="processStep" @sendForm="registerUser" :class="{ loading: isLoading }")
-           p.error.center-align.mt-sm(v-if="error === 409") This user already exists. Please use a different email address.
-      div(v-if="currentStep === 3")
         p.mt-md 
           | We have sent you an email with a verification code that you can copy and paste. Please also check your spam.
           br
