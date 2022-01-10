@@ -221,7 +221,7 @@ exports.createGhost = async (req, res) => {
           last_name: name.last,
           phone_number: countryCode + phone,
           custom_fields: {
-            country_code: countryCode,
+            e1_T: countryCode,
           },
         },
       ],
