@@ -50,6 +50,7 @@ const ghostSchema = new Schema(
       {
         type: String,
         trim: true,
+        lowercase: true,
       },
     ],
     about: {
