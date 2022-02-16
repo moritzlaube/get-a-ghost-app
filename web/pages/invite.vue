@@ -1,33 +1,33 @@
 <template lang="pug">
-  div.container
-    BaseGhostLogo.mt-md.center-align
-    div.mt-md.flow
-      h1 Welcome on board, {{form.firstName}}!
-      p We are happy to have you. Please fill out this form to create your account. On the following page you'll be able to complete your profile. As soon as you're done, you'll be immediately discoverable by everyone who is in need of your excellency.
-      form.flow.mt-xl(@submit.prevent="handleSubmit" :class="{ loading: isLoading }")
+div.container
+  BaseGhostLogo.mt-md.center-align
+  div.mt-md.flow
+    h1 Welcome on board, {{form.firstName}}!
+    p We are happy to have you. Please fill out this form to create your account. On the following page you'll be able to complete your profile. As soon as you're done, you'll be immediately discoverable by everyone who is in need of your excellency.
+    form.flow.mt-xl(@submit.prevent="handleSubmit" :class="{ loading: isLoading }")
+      div
+        span.label Email
+        div.email {{form.email}}
+      div
+        span.label Password
+        BaseInput(type="password" id="password" name="password" v-model="form.password" placeholder="Password" label="Password" required)
+      div.split
         div
-          span.label Email
-          div.email {{form.email}}
+          span.label First Name
+          BaseInput(type="text" id="firstName" name="firstName" v-model="form.firstName" placeholder="First Name" label="First Name" required)
         div
-          span.label Password
-          BaseInput(type="password" id="password" name="password" v-model="form.password" placeholder="Password" label="Password" required)
-        div.split
-          div
-            span.label First Name
-            BaseInput(type="text" id="firstName" name="firstName" v-model="form.firstName" placeholder="First Name" label="First Name" required)
-          div
-            span.label Last Name
-            BaseInput(type="text" id="lastName" name="lastName" v-model="form.lastName" placeholder="Last Name" label="Last Name" required)
-        div
-          span.label Your public alias
-          BaseInput(type="text" id="ghostName" name="ghostName" v-model="form.ghostName" :placeholder="form.firstName + ' ' + form.lastName" label="Ghost Name")
-        div
-          span.label Phone
-          div.phone-split
-            BaseSearchSelect(type="tel" id="country-code" v-model="form.countryCode" :options="Array.from(countryCodes)" pre-selected="+49" required)
-            BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="1511234567" label="Phone" required)
-        BaseButton(:disabled="!(this.form.phone && this.form.password)" type="submit") Create Account
-    BaseFooter
+          span.label Last Name
+          BaseInput(type="text" id="lastName" name="lastName" v-model="form.lastName" placeholder="Last Name" label="Last Name" required)
+      div
+        span.label Your public alias
+        BaseInput(type="text" id="ghostName" name="ghostName" v-model="form.ghostName" :placeholder="form.firstName + ' ' + form.lastName" label="Ghost Name")
+      div
+        span.label Phone
+        div.phone-split
+          BaseSearchSelect(type="tel" id="country-code" v-model="form.countryCode" :options="Array.from(countryCodes)" pre-selected="+49" required)
+          BaseInput(type="tel" id="phone" name="phone" v-model="form.phone" placeholder="1511234567" label="Phone" required)
+      BaseButton(:disabled="!(this.form.phone && this.form.password)" type="submit") Create Account
+  BaseFooter
 </template>
 
 <script>

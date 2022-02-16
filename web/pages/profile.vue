@@ -1,70 +1,70 @@
 <template lang="pug">
-  div.container
-    div.flow(v-if="!showAccountCreatedMessage")
-      h1 Edit Profile
-      BaseBackButton(v-if="loggedInUser.profile.active" @click="$router.go(-1)") Go Back
-      form.flow(@submit.prevent="handleSubmit" :class="{ loading: isLoading }")
+div.container
+  div.flow(v-if="!showAccountCreatedMessage")
+    h1 Edit Profile
+    BaseBackButton(v-if="loggedInUser.profile.active" @click="$router.go(-1)") Go Back
+    form.flow(@submit.prevent="handleSubmit" :class="{ loading: isLoading }")
+      div
+        .label Select your profession(s)
+          span.label--subline Multiple selections are possible
+        ul.pill-bg(v-if="form.type && form.type.length > 0")
+          li.pill(v-for="(type, i) in form.type" :key="type") 
+            span {{type}}
+            svg(xmlns='http://www.w3.org/2000/svg' viewBox="0 0 24 24" width="14" fill='#FFF' @click="deleteType(i)")
+              path(d='M0 0h24v24H0V0z' fill='none' opacity='.9')
+              path(d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.6L15.6 17 12 13.4 8.4 17 7 15.6l3.6-3.6L7 8.4 8.4 7l3.6 3.6L15.6 7 17 8.4 13.4 12l3.6 3.6z')
+        BaseSelect(label="What's your field of expertise?" placeholder="Select ..." :id="'profession'" tabindex="0" :options="['Ghostwriter', 'Moodscout']" @input="handleTypeSelect")
+      div(v-if="form.type.includes('Ghostwriter')")  
+        .label Select your language(s)
+          span.label--subline Multiple selections are possible
+        ul.pill-bg(v-if="form.languages && form.languages.length > 0")
+          li.pill(v-for="(lang, i) in form.languages" :key="lang") 
+            span {{lang}}
+            svg(xmlns='http://www.w3.org/2000/svg' viewBox="0 0 24 24" width="14" fill='#FFF' @click="deleteLanguage(i)")
+              path(d='M0 0h24v24H0V0z' fill='none' opacity='.9')
+              path(d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.6L15.6 17 12 13.4 8.4 17 7 15.6l3.6-3.6L7 8.4 8.4 7l3.6 3.6L15.6 7 17 8.4 13.4 12l3.6 3.6z')
+        BaseSelect(label="Select your language" placeholder="Select ..." :id="'language'" tabindex="0" :options="languages" @input="handleLanguageSelect")
+      div
+        .label Select your favorite categories
+        ul.pill-bg(v-if="form.categories && form.categories.length > 0")
+          li.pill(v-for="(cat, i) in form.categories" :key="cat") 
+            span {{cat}}
+            svg(xmlns='http://www.w3.org/2000/svg' viewBox="0 0 24 24" width="14" fill='#FFF' @click="deleteCategory(i)")
+              path(d='M0 0h24v24H0V0z' fill='none' opacity='.9')
+              path(d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.6L15.6 17 12 13.4 8.4 17 7 15.6l3.6-3.6L7 8.4 8.4 7l3.6 3.6L15.6 7 17 8.4 13.4 12l3.6 3.6z')
+        BaseSelect(label="Select your categories" placeholder="Select ..." :id="'category'" tabindex="0" :options="categories" @input="handleCategorySelect")
+      div
+        .label Website (optional)
+        BaseInput(type="text" id="website" name="website" v-model="form.website" placeholder="www.example.com" label="Website")
+      div
+        div.space-between
+          .label About (english) 
+          span.label(:class="{ exceed: wordCount < 0 }") {{ wordCount }}
+        BaseTextarea(id="about" name="about" v-model="form.about" rows="5" cols="33" placeholder="About You")
+      div
+        .label Your timezone
+        BaseSelect(label="Select your timezone" placeholder="Select ..." :id="'timezone'" tabindex="0" :options="timezones" v-model="form.timezone")
+      client-only
         div
-          .label Select your profession(s)
-            span.label--subline Multiple selections are possible
-          ul.pill-bg(v-if="form.type && form.type.length > 0")
-            li.pill(v-for="(type, i) in form.type" :key="type") 
-              span {{type}}
-              svg(xmlns='http://www.w3.org/2000/svg' viewBox="0 0 24 24" width="14" fill='#FFF' @click="deleteType(i)")
-                path(d='M0 0h24v24H0V0z' fill='none' opacity='.9')
-                path(d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.6L15.6 17 12 13.4 8.4 17 7 15.6l3.6-3.6L7 8.4 8.4 7l3.6 3.6L15.6 7 17 8.4 13.4 12l3.6 3.6z')
-          BaseSelect(label="What's your field of expertise?" placeholder="Select ..." :id="'profession'" tabindex="0" :options="['Ghostwriter', 'Moodscout']" @input="handleTypeSelect")
-        div(v-if="form.type.includes('Ghostwriter')")  
-          .label Select your language(s)
-            span.label--subline Multiple selections are possible
-          ul.pill-bg(v-if="form.languages && form.languages.length > 0")
-            li.pill(v-for="(lang, i) in form.languages" :key="lang") 
-              span {{lang}}
-              svg(xmlns='http://www.w3.org/2000/svg' viewBox="0 0 24 24" width="14" fill='#FFF' @click="deleteLanguage(i)")
-                path(d='M0 0h24v24H0V0z' fill='none' opacity='.9')
-                path(d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.6L15.6 17 12 13.4 8.4 17 7 15.6l3.6-3.6L7 8.4 8.4 7l3.6 3.6L15.6 7 17 8.4 13.4 12l3.6 3.6z')
-          BaseSelect(label="Select your language" placeholder="Select ..." :id="'language'" tabindex="0" :options="languages" @input="handleLanguageSelect")
-        div
-          .label Select your favorite categories
-          ul.pill-bg(v-if="form.categories && form.categories.length > 0")
-            li.pill(v-for="(cat, i) in form.categories" :key="cat") 
-              span {{cat}}
-              svg(xmlns='http://www.w3.org/2000/svg' viewBox="0 0 24 24" width="14" fill='#FFF' @click="deleteCategory(i)")
-                path(d='M0 0h24v24H0V0z' fill='none' opacity='.9')
-                path(d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.6L15.6 17 12 13.4 8.4 17 7 15.6l3.6-3.6L7 8.4 8.4 7l3.6 3.6L15.6 7 17 8.4 13.4 12l3.6 3.6z')
-          BaseSelect(label="Select your categories" placeholder="Select ..." :id="'category'" tabindex="0" :options="categories" @input="handleCategorySelect")
-        div
-          .label Website (optional)
-          BaseInput(type="text" id="website" name="website" v-model="form.website" placeholder="www.example.com" label="Website")
-        div
-          div.space-between
-            .label About (english) 
-            span.label(:class="{ exceed: wordCount < 0 }") {{ wordCount }}
-          BaseTextarea(id="about" name="about" v-model="form.about" rows="5" cols="33" placeholder="About You")
-        div
-          .label Your timezone
-          BaseSelect(label="Select your timezone" placeholder="Select ..." :id="'timezone'" tabindex="0" :options="timezones" v-model="form.timezone")
-        client-only
-          div
-            .label Your blocked dates
-              span.label--subline Delete blocked dates by double-clicking a day within a range
-            v-date-picker(:value="null" color="pink" v-model="selectedDates" :model-config="modelConfig" :attributes="attrs" locale="en" :min-date="new Date()" is-dark is-range is-expanded @input="handleDatePicker" @dayclick="handleDateDelete")
-        BaseButton(:disabled="!(form.type && form.about && form.timezone && wordCount >= 0)" type="submit") Update Profile
-    div.flow(v-else)
-      h1 Congratulations!
-      p You just activated your account! From now on, our registered users will be able to find you on our platform. We wish you the best of luck! Please don't hesitate to #[a(href="mailto:hi@get-a-ghost.com") contact] us if you have any questions or issues with our app.
-      p Your 
-        span.emphasize Get A Ghost 
-        | team
+          .label Your blocked dates
+            span.label--subline Delete blocked dates by double-clicking a day within a range
+          v-date-picker(:value="null" color="pink" v-model="selectedDates" :model-config="modelConfig" :attributes="attrs" locale="en" :min-date="new Date()" is-dark is-range is-expanded @input="handleDatePicker" @dayclick="handleDateDelete")
+      BaseButton(:disabled="!(form.type && form.about && form.timezone && wordCount >= 0)" type="submit") Update Profile
+  div.flow(v-else)
+    h1 Congratulations!
+    p You just activated your account! From now on, our registered users will be able to find you on our platform. We wish you the best of luck! Please don't hesitate to #[a(href="mailto:hi@get-a-ghost.com") contact] us if you have any questions or issues with our app.
+    p Your 
+      span.emphasize Get A Ghost 
+      | team
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { isWithinInterval, parseISO, areIntervalsOverlapping } from 'date-fns'
+import confetti from 'canvas-confetti'
 import timezones from '@/assets/json/timezones.json'
 import availableLanguages from '@/assets/json/languages.json'
 import availableCategories from '@/assets/json/categories.json'
-import confetti from 'canvas-confetti'
 
 export default {
   name: 'ProfilePage',

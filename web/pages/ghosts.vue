@@ -1,7 +1,7 @@
 <template lang="pug">
-  div.container.flow
-    BaseBackButton(@click="$router.go(-1)") New Search
-    GhostsList
+div.container.flow
+  BaseBackButton(@click="$router.go(-1)") New Search
+  GhostsList
 </template>
 
 <script>
